@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-ivory: #f8f5f1;
+  --color-beige: #efe7dd;
+  --color-gold: #c7a46a;
+  --color-gold-hover: #b8935a;
+  --color-charcoal: #2b2b2b;
+  --color-taupe: #756a60;
+  --color-border: #e6ddd2;
+
+  --font-display: var(--font-playfair);
+  --font-body: var(--font-inter);
+}
+
+:root {
+  --header-height: 5rem;
+  --page-gutter: 1.25rem;
+  --page-max: 1320px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --page-gutter: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --page-gutter: 2.5rem;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-ivory);
+  color: var(--color-charcoal);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
+  color: var(--color-charcoal);
+}
+
+.luxury-shadow {
+  box-shadow:
+    0 4px 24px rgba(43, 43, 43, 0.04),
+    0 12px 48px rgba(43, 43, 43, 0.06);
+}
+
+.luxury-shadow-lg {
+  box-shadow:
+    0 8px 32px rgba(43, 43, 43, 0.06),
+    0 24px 64px rgba(43, 43, 43, 0.08);
+}
+
+.gold-focus:focus {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 25%, transparent);
+}
+
+.divider-line {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-border) 20%,
+    var(--color-border) 80%,
+    transparent
+  );
+}
+
+.page-container {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+
+.section-offset {
+  padding-top: calc(var(--header-height) + 1.5rem);
+}
+
+@media (min-width: 1024px) {
+  .section-offset {
+    padding-top: calc(var(--header-height) + 2rem);
+  }
+}
+
+.viewport-section {
+  position: relative;
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
+  justify-content: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow-x: hidden;
+}
+
+.hero-form-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.hero-form-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.hero-form-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 999px;
+}
