@@ -1,20 +1,22 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-ivory: #f8f5f1;
-  --color-beige: #efe7dd;
-  --color-gold: #c7a46a;
-  --color-gold-hover: #b8935a;
+  --color-ivory: #fafafa;
+  --color-beige: #f3f4f6;
+  --color-gold: #5b2d8b;
+  --color-gold-hover: #4a2472;
+  --color-cta: #5b2d8b;
+  --color-cta-hover: #4a2472;
   --color-charcoal: #2b2b2b;
-  --color-taupe: #756a60;
-  --color-border: #e6ddd2;
+  --color-taupe: #6b7280;
+  --color-border: #e5e7eb;
 
   --font-display: var(--font-jakarta);
   --font-body: var(--font-jakarta);
 }
 
 :root {
-  --header-height: 5rem;
+  --header-height: 4.75rem;
   --page-gutter: 1.25rem;
   --page-max: 1320px;
 }
@@ -32,19 +34,29 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 body {
-  background-color: var(--color-ivory);
+  background-color: #ffffff;
   color: var(--color-charcoal);
   font-family: var(--font-body), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100%;
+  overflow-x: clip;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 ::selection {
-  background-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
+  background-color: color-mix(in srgb, var(--color-cta) 30%, transparent);
   color: var(--color-charcoal);
 }
 
@@ -62,8 +74,8 @@ body {
 
 .gold-focus:focus {
   outline: none;
-  border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 25%, transparent);
+  border-color: var(--color-cta);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-cta) 25%, transparent);
 }
 
 .divider-line {
@@ -84,25 +96,89 @@ body {
   padding-inline: var(--page-gutter);
 }
 
-.section-offset {
-  padding-top: calc(var(--header-height) + 1.5rem);
+.viewport-section {
+  position: relative;
+  overflow-x: clip;
 }
 
-@media (min-width: 1024px) {
-  .section-offset {
-    padding-top: calc(var(--header-height) + 2rem);
+/* Full viewport per section — layout only, no scroll-snap */
+.snap-section {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Mobile: let sections grow so content is never clipped */
+@media (max-width: 1023px) {
+  .snap-section {
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  #hero.snap-section {
+    min-height: 100dvh;
+  }
+
+  .snap-section-body {
+    height: auto;
+    min-height: auto;
+    padding-bottom: 1rem;
+  }
+
+  .snap-section-inner {
+    height: auto;
+    overflow: visible;
+    justify-content: flex-start;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .snap-section-inner > .section-fit {
+    flex: none;
+    max-height: none;
+    overflow: visible;
   }
 }
 
-.viewport-section {
-  position: relative;
+.snap-section-body {
+  box-sizing: border-box;
+  height: 100%;
+  padding-top: var(--header-height);
+  padding-bottom: 0.75rem;
+}
+
+.snap-section-inner {
   display: flex;
-  min-height: 100dvh;
+  height: 100%;
   flex-direction: column;
-  justify-content: center;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  overflow-x: hidden;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: hidden;
+  padding-top: 0.25rem;
+}
+
+@media (min-width: 1024px) {
+  .snap-section-inner {
+    justify-content: center;
+    padding-top: 0;
+  }
+}
+
+/* Prevent flex parents from squishing section content */
+.snap-section-inner > * {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+/* Section content that must fit within one viewport (e.g. FAQ) */
+.snap-section-inner > .section-fit {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .hero-form-scroll {
@@ -117,4 +193,70 @@ body {
 .hero-form-scroll::-webkit-scrollbar-thumb {
   background-color: var(--color-border);
   border-radius: 999px;
+}
+
+.form-field-hero {
+  height: 2.5rem;
+  padding-inline: 0.875rem;
+}
+
+.form-field-secondary {
+  padding: 1rem 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .form-field-secondary {
+    padding: 1rem 1.25rem;
+  }
+}
+
+@keyframes premium-border-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.premium-rotating-border {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 28px;
+  padding: 2px;
+}
+
+.premium-rotating-border::before {
+  content: "";
+  position: absolute;
+  inset: -120%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 300deg,
+    color-mix(in srgb, var(--color-cta) 25%, transparent) 318deg,
+    var(--color-cta) 336deg,
+    color-mix(in srgb, var(--color-cta) 70%, white) 350deg,
+    transparent 360deg
+  );
+  animation: premium-border-spin 3.5s linear infinite;
+}
+
+.premium-rotating-border__inner {
+  position: relative;
+  z-index: 1;
+  border-radius: 26px;
+  background: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .premium-rotating-border::before {
+    animation: none;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-cta) 35%, transparent),
+      transparent 40%,
+      transparent 60%,
+      color-mix(in srgb, var(--color-cta) 35%, transparent)
+    );
+  }
 }

@@ -1,163 +1,105 @@
 "use client";
 
+import HeroImage from "@/assets/Hero.png";
+import MobHeroImage from "@/assets/MobHero.png";
+import { handleSectionNavClick } from "@/lib/scroll";
 import { motion } from "framer-motion";
+import { Check } from "lucide-react";
 import Image from "next/image";
-import { ArrowRight, Building2, IndianRupee, MapPin, Shield, Store } from "lucide-react";
 import { fadeUp, staggerContainer } from "../ui/AnimatedSection";
-import { EnquiryForm } from "../ui/EnquiryForm";
-import { GoldButton } from "../ui/GoldButton";
 
-const topCards = [
-  {
-    icon: IndianRupee,
-    label: "Investment",
-    value: "₹45 Lakhs+",
-  },
-  {
-    icon: Building2,
-    label: "Business Model",
-    value: "FICO",
-  },
-  {
-    icon: Store,
-    label: "Store Operations",
-    value: "Company Operated",
-  },
+const heroHighlights = [
+  "Premium Fashion Brand",
+  "End-to-End Franchise Support",
+  "High Growth Retail Opportunity",
+  "Dedicated Business Consultants",
 ];
-
-const bottomCards = [
-  {
-    icon: Shield,
-    label: "Minimum Guarantee",
-    value: "1.25 Lakhs or 12% Revenue Share* (whichever is higher)",
-  },
-  {
-    icon: MapPin,
-    label: "Expansion",
-    value: "Selected Cities Across India",
-  },
-];
-
-function HighlightCard({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: typeof IndianRupee;
-  label: string;
-  value: string;
-}) {
-  return (
-    <motion.div
-      whileHover={{ y: -4, transition: { duration: 0.3 } }}
-      className="luxury-shadow group h-full rounded-[20px] border border-border bg-white/95 p-4 backdrop-blur-sm transition-shadow duration-500 hover:shadow-[0_12px_40px_rgba(43,43,43,0.08)] lg:p-5"
-    >
-      <div className="mb-2.5 flex items-center gap-2.5">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-beige transition-colors duration-300 group-hover:bg-gold/15">
-          <Icon className="h-4 w-4 text-gold" strokeWidth={1.5} />
-        </div>
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-taupe">{label}</p>
-      </div>
-      <p className="text-sm font-medium leading-snug text-charcoal">{value}</p>
-    </motion.div>
-  );
-}
 
 export function HeroSection() {
-  const scrollToForm = () => {
-    document.getElementById("enquiry-form")?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <section className="viewport-section relative !justify-start">
-      <div className="absolute inset-0">
-        <Image
-          src="https://images.unsplash.com/photo-1441984904996-e0b495597652?auto=format&fit=crop&w=2400&q=80"
-          alt="Premium Odette fashion showroom interior"
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
-        />
-        <div className="absolute inset-0 bg-linear-to-r from-ivory/95 via-ivory/88 to-ivory/75" />
-        <div className="absolute inset-0 bg-linear-to-b from-ivory/30 via-transparent to-ivory/50" />
-      </div>
+    <section
+      id="hero"
+      className="viewport-section relative snap-section overflow-hidden max-lg:overflow-visible"
+    >
+      <Image
+        src={MobHeroImage}
+        alt=""
+        fill
+        priority
+        quality={100}
+        className="object-cover object-[center_20%] lg:hidden"
+        sizes="100vw"
+      />
+      <Image
+        src={HeroImage}
+        alt=""
+        fill
+        priority
+        quality={100}
+        className="hidden object-cover object-[50%_35%] lg:block"
+        sizes="100vw"
+      />
 
-      <div className="page-container section-offset relative w-full pb-8 pt-0 lg:pb-10">
-        <div className="grid items-start gap-8 lg:grid-cols-[1.5fr_minmax(320px,400px)] lg:gap-10 xl:gap-12">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={staggerContainer}
-            className="flex min-w-0 flex-col"
-          >
-            <motion.div variants={fadeUp} className="flex flex-wrap items-center gap-3 lg:gap-4">
-              <span className="inline-flex items-center rounded-full border border-gold/30 bg-white/80 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-gold backdrop-blur-sm">
-                Premium Fashion Franchise Opportunity
-              </span>
-              <span className="text-sm font-medium text-charcoal lg:text-base">
-                Investment starts from ₹45 Lakhs.
-              </span>
-            </motion.div>
+      <div
+        className="pointer-events-none absolute inset-0 z-[1] hidden bg-gradient-to-r from-white from-0% via-white via-[22%] via-ivory/85 via-[34%] to-transparent to-[52%] lg:block"
+        aria-hidden
+      />
 
-            <motion.h1
-              variants={fadeUp}
-              className="mt-5 font-display text-[2rem] leading-[1.22] tracking-tight text-charcoal sm:text-[2.35rem] lg:text-[2.5rem] xl:text-[2.65rem]"
-            >
-              Own a Premium Fashion Business
-            </motion.h1>
-
-            <motion.p
-              variants={fadeUp}
-              className="mt-4 max-w-xl text-sm leading-relaxed text-taupe lg:text-base"
-            >
-              Partner with Odette through a company-operated franchise model designed for investors
-              looking to own a premium fashion business.
-            </motion.p>
-
-            <motion.div variants={fadeUp} className="mt-6 space-y-3">
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {topCards.map((card) => (
-                  <HighlightCard key={card.label} {...card} />
-                ))}
-              </div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {bottomCards.map((card) => (
-                  <HighlightCard key={card.label} {...card} />
-                ))}
-              </div>
-            </motion.div>
-
-            <motion.div
-              variants={fadeUp}
-              className="mt-6 space-y-4 border-t border-border/60 pt-5"
-            >
-              <GoldButton onClick={scrollToForm}>
-                Get Franchise Details
-                <ArrowRight className="h-4 w-4" />
-              </GoldButton>
-
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-                <div className="flex items-center gap-1.5 text-xs text-taupe">
-                  <Shield className="h-3.5 w-3.5 shrink-0 text-gold" strokeWidth={1.5} />
-                  <span>Company Operated Model</span>
-                </div>
-                <div className="flex items-center gap-1.5 text-xs text-taupe">
-                  <Store className="h-3.5 w-3.5 shrink-0 text-gold" strokeWidth={1.5} />
-                  <span>Premium Fashion Retail</span>
-                </div>
-                <div className="flex items-center gap-1.5 text-xs text-taupe">
-                  <MapPin className="h-3.5 w-3.5 shrink-0 text-gold" strokeWidth={1.5} />
-                  <span>Selected Cities Across India</span>
-                </div>
-              </div>
-            </motion.div>
+      <div className="page-container relative z-10 box-border flex w-full flex-col overflow-hidden pb-8 pt-[var(--header-height)] max-lg:h-auto max-lg:min-h-0 max-lg:justify-start max-lg:overflow-visible max-lg:pb-6 max-lg:pt-[calc(var(--header-height)+2.25rem)] lg:h-full lg:justify-center lg:overflow-hidden">
+        <motion.div
+          initial={false}
+          animate="visible"
+          variants={staggerContainer}
+          className="w-full max-w-2xl min-w-0 max-lg:mx-auto max-lg:flex max-lg:flex-col max-lg:items-center max-lg:text-center"
+        >
+          <motion.div variants={fadeUp} className="max-lg:flex max-lg:w-full max-lg:justify-center">
+            <span className="inline-flex items-center rounded-full border border-cta/20 bg-white/95 px-4 py-1.5 text-[11px] font-semibold leading-snug text-charcoal backdrop-blur-sm sm:text-xs">
+              Premium Women&apos;s Fashion Franchise Opportunity
+            </span>
           </motion.div>
 
-          <div className="hero-form-scroll min-w-0 lg:max-h-[calc(100dvh-var(--header-height)-2rem)] lg:overflow-y-auto lg:overscroll-contain">
-            <EnquiryForm variant="hero" id="enquiry-form" />
-          </div>
-        </div>
+          <motion.h1
+            variants={fadeUp}
+            className="mt-3 font-display text-[1.65rem] leading-[1.22] tracking-tight text-charcoal max-lg:mt-3 sm:text-[2rem] lg:mt-4 lg:text-[2.35rem]"
+          >
+            Own an Odette Franchise &amp; Build a Profitable Fashion Business
+          </motion.h1>
+
+          <motion.p
+            variants={fadeUp}
+            className="mt-3 max-w-xl text-sm leading-relaxed text-black max-lg:mx-auto sm:text-base lg:mt-4"
+          >
+            Launch your Odette franchise with expert guidance from iFranchise—from planning
+            and setup to a successful store launch.
+          </motion.p>
+
+          <motion.div variants={fadeUp} className="mt-5 max-lg:flex max-lg:w-full max-lg:justify-center lg:mt-6">
+            <a
+              href="#contact"
+              onClick={(e) => handleSectionNavClick(e, "#contact")}
+              className="inline-flex items-center justify-center rounded-full bg-cta px-8 py-3.5 text-sm font-semibold text-white shadow-[0_4px_16px_rgba(91,45,139,0.28)] transition-colors duration-300 hover:bg-cta-hover"
+            >
+              Start Your Franchise Journey
+            </a>
+          </motion.div>
+
+          <motion.ul
+            variants={fadeUp}
+            className="mt-5 hidden gap-2 lg:grid sm:grid-cols-2 sm:gap-x-6 sm:gap-y-2.5"
+          >
+            {heroHighlights.map((item, index) => (
+              <li
+                key={item}
+                className={`flex items-center gap-2 ${index % 2 === 1 ? "sm:-ml-10 sm:gap-1" : ""}`}
+              >
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cta/10">
+                  <Check className="h-3 w-3 text-cta" strokeWidth={2.5} />
+                </span>
+                <span className="text-sm font-medium text-charcoal">{item}</span>
+              </li>
+            ))}
+          </motion.ul>
+        </motion.div>
       </div>
     </section>
   );

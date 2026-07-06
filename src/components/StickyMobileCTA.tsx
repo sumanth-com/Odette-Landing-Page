@@ -1,5 +1,6 @@
 "use client";
 
+import { scrollToSection } from "@/lib/scroll";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { GoldButton } from "./ui/GoldButton";
@@ -16,8 +17,8 @@ export function StickyMobileCTA() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToForm = () => {
-    document.getElementById("enquiry-form")?.scrollIntoView({ behavior: "smooth" });
+  const scrollToContact = () => {
+    scrollToSection("contact");
   };
 
   return (
@@ -30,8 +31,8 @@ export function StickyMobileCTA() {
           transition={{ duration: 0.5, ease: "easeOut" }}
           className="fixed bottom-0 left-0 right-0 z-50 border-t border-border bg-white/95 p-4 backdrop-blur-md lg:hidden"
         >
-          <GoldButton fullWidth size="large" onClick={scrollToForm}>
-            Get Franchise Details
+          <GoldButton fullWidth size="large" onClick={scrollToContact}>
+            Book Consultation
           </GoldButton>
         </motion.div>
       )}

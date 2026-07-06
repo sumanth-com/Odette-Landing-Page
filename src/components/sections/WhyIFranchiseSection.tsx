@@ -1,51 +1,78 @@
 "use client";
 
-import { ClipboardCheck, FileSearch, MessageCircle, TrendingUp } from "lucide-react";
+import {
+  FileSearch,
+  Headphones,
+  MapPinned,
+  Rocket,
+  Scale,
+  UserCheck,
+} from "lucide-react";
 import { StaggerGroup, StaggerItem } from "../ui/AnimatedSection";
 import { SectionHeading } from "../ui/GoldButton";
 import { SectionShell } from "../ui/SectionShell";
 
 const cards = [
   {
-    icon: MessageCircle,
-    title: "Franchise Consultation",
-  },
-  {
-    icon: TrendingUp,
-    title: "Investment Guidance",
-  },
-  {
     icon: FileSearch,
-    title: "Brand Evaluation",
+    title: "Franchise Opportunity Assessment",
   },
   {
-    icon: ClipboardCheck,
-    title: "End-to-End Assistance",
+    icon: Headphones,
+    title: "End-to-End Franchise Consulting",
+  },
+  {
+    icon: MapPinned,
+    title: "Market Research & Location Analysis",
+  },
+  {
+    icon: Scale,
+    title: "Franchise Legal & Documentation Support",
+  },
+  {
+    icon: Rocket,
+    title: "Franchise Setup & Store Launch",
+  },
+  {
+    icon: UserCheck,
+    title: "Dedicated Franchise Business Consultant",
   },
 ];
 
 export function WhyIFranchiseSection() {
   return (
-    <SectionShell className="bg-white">
-      <SectionHeading
-        compact
-        title="Why Choose iFranchise?"
-        subtitle="Buying a franchise is an important investment decision. Our team helps you understand the opportunity, answer your questions, and guide you through the complete franchise process."
-        centered
-      />
+    <SectionShell id="why-ifranchise">
+      <div className="flex w-full max-w-6xl flex-col items-center">
+        <SectionHeading
+          compact
+          centered
+          pill="iFranchise"
+          title="Why Choose iFranchise?"
+          tagline="India's Trusted Franchise Consulting Partner"
+          subtitle="Expert franchise consulting for investors and brands—from opportunity assessment to store launch and growth."
+        />
 
-      <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-        {cards.map((card) => (
-          <StaggerItem key={card.title}>
-            <div className="group luxury-shadow h-full rounded-[22px] border border-border bg-white p-6 text-center transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(43,43,43,0.08)] lg:p-7">
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-beige transition-colors duration-300 group-hover:bg-gold/15">
-                <card.icon className="h-5 w-5 text-gold" strokeWidth={1.5} />
+        <StaggerGroup className="grid w-full grid-cols-2 gap-2 lg:grid-cols-3 lg:gap-4">
+          {cards.map((card) => (
+            <StaggerItem key={card.title} className="h-full">
+              <div className="group relative h-full overflow-hidden rounded-[14px] border border-cta/15 bg-white p-2.5 shadow-[0_8px_32px_rgba(91,45,139,0.08)] transition-all duration-500 hover:-translate-y-1 hover:border-cta/30 hover:shadow-[0_16px_48px_rgba(91,45,139,0.14)] lg:rounded-[20px] lg:p-5">
+                <div
+                  className="absolute inset-y-0 left-0 w-1 bg-gradient-to-b from-cta to-cta/40"
+                  aria-hidden
+                />
+                <div className="flex flex-col gap-1.5 pl-1 lg:flex-row lg:items-start lg:gap-3.5 lg:pl-2">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-cta/10 transition-colors duration-300 group-hover:bg-cta/15 lg:h-12 lg:w-12 lg:rounded-xl">
+                    <card.icon className="h-4 w-4 text-cta lg:h-[22px] lg:w-[22px]" strokeWidth={1.5} />
+                  </div>
+                  <h3 className="font-display text-[10px] font-semibold leading-tight text-charcoal lg:pt-2 lg:text-[15px] lg:leading-snug lg:text-base">
+                    {card.title}
+                  </h3>
+                </div>
               </div>
-              <h3 className="font-display text-base text-charcoal lg:text-lg">{card.title}</h3>
-            </div>
-          </StaggerItem>
-        ))}
-      </StaggerGroup>
+            </StaggerItem>
+          ))}
+        </StaggerGroup>
+      </div>
     </SectionShell>
   );
 }

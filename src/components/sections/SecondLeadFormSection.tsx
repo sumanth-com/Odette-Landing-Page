@@ -1,30 +1,28 @@
-"use client";
-
 import { EnquiryForm } from "../ui/EnquiryForm";
 import { SectionHeading } from "../ui/GoldButton";
 import { SectionShell } from "../ui/SectionShell";
 
 export function SecondLeadFormSection() {
   return (
-    <SectionShell className="bg-beige">
+    <SectionShell id="consultation-section" className="!min-h-0">
       <SectionHeading
         compact
-        title="Want to Learn More?"
-        subtitle="Fill in your details and our franchise consultant will help you understand the business model, investment, and next steps."
+        title="Ready to Take the Next Step?"
+        subtitle="Share your details and our franchise consultant will walk you through the Odette opportunity, investment, and how to get started."
         centered
       />
 
       <div className="mx-auto w-full max-w-md">
         <EnquiryForm
           variant="secondary"
-          id="secondary-enquiry-form"
-          buttonText="Schedule a Free Consultation"
+          id="consultation-form"
+          buttonText="Schedule Free Consultation"
           showHeading={false}
           showEmail={false}
           showBudget={false}
           nameLabel="Name"
           phoneLabel="Phone"
-          helperText=""
+          helperText="No obligation. Our team responds within one business day."
         />
       </div>
     </SectionShell>

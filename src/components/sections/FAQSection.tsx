@@ -1,5 +1,6 @@
 "use client";
 
+import { FAQ_ITEMS } from "@/lib/faqs";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
@@ -7,48 +8,26 @@ import { StaggerGroup, StaggerItem } from "../ui/AnimatedSection";
 import { SectionHeading } from "../ui/GoldButton";
 import { SectionShell } from "../ui/SectionShell";
 
-const faqs = [
-  {
-    question: "What is the minimum investment?",
-    answer: "Investment starts from ₹45 Lakhs.",
-  },
-  {
-    question: "Who manages the store?",
-    answer: "The company manages the day-to-day operations under the FICO model.",
-  },
-  {
-    question: "What support will I receive?",
-    answer: "Support includes guidance for setup, launch, operations, and ongoing business assistance.",
-  },
-  {
-    question: "Which cities are available?",
-    answer: "Franchise opportunities are available in selected cities across India.",
-  },
-  {
-    question: "How do I get started?",
-    answer:
-      "Submit the enquiry form and our franchise consultant will contact you to discuss the opportunity.",
-  },
-];
-
 function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="border-b border-border last:border-b-0">
+    <div className="rounded-xl border border-border/60 bg-white px-4 py-2.5 shadow-[0_2px_16px_rgba(43,43,43,0.05)] sm:px-5 sm:py-3">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between gap-4 py-4 text-left transition-colors duration-300 hover:text-gold lg:py-3.5"
+        className="flex w-full items-center justify-between gap-3 text-left"
         aria-expanded={isOpen}
       >
-        <span className="font-display text-sm text-charcoal lg:text-base">{question}</span>
+        <span className="font-display text-[13px] font-semibold leading-snug text-charcoal sm:text-sm">
+          {question}
+        </span>
         <motion.span
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="shrink-0"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cta/10"
         >
-          <ChevronDown className="h-4 w-4 text-gold" strokeWidth={1.5} />
+          <ChevronDown className="h-3.5 w-3.5 text-cta" strokeWidth={2} />
         </motion.span>
       </button>
       <AnimatePresence initial={false}>
@@ -57,10 +36,10 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <p className="pb-4 text-sm leading-relaxed text-taupe">{answer}</p>
+            <p className="pt-2 text-xs leading-relaxed text-taupe sm:text-sm">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -70,18 +49,24 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 
 export function FAQSection() {
   return (
-    <SectionShell className="bg-white">
-      <SectionHeading compact title="Frequently Asked Questions" centered />
+    <SectionShell id="faq">
+      <div className="section-fit mx-auto flex w-full max-w-3xl flex-col items-center justify-center">
+        <SectionHeading
+          dense
+          centered
+          pill="FAQ"
+          title="Frequently Asked Questions"
+          subtitle="Answers about the Odette premium fashion franchise in India."
+        />
 
-      <StaggerGroup className="mx-auto w-full max-w-3xl">
-        <StaggerItem>
-          <div className="luxury-shadow rounded-[22px] border border-border bg-white px-5 md:px-8">
-            {faqs.map((faq) => (
-              <FAQItem key={faq.question} question={faq.question} answer={faq.answer} />
-            ))}
-          </div>
-        </StaggerItem>
-      </StaggerGroup>
+        <StaggerGroup className="flex w-full flex-col gap-2 sm:gap-2.5">
+          {FAQ_ITEMS.map((faq) => (
+            <StaggerItem key={faq.question}>
+              <FAQItem question={faq.question} answer={faq.answer} />
+            </StaggerItem>
+          ))}
+        </StaggerGroup>
+      </div>
     </SectionShell>
   );
 }

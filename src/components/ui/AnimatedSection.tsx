@@ -3,17 +3,18 @@
 import { motion, type Variants } from "framer-motion";
 import { type ReactNode } from "react";
 
+/** Opacity stays 1 so content is never invisible if animation does not run */
 export const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 1, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.75, ease: [0.25, 0.46, 0.45, 0.94] },
+    transition: { duration: 0.65, ease: [0.25, 0.46, 0.45, 0.94] },
   },
 };
 
 export const fadeIn: Variants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: { duration: 0.7, ease: "easeOut" },
@@ -21,7 +22,7 @@ export const fadeIn: Variants = {
 };
 
 export const scaleIn: Variants = {
-  hidden: { opacity: 0, scale: 0.98 },
+  hidden: { opacity: 1, scale: 0.99 },
   visible: {
     opacity: 1,
     scale: 1,
@@ -32,7 +33,7 @@ export const scaleIn: Variants = {
 export const staggerContainer: Variants = {
   hidden: {},
   visible: {
-    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
+    transition: { staggerChildren: 0.1, delayChildren: 0.05 },
   },
 };
 
@@ -47,8 +48,7 @@ export function AnimatedSection({ children, className = "", id }: AnimatedSectio
     <motion.section
       id={id}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
+      animate="visible"
       variants={fadeUp}
       className={className}
     >
@@ -67,7 +67,7 @@ export function StaggerGroup({ children, className = "" }: StaggerGroupProps) {
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: "-60px" }}
+      viewport={{ once: true, amount: 0.15 }}
       variants={staggerContainer}
       className={className}
     >

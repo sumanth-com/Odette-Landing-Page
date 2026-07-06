@@ -1,128 +1,101 @@
 "use client";
 
-import image1 from "@/assets/1.png";
-import image2 from "@/assets/2.png";
-import image3 from "@/assets/3.png";
-import image4 from "@/assets/4.png";
-import image5 from "@/assets/5.png";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import Image, { type StaticImageData } from "next/image";
-import { useState } from "react";
-import { GoldButton } from "../ui/GoldButton";
-
-const galleryImages: { src: StaticImageData; alt: string }[] = [
-  { src: image1, alt: "Odette premium fashion store interior" },
-  { src: image2, alt: "Odette luxury retail showroom" },
-  { src: image3, alt: "Odette fashion boutique display" },
-  { src: image4, alt: "Odette premium clothing collection" },
-  { src: image5, alt: "Odette elegant store environment" },
-];
+import { EnquiryForm } from "@/components/ui/EnquiryForm";
+import { fadeUp } from "@/components/ui/AnimatedSection";
+import { GoogleMeetIcon } from "@/components/ui/GoogleMeetIcon";
+import { SectionPill } from "@/components/ui/GoldButton";
+import { SectionShell } from "@/components/ui/SectionShell";
+import {
+  CONTACT_EMAIL,
+  CONTACT_PHONE,
+  CONTACT_WEBSITE,
+  MEETING_URL,
+} from "@/lib/site";
+import { motion } from "framer-motion";
+import { Globe, Mail, Phone } from "lucide-react";
 
 export function FinalCTASection() {
-  const [current, setCurrent] = useState(0);
-  const activeImage = galleryImages[current].src;
-
-  const scrollToForm = () => {
-    document.getElementById("enquiry-form")?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const goPrev = () => {
-    setCurrent((index) => (index === 0 ? galleryImages.length - 1 : index - 1));
-  };
-
-  const goNext = () => {
-    setCurrent((index) => (index === galleryImages.length - 1 ? 0 : index + 1));
-  };
-
   return (
-    <section className="relative snap-start overflow-hidden bg-charcoal">
-      <div
-        className="pointer-events-none absolute inset-0 bg-linear-to-br from-charcoal via-[#333] to-[#1f1f1f]"
-        aria-hidden="true"
-      />
-
-      <div className="page-container relative z-10 py-10 lg:py-14">
-        <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-          {/* Left — Image gallery */}
-          <div className="w-full">
-            <motion.div
-              layout
-              className="relative w-full overflow-hidden rounded-[22px] luxury-shadow-lg"
-              style={{ aspectRatio: `${activeImage.width} / ${activeImage.height}` }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={current}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
-                  className="absolute inset-0"
-                >
-                  <Image
-                    src={activeImage}
-                    alt={galleryImages[current].alt}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    priority={current === 0}
-                  />
-                </motion.div>
-              </AnimatePresence>
-
-              <button
-                type="button"
-                onClick={goPrev}
-                aria-label="Previous image"
-                className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/90 text-charcoal shadow-md transition-all duration-300 hover:bg-white"
-              >
-                <ChevronLeft className="h-5 w-5" strokeWidth={1.5} />
-              </button>
-              <button
-                type="button"
-                onClick={goNext}
-                aria-label="Next image"
-                className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/90 text-charcoal shadow-md transition-all duration-300 hover:bg-white"
-              >
-                <ChevronRight className="h-5 w-5" strokeWidth={1.5} />
-              </button>
-
-              <div className="absolute bottom-3 left-0 right-0 z-10 flex justify-center gap-1.5">
-                {galleryImages.map((_, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    aria-label={`Go to image ${index + 1}`}
-                    onClick={() => setCurrent(index)}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      index === current ? "w-5 bg-gold" : "w-1.5 bg-white/50 hover:bg-white/70"
-                    }`}
-                  />
-                ))}
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Right — Text & CTA */}
-          <div className="text-center lg:text-left">
-            <h2 className="font-display text-2xl leading-snug tracking-tight text-white md:text-3xl lg:text-[2rem] xl:text-4xl">
-              Interested in Exploring the Odette Franchise Opportunity?
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-white/70 md:text-base lg:mx-0">
-              If you&apos;re looking to invest in a premium fashion business, our team is here to help
-              you understand the opportunity and answer your questions.
-            </p>
-            <div className="mt-6 flex justify-center lg:justify-start">
-              <GoldButton size="large" onClick={scrollToForm}>
-                Get Franchise Details
-                <ArrowRight className="h-4 w-4" />
-              </GoldButton>
+    <SectionShell id="contact">
+      <div className="flex w-full max-w-6xl flex-col items-center justify-center">
+        <div className="grid w-full items-center gap-6 lg:grid-cols-2 lg:gap-10">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={fadeUp}
+            className="flex flex-col items-start justify-center text-left"
+          >
+            <div className="w-full max-lg:flex max-lg:justify-center">
+              <SectionPill>Contact</SectionPill>
             </div>
-          </div>
+            <h2 className="mt-4 font-display text-2xl leading-snug tracking-tight text-charcoal md:text-3xl lg:text-[2rem]">
+              Get in Touch With Our Team
+            </h2>
+            <p className="mt-3 text-sm font-medium text-cta md:text-base">
+              Limited franchise slots in select cities — act now before allocation closes.
+            </p>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-taupe md:text-base">
+              Book a meeting with our franchise consultants to discuss the Odette opportunity and
+              get your questions answered.
+            </p>
+
+            <div className="mt-5 flex flex-wrap items-center gap-2">
+              <a
+                href={MEETING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-cta px-4 py-2.5 text-[13px] font-semibold text-white shadow-[0_2px_10px_rgba(91,45,139,0.22)] transition-colors duration-200 hover:bg-cta-hover sm:px-5 sm:text-sm"
+              >
+                <GoogleMeetIcon className="h-4 w-4 text-white" />
+                Book a Meeting with Us
+              </a>
+              <a
+                href={CONTACT_PHONE}
+                aria-label="Call us"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cta text-white shadow-[0_2px_10px_rgba(91,45,139,0.22)] transition-colors duration-200 hover:bg-cta-hover"
+              >
+                <Phone className="h-4 w-4" strokeWidth={1.5} />
+              </a>
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                aria-label="Email us"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cta text-white shadow-[0_2px_10px_rgba(91,45,139,0.22)] transition-colors duration-200 hover:bg-cta-hover"
+              >
+                <Mail className="h-4 w-4" strokeWidth={1.5} />
+              </a>
+              <a
+                href={CONTACT_WEBSITE}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Visit our website"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cta text-white shadow-[0_2px_10px_rgba(91,45,139,0.22)] transition-colors duration-200 hover:bg-cta-hover"
+              >
+                <Globe className="h-4 w-4" strokeWidth={1.5} />
+              </a>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={fadeUp}
+            className="w-full min-w-0"
+          >
+            <EnquiryForm
+              variant="hero"
+              id="contact-form"
+              heading="Check if This Opportunity is Right for You"
+              buttonText="Book Free Consultation"
+            />
+          </motion.div>
         </div>
+
+        <p className="mt-6 shrink-0 text-center text-[11px] text-taupe/80">
+          &copy; {new Date().getFullYear()} iFranchise. All rights reserved.
+        </p>
       </div>
-    </section>
+    </SectionShell>
   );
 }

@@ -1,7 +1,10 @@
 "use client";
 
+import { CITIES_BY_STATE, INDIAN_STATES, STATE_DISPLAY_LABELS, type IndianState } from "@/lib/indianLocations";
+import { submitLead } from "@/lib/submitLead";
 import { motion } from "framer-motion";
-import { FormEvent, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
+import { FormSelect } from "./FormSelect";
 import { GoldButton } from "./GoldButton";
 
 export interface EnquiryFormData {
@@ -9,6 +12,7 @@ export interface EnquiryFormData {
   countryCode: string;
   mobile: string;
   email: string;
+  state: string;
   city: string;
   investmentBudget: string;
 }
@@ -45,13 +49,10 @@ const countryCodes = [
   { code: "+973", label: "BH +973" },
 ];
 
-const selectChevron =
-  "cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23756A60%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-size-[18px] bg-position-[right_10px_center] bg-no-repeat pr-9";
-
 export function EnquiryForm({
   heading = "Check if This Opportunity is Right for You",
-  buttonText = "Get Franchise Details",
-  helperText = "Our franchise consultant will contact you within one business day.",
+  buttonText = "Book Free Consultation",
+  helperText = "",
   variant = "hero",
   showEmail = true,
   showBudget = true,
@@ -62,28 +63,58 @@ export function EnquiryForm({
 }: EnquiryFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const [mobileError, setMobileError] = useState("");
+  const [locationError, setLocationError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<EnquiryFormData>({
     fullName: "",
     countryCode: "+91",
     mobile: "",
     email: "",
+    state: "",
     city: "",
     investmentBudget: "",
   });
 
   const isHero = variant === "hero";
 
+  const stateOptions = useMemo(
+    () =>
+      INDIAN_STATES.map((state) => ({
+        value: state,
+        label: STATE_DISPLAY_LABELS[state],
+        title: state,
+      })),
+    []
+  );
+
+  const budgetSelectOptions = useMemo(
+    () => budgetOptions.map((option) => ({ value: option, label: option })),
+    []
+  );
+
+  const countryOptions = useMemo(
+    () => countryCodes.map((item) => ({ value: item.code, label: item.label })),
+    []
+  );
+
+  const locationSuggestions = useMemo(() => {
+    if (!formData.state) return [];
+    return CITIES_BY_STATE[formData.state as IndianState] ?? [];
+  }, [formData.state]);
+
   const inputClasses = isHero
-    ? "gold-focus w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm text-charcoal placeholder:text-taupe/60 transition-all duration-300"
-    : "gold-focus w-full rounded-2xl border border-border bg-white px-5 py-4 text-sm text-charcoal placeholder:text-taupe/60 transition-all duration-300 md:text-base";
+    ? "form-field-hero gold-focus w-full min-w-0 rounded-xl border border-border bg-white text-sm text-charcoal placeholder:text-taupe/60 transition-all duration-300"
+    : "form-field-secondary gold-focus w-full min-w-0 rounded-2xl border border-border bg-white text-sm text-charcoal placeholder:text-taupe/60 transition-all duration-300 md:text-base";
+
+  const fieldClasses = `${inputClasses}`;
 
   const labelClasses = isHero
-    ? "mb-1 block text-[11px] font-medium uppercase tracking-wider text-taupe"
+    ? "mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-taupe"
     : "mb-2 block text-xs font-medium uppercase tracking-wider text-taupe";
 
-  const shellClasses = `luxury-shadow-lg w-full rounded-[22px] bg-white ${
-    isHero ? "p-5 lg:p-6" : "p-8 md:p-10"
-  }`;
+  const shellClasses = isHero
+    ? "w-full max-w-full overflow-hidden rounded-[22px] border border-border/90 bg-white p-5 shadow-[0_6px_28px_rgba(43,43,43,0.05)] lg:p-6"
+    : `luxury-shadow-lg w-full max-w-full rounded-[22px] bg-white p-8 md:p-10`;
 
   const handleMobileChange = (value: string) => {
     const digits = value.replace(/\D/g, "").slice(0, 10);
@@ -91,7 +122,12 @@ export function EnquiryForm({
     if (mobileError) setMobileError("");
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleStateChange = (state: string) => {
+    setFormData((prev) => ({ ...prev, state, city: "" }));
+    if (locationError) setLocationError("");
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (formData.mobile.length !== 10) {
@@ -99,7 +135,51 @@ export function EnquiryForm({
       return;
     }
 
-    setSubmitted(true);
+    if (!formData.state) {
+      setLocationError("Please select your state.");
+      return;
+    }
+
+    if (!formData.city.trim()) {
+      setLocationError("Please enter your city or area.");
+      return;
+    }
+
+    if (showBudget && !formData.investmentBudget) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await submitLead({
+        fullName: formData.fullName.trim(),
+        mobileNumber: `${formData.countryCode} ${formData.mobile}`,
+        email: formData.email.trim(),
+        state: formData.state,
+        city: formData.city.trim(),
+        investmentBudget: formData.investmentBudget,
+      });
+
+      setSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSubmitAnother = () => {
+    setSubmitted(false);
+    setMobileError("");
+    setLocationError("");
+    setFormData({
+      fullName: "",
+      countryCode: "+91",
+      mobile: "",
+      email: "",
+      state: "",
+      city: "",
+      investmentBudget: "",
+    });
   };
 
   if (submitted) {
@@ -111,8 +191,8 @@ export function EnquiryForm({
         className={shellClasses}
       >
         <div className="flex flex-col items-center py-8 text-center">
-          <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-beige">
-            <svg className="h-8 w-8 text-gold" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+            <svg className="h-8 w-8 text-cta" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
             </svg>
           </div>
@@ -120,18 +200,20 @@ export function EnquiryForm({
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-taupe">
             Our franchise consultant will contact you within one business day.
           </p>
+          <div className="mt-8 w-full max-w-xs">
+            <GoldButton type="button" fullWidth size={isHero ? "default" : "large"} onClick={handleSubmitAnother}>
+              Submit Another Enquiry
+            </GoldButton>
+          </div>
         </div>
       </motion.div>
     );
   }
 
+  const cityEnabled = Boolean(formData.state);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-      className={shellClasses}
-    >
+    <div className={shellClasses}>
       {showHeading && (
         <>
           <h3
@@ -145,7 +227,7 @@ export function EnquiryForm({
         </>
       )}
 
-      <form id={id} onSubmit={handleSubmit} className={isHero ? "space-y-3" : "space-y-5"} noValidate>
+      <form id={id} onSubmit={handleSubmit} className={isHero ? "space-y-2.5" : "space-y-5"} noValidate>
         <div>
           <label htmlFor={`${id}-name`} className={labelClasses}>
             {nameLabel}
@@ -156,7 +238,7 @@ export function EnquiryForm({
             required
             autoComplete="name"
             placeholder="Enter your full name"
-            className={inputClasses}
+            className={fieldClasses}
             value={formData.fullName}
             onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
           />
@@ -167,19 +249,16 @@ export function EnquiryForm({
             {phoneLabel}
           </label>
           <div className="flex gap-2">
-            <select
-              id={`${id}-country-code`}
-              aria-label="Country code"
-              value={formData.countryCode}
-              onChange={(e) => setFormData({ ...formData, countryCode: e.target.value })}
-              className={`${inputClasses} ${selectChevron} w-[6.75rem] shrink-0 px-2.5 text-xs lg:w-[7.25rem] lg:text-sm`}
-            >
-              {countryCodes.map((item) => (
-                <option key={item.code} value={item.code}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
+            <div className="w-[6.5rem] shrink-0 lg:w-[7rem]">
+              <FormSelect
+                id={`${id}-country-code`}
+                value={formData.countryCode}
+                onChange={(code) => setFormData({ ...formData, countryCode: code })}
+                options={countryOptions}
+                placeholder="Code"
+                fieldClassName={fieldClasses}
+              />
+            </div>
             <input
               id={`${id}-mobile`}
               type="tel"
@@ -190,36 +269,32 @@ export function EnquiryForm({
               pattern="[0-9]{10}"
               minLength={10}
               maxLength={10}
-              className={`${inputClasses} min-w-0 flex-1`}
+              className={`${fieldClasses} min-w-0 flex-1`}
               value={formData.mobile}
               onChange={(e) => handleMobileChange(e.target.value)}
               aria-invalid={!!mobileError}
               aria-describedby={mobileError ? `${id}-mobile-error` : undefined}
             />
           </div>
-          {mobileError ? (
+          {mobileError && (
             <p id={`${id}-mobile-error`} className="mt-1.5 text-xs text-red-600/80">
               {mobileError}
             </p>
-          ) : (
-            !isHero && (
-              <p className="mt-1 text-[10px] text-taupe/80">Enter 10 digits without spaces</p>
-            )
           )}
         </div>
 
         {showEmail && (
           <div>
             <label htmlFor={`${id}-email`} className={labelClasses}>
-              Email Address{" "}
+              Email{" "}
               <span className="normal-case tracking-normal text-taupe/70">(Optional)</span>
             </label>
             <input
               id={`${id}-email`}
               type="email"
               autoComplete="email"
-              placeholder="Enter your email address"
-              className={inputClasses}
+              placeholder="Email address"
+              className={fieldClasses}
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
@@ -227,19 +302,64 @@ export function EnquiryForm({
         )}
 
         <div>
-          <label htmlFor={`${id}-city`} className={labelClasses}>
-            City
-          </label>
-          <input
-            id={`${id}-city`}
-            type="text"
-            required
-            autoComplete="address-level2"
-            placeholder="Enter your city"
-            className={inputClasses}
-            value={formData.city}
-            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-          />
+          <div className="grid grid-cols-2 gap-2.5">
+            <div className="min-w-0">
+              <label htmlFor={`${id}-state`} className={labelClasses}>
+                State
+              </label>
+              <FormSelect
+                id={`${id}-state`}
+                value={formData.state}
+                onChange={handleStateChange}
+                options={stateOptions}
+                placeholder="Select state"
+                fieldClassName={fieldClasses}
+              />
+            </div>
+
+            <div className="min-w-0">
+              <label htmlFor={`${id}-city`} className={labelClasses}>
+                City
+              </label>
+              <input
+                id={`${id}-city`}
+                type="text"
+                required
+                list={cityEnabled ? `${id}-city-suggestions` : undefined}
+                autoComplete="address-level2"
+                readOnly={!cityEnabled}
+                placeholder={cityEnabled ? "Type your city" : "Select state first"}
+                className={`${fieldClasses} ${
+                  cityEnabled
+                    ? "bg-white text-charcoal"
+                    : "cursor-not-allowed bg-gray-50 text-taupe/70"
+                }`}
+                value={formData.city}
+                onChange={(e) => {
+                  setFormData({ ...formData, city: e.target.value });
+                  if (locationError) setLocationError("");
+                }}
+                onFocus={(e) => {
+                  if (!cityEnabled) e.target.blur();
+                }}
+                aria-invalid={!!locationError}
+                aria-describedby={locationError ? `${id}-location-error` : undefined}
+              />
+            </div>
+          </div>
+
+          {cityEnabled && locationSuggestions.length > 0 && (
+            <datalist id={`${id}-city-suggestions`}>
+              {locationSuggestions.map((city) => (
+                <option key={city} value={city} />
+              ))}
+            </datalist>
+          )}
+          {locationError && (
+            <p id={`${id}-location-error`} className="mt-1.5 text-xs text-red-600/80">
+              {locationError}
+            </p>
+          )}
         </div>
 
         {showBudget && (
@@ -247,28 +367,20 @@ export function EnquiryForm({
             <label htmlFor={`${id}-budget`} className={labelClasses}>
               Investment Budget
             </label>
-            <select
+            <FormSelect
               id={`${id}-budget`}
-              required
-              className={`${inputClasses} ${selectChevron} pr-10`}
               value={formData.investmentBudget}
-              onChange={(e) => setFormData({ ...formData, investmentBudget: e.target.value })}
-            >
-              <option value="" disabled>
-                Select investment budget
-              </option>
-              {budgetOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+              onChange={(budget) => setFormData({ ...formData, investmentBudget: budget })}
+              options={budgetSelectOptions}
+              placeholder="Select budget"
+              fieldClassName={fieldClasses}
+            />
           </div>
         )}
 
-        <div className={isHero ? "pt-0.5" : "pt-2"}>
-          <GoldButton type="submit" fullWidth size={isHero ? "default" : "large"}>
-            {buttonText}
+        <div className={isHero ? "pt-1" : "pt-2"}>
+          <GoldButton type="submit" fullWidth size={isHero ? "default" : "large"} disabled={isSubmitting}>
+            {isSubmitting ? "Submitting..." : buttonText}
           </GoldButton>
         </div>
 
@@ -276,6 +388,6 @@ export function EnquiryForm({
           <p className="text-center text-[10px] leading-relaxed text-taupe lg:text-xs">{helperText}</p>
         )}
       </form>
-    </motion.div>
+    </div>
   );
 }

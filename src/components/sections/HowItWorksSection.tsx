@@ -1,92 +1,95 @@
 "use client";
 
+import { Fragment } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 import { fadeUp, staggerContainer } from "../ui/AnimatedSection";
-import { SectionHeading } from "../ui/GoldButton";
+import { SectionHeading, CardTitleHighlight } from "../ui/GoldButton";
+import { InvestmentOverviewCard } from "../ui/InvestmentOverviewCard";
 import { SectionShell } from "../ui/SectionShell";
 
-const steps = [
-  {
-    number: "01",
-    title: "You invest in setting up the store.",
-  },
-  {
-    number: "02",
-    title: "The outlet is prepared for launch.",
-  },
-  {
-    number: "03",
-    title: "The company manages the daily operations.",
-  },
-  {
-    number: "04",
-    title: "You receive ongoing support under the agreed business model.",
-  },
+const processSteps = [
+  "Connect with iFranchise",
+  "Business Consultation",
+  "Franchise Approval",
+  "Store Setup & Launch",
+  "Ongoing Business Support",
 ];
+
+function ProcessStep({ title }: { title: string }) {
+  return (
+    <div className="flex w-full min-h-[2.75rem] items-center justify-center rounded-lg border border-border/70 bg-beige/60 px-4 py-2.5 sm:min-h-[3rem]">
+      <p className="text-center font-display text-sm font-medium leading-snug text-charcoal sm:text-[15px]">
+        {title}
+      </p>
+    </div>
+  );
+}
+
+function VerticalConnector({ index }: { index: number }) {
+  return (
+    <div className="flex shrink-0 justify-center py-1 sm:py-1.5" aria-hidden>
+      <motion.div
+        animate={{ y: [0, 4, 0] }}
+        transition={{
+          duration: 1.8,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: index * 0.25,
+        }}
+        className="flex h-6 w-6 items-center justify-center rounded-full bg-cta text-white shadow-[0_2px_10px_rgba(91,45,139,0.25)]"
+      >
+        <ChevronDown className="h-3.5 w-3.5" strokeWidth={2.5} />
+      </motion.div>
+    </div>
+  );
+}
+
+function SetupProcessCard() {
+  return (
+    <div className="luxury-shadow flex h-full w-full flex-col rounded-[20px] border border-border bg-white p-3 sm:p-3.5">
+      <CardTitleHighlight>Setup Process</CardTitleHighlight>
+
+      <div className="mt-2 flex flex-1 flex-col justify-between sm:mt-3">
+        {processSteps.map((title, index) => (
+          <Fragment key={title}>
+            <ProcessStep title={title} />
+            {index < processSteps.length - 1 && <VerticalConnector index={index} />}
+          </Fragment>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function HowItWorksSection() {
   return (
-    <SectionShell className="bg-beige">
-      <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-        {/* Left — Timeline */}
-        <div>
-          <SectionHeading compact title="How the Franchise Model Works" />
+    <SectionShell id="invest-process">
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+        variants={staggerContainer}
+        className="flex w-full min-h-0 max-w-6xl flex-col items-center"
+      >
+        <SectionHeading
+          dense
+          centered
+          pill="Franchise Investment"
+          title="Franchise Investment & Setup Process in India"
+          subtitle="₹45 Lakhs investment to store launch — your Odette franchise journey across India."
+        />
 
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
-            variants={staggerContainer}
-            className="relative"
-          >
-            <div
-              className="absolute bottom-2 left-[23px] top-2 w-px bg-border lg:left-[27px]"
-              aria-hidden="true"
-            />
+        <div className="grid w-full items-stretch gap-4 md:grid-cols-2 md:gap-5">
+          <motion.div variants={fadeUp} className="flex min-h-0 min-w-0">
+            <InvestmentOverviewCard compact extended fillHeight />
+          </motion.div>
 
-            <div className="space-y-0">
-              {steps.map((step, index) => (
-                <motion.div
-                  key={step.number}
-                  variants={fadeUp}
-                  className="relative flex gap-5 pb-6 last:pb-0 lg:pb-5"
-                >
-                  <div className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-gold/30 bg-white luxury-shadow lg:h-14 lg:w-14">
-                    <span className="font-display text-sm text-gold">{step.number}</span>
-                  </div>
-                  <div className="flex flex-col justify-center pt-1">
-                    <p className="text-sm leading-relaxed text-charcoal lg:text-base">{step.title}</p>
-                    {index < steps.length - 1 && (
-                      <span className="mt-2 text-gold/60" aria-hidden="true">
-                        ↓
-                      </span>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+          <motion.div variants={fadeUp} className="flex min-h-0 min-w-0">
+            <SetupProcessCard />
           </motion.div>
         </div>
-
-        {/* Right — Illustration */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="relative aspect-[4/5] w-full max-h-[min(58vh,480px)] overflow-hidden rounded-[24px] luxury-shadow-lg lg:mx-auto lg:max-w-md"
-        >
-          <Image
-            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80"
-            alt="Elegant premium fashion retail environment"
-            fill
-            className="object-cover transition-transform duration-700 hover:scale-105"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-          />
-          <div className="absolute inset-0 bg-linear-to-t from-charcoal/20 to-transparent" />
-        </motion.div>
-      </div>
+      </motion.div>
     </SectionShell>
   );
 }

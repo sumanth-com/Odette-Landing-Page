@@ -1,55 +1,73 @@
 "use client";
 
-import { Award, Headphones, Layers, Store } from "lucide-react";
-import { StaggerGroup, StaggerItem } from "../ui/AnimatedSection";
+import Logo from "@/assets/Logo.webp";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { fadeUp } from "../ui/AnimatedSection";
 import { SectionHeading } from "../ui/GoldButton";
 import { SectionShell } from "../ui/SectionShell";
 
-const features = [
-  {
-    icon: Award,
-    title: "Premium Brand",
-    description: "Partner with an established fashion brand.",
-  },
-  {
-    icon: Store,
-    title: "Company Operated",
-    description: "The company manages the day-to-day store operations.",
-  },
-  {
-    icon: Layers,
-    title: "Structured Business Model",
-    description: "Operate through a proven business system.",
-  },
-  {
-    icon: Headphones,
-    title: "End-to-End Support",
-    description: "Guidance from setup to ongoing business support.",
-  },
-];
+function OdetteBrandCard() {
+  return (
+    <div className="flex w-full items-center justify-center py-2 md:py-0">
+      <div className="premium-rotating-border luxury-shadow w-full max-w-[320px] sm:max-w-[360px]">
+        <div className="premium-rotating-border__inner flex w-full flex-col items-center justify-center px-10 py-12 sm:px-12 sm:py-14">
+          <Image
+            src={Logo}
+            alt=""
+            aria-hidden
+            priority
+            className="h-auto w-full max-w-[220px] object-contain sm:max-w-[250px]"
+          />
+          <p className="mt-8 font-display text-[11px] font-medium uppercase tracking-[0.32em] text-charcoal sm:mt-10 sm:text-xs">
+            Odette
+          </p>
+          <p className="mt-2 text-[10px] font-medium uppercase tracking-[0.22em] text-taupe sm:text-[11px]">
+            Premium Fashion Retail
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function WhyConsiderSection() {
   return (
-    <SectionShell className="bg-white">
-      <SectionHeading
-        compact
-        title="Looking to Invest in a Premium Retail Business?"
-        subtitle="Starting a business from scratch requires time, planning, hiring, operations, and building customer trust. With Odette, you partner with an established premium fashion brand through a structured business model designed for long-term business growth."
-      />
+    <SectionShell id="about-odette">
+      <div className="flex w-full max-w-6xl flex-col items-center">
+        <SectionHeading
+          compact
+          centered
+          pill="About Odette"
+          title="A Mass-Premium Fashion Brand Built for India"
+          subtitle="Odette blends trend-led design, accessible pricing, and a growing retail footprint — creating a brand customers trust and investors can scale."
+        />
 
-      <StaggerGroup className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-        {features.map((feature) => (
-          <StaggerItem key={feature.title}>
-            <div className="group luxury-shadow h-full rounded-[22px] border border-border bg-white p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_16px_48px_rgba(43,43,43,0.08)] lg:p-7">
-              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-beige transition-colors duration-300 group-hover:bg-gold/15">
-                <feature.icon className="h-5 w-5 text-gold" strokeWidth={1.5} />
-              </div>
-              <h3 className="font-display text-lg text-charcoal lg:text-xl">{feature.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-taupe">{feature.description}</p>
-            </div>
-          </StaggerItem>
-        ))}
-      </StaggerGroup>
+        <div className="grid w-full items-center gap-6 md:grid-cols-[0.95fr_1.05fr] md:gap-10 lg:gap-12">
+          <OdetteBrandCard />
+
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={fadeUp}
+            className="min-w-0 text-left"
+          >
+            <p className="text-sm leading-relaxed text-taupe sm:text-[15px] sm:leading-[1.7]">
+              Odette is India&apos;s mass-premium fashion brand — high-fashion style at
+              pocket-friendly prices for ages 15 to 65.
+              <br />
+              <br />
+              Founded in Bengaluru in 2021, it has grown to 35+ stores with ethnic, Western, and
+              lifestyle collections customers trust.
+              <br />
+              <br />
+              Fresh designs, premium quality, and accessible pricing — a brand built to scale for
+              customers and franchise partners alike.
+            </p>
+          </motion.div>
+        </div>
+      </div>
     </SectionShell>
   );
 }

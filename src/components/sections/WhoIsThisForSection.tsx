@@ -22,7 +22,7 @@ const notSuitableFor = [
 
 export function WhoIsThisForSection() {
   return (
-    <SectionShell className="bg-ivory">
+    <SectionShell id="who-is-this-for">
       <SectionHeading compact title="Who Is This Opportunity For?" centered />
 
       <StaggerGroup className="grid gap-5 md:grid-cols-2 lg:gap-6">
@@ -33,8 +33,8 @@ export function WhoIsThisForSection() {
             <ul className="space-y-3">
               {suitableFor.map((item) => (
                 <li key={item} className="flex items-start gap-3">
-                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gold/15">
-                    <Check className="h-3.5 w-3.5 text-gold" strokeWidth={2.5} />
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-cta/10">
+                    <Check className="h-3.5 w-3.5 text-cta" strokeWidth={2.5} />
                   </span>
                   <span className="text-sm leading-relaxed text-charcoal">{item}</span>
                 </li>
@@ -44,7 +44,7 @@ export function WhoIsThisForSection() {
         </StaggerItem>
 
         <StaggerItem>
-          <div className="h-full rounded-[22px] border border-border bg-beige/50 p-6 md:p-8">
+          <div className="h-full rounded-[22px] border border-border bg-white p-6 md:p-8">
             <h3 className="font-display text-xl text-charcoal">
               This Opportunity May Not Be Suitable For
             </h3>
