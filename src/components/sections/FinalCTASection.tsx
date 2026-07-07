@@ -15,6 +15,12 @@ import { motion } from "framer-motion";
 import { Globe, Mail, Phone } from "lucide-react";
 
 export function FinalCTASection() {
+  const copyright = (
+    <p className="text-center text-[10px] leading-relaxed text-black/55 sm:text-[11px]">
+      &copy; {new Date().getFullYear()} iFranchise. All rights reserved.
+    </p>
+  );
+
   return (
     <SectionShell id="contact" gradientTone={5}>
       <div className="section-fit mx-auto flex min-h-0 w-full max-w-6xl flex-col">
@@ -92,12 +98,13 @@ export function FinalCTASection() {
               showBudget
               stackStateCityOnMobile
               showSecurityNote={false}
+              footer={<div className="lg:hidden">{copyright}</div>}
             />
           </motion.div>
         </div>
 
-        <p className="mt-1 shrink-0 text-center text-[10px] text-black/70 max-lg:mt-0.5 sm:text-[11px]">
-          &copy; {new Date().getFullYear()} iFranchise. All rights reserved.
+        <p className="mt-1 hidden shrink-0 text-center text-[10px] text-black/70 sm:text-[11px] lg:block">
+          {copyright}
         </p>
       </div>
     </SectionShell>

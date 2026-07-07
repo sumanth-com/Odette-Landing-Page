@@ -336,6 +336,14 @@ body {
     padding-top: 0.5rem;
   }
 
+  #contact .snap-section-body {
+    padding-bottom: 5.5rem;
+  }
+
+  #contact .section-fit {
+    padding-bottom: 0.25rem;
+  }
+
   #why-ifranchise .snap-section-inner {
     justify-content: flex-start;
     padding-top: 0.5rem;

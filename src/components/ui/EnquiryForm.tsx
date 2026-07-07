@@ -37,6 +37,7 @@ interface EnquiryFormProps {
   id?: string;
   stackStateCityOnMobile?: boolean;
   showSecurityNote?: boolean;
+  footer?: ReactNode;
 }
 
 const budgetOptions = [
@@ -93,6 +94,7 @@ export function EnquiryForm({
   id = "enquiry-form",
   stackStateCityOnMobile = false,
   showSecurityNote = true,
+  footer,
 }: EnquiryFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -255,6 +257,9 @@ export function EnquiryForm({
             </GoldButton>
           </div>
         </div>
+        {footer ? (
+          <div className="mt-3 shrink-0 border-t border-border/50 pt-2.5">{footer}</div>
+        ) : null}
       </motion.div>
     );
   }
@@ -430,6 +435,10 @@ export function EnquiryForm({
             ) : null}
           </div>
         </form>
+
+        {footer ? (
+          <div className="mt-3 shrink-0 border-t border-border/50 pt-2.5">{footer}</div>
+        ) : null}
       </div>
     );
   }
