@@ -37,11 +37,14 @@ This folder contains the **Google Apps Script** project that saves form leads to
 
 ```env
 GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
+NEXT_PUBLIC_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
 ```
 
-Set this in:
+Set both in:
 - `.env.local` for local development
 - Your production host (e.g. Vercel → Project → Settings → Environment Variables)
+
+Use the **same URL** for both variables. The public one powers the live-site browser fallback when server-side sync fails.
 
 9. Restart the dev server after changing env vars: `npm run dev`
 

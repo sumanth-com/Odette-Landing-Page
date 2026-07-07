@@ -1,5 +1,5 @@
 import { leadSchema, normalizeLeadInput } from "@/lib/leadSchema";
-import { isGoogleAppsScriptConfigured } from "@/lib/googleAppsScript";
+import { isGoogleAppsScriptConfigured } from "@/lib/googleSheetsConfig";
 import { sendLeadEmails } from "@/lib/sendLeadEmails";
 import { submitLeadToGoogleSheets } from "@/lib/submitLeadToGoogleSheets";
 import { NextResponse } from "next/server";
@@ -43,26 +43,26 @@ export async function POST(request: Request) {
       investmentBudget: lead.investmentBudget,
     };
 
-    const [emailResult, sheetsResult] = await Promise.allSettled([
-      sendLeadEmails(lead),
-      isGoogleAppsScriptConfigured()
-        ? submitLeadToGoogleSheets(sheetsPayload)
-        : Promise.reject(new Error("GOOGLE_SCRIPT_URL is not configured")),
-    ]);
+    await sendLeadEmails(lead);
 
-    if (emailResult.status === "rejected") {
-      throw emailResult.reason;
-    }
+    let sheetsSynced = false;
+    let sheetsError: string | undefined;
 
-    const sheetsSynced = sheetsResult.status === "fulfilled";
+    if (isGoogleAppsScriptConfigured()) {
+      try {
+        await submitLeadToGoogleSheets(sheetsPayload);
+        sheetsSynced = true;
+      } catch (error) {
+        sheetsError =
+          error instanceof Error
+            ? error.message
+            : "Google Sheets sync failed";
 
-    if (!sheetsSynced) {
-      const sheetsError =
-        sheetsResult.reason instanceof Error
-          ? sheetsResult.reason.message
-          : "Google Sheets sync failed";
-
-      console.error("Google Sheets sync failed after email delivery:", sheetsError);
+        console.error("Google Sheets sync failed after email delivery:", sheetsError);
+      }
+    } else {
+      sheetsError = "GOOGLE_SCRIPT_URL is not configured";
+      console.error("Google Sheets sync skipped:", sheetsError);
     }
 
     return NextResponse.json({
@@ -70,6 +70,7 @@ export async function POST(request: Request) {
       message: "Your inquiry has been submitted successfully.",
       confirmationSent: Boolean(lead.email),
       sheetsSynced,
+      sheetsError: sheetsSynced ? undefined : sheetsError,
     });
   } catch (error) {
     console.error("Contact form submission failed:", error);

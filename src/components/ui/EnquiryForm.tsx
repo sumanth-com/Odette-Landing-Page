@@ -3,6 +3,7 @@
 import { INDIAN_STATES, STATE_DISPLAY_LABELS } from "@/lib/indianLocations";
 import { trackGenerateLead } from "@/lib/analytics";
 import { submitLead } from "@/lib/submitLead";
+import { syncLeadToGoogleSheetsClient } from "@/lib/submitLeadToGoogleSheets.client";
 import { motion } from "framer-motion";
 import {
   Mail,
@@ -201,16 +202,21 @@ export function EnquiryForm({
     setSubmitError("");
 
     const cityValue = formData.city.trim();
+    const leadPayload = {
+      fullName: formData.fullName.trim(),
+      mobileNumber: `${formData.countryCode} ${formData.mobile}`,
+      email: emailValue,
+      state: formData.state,
+      city: cityValue,
+      investmentBudget: formData.investmentBudget,
+    };
 
     try {
-      await submitLead({
-        fullName: formData.fullName.trim(),
-        mobileNumber: `${formData.countryCode} ${formData.mobile}`,
-        email: emailValue,
-        state: formData.state,
-        city: cityValue,
-        investmentBudget: formData.investmentBudget,
-      });
+      const result = await submitLead(leadPayload);
+
+      if (!result.sheetsSynced) {
+        syncLeadToGoogleSheetsClient(leadPayload);
+      }
 
       trackGenerateLead();
       setSubmitted(true);

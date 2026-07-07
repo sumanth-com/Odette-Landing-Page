@@ -9,6 +9,7 @@ export interface LeadPayload {
 
 export interface SubmitLeadResult {
   confirmationSent: boolean;
+  sheetsSynced: boolean;
 }
 
 export class LeadSubmissionError extends Error {
@@ -31,6 +32,7 @@ export async function submitLead(payload: LeadPayload): Promise<SubmitLeadResult
     success?: boolean;
     error?: string;
     confirmationSent?: boolean;
+    sheetsSynced?: boolean;
   };
 
   if (!response.ok || !result.success) {
@@ -41,5 +43,6 @@ export async function submitLead(payload: LeadPayload): Promise<SubmitLeadResult
 
   return {
     confirmationSent: Boolean(result.confirmationSent),
+    sheetsSynced: Boolean(result.sheetsSynced),
   };
 }

@@ -1,5 +1,7 @@
+import { getGoogleScriptUrl, isGoogleAppsScriptConfigured } from "@/lib/googleSheetsConfig";
+
 const GAS_REQUEST_TIMEOUT_MS = 25_000;
-const GAS_MAX_ATTEMPTS = 2;
+const GAS_MAX_ATTEMPTS = 3;
 
 export type GoogleAppsScriptResult = {
   success?: boolean;
@@ -7,10 +9,6 @@ export type GoogleAppsScriptResult = {
   message?: string;
   status?: string;
 };
-
-function getScriptUrl(): string | undefined {
-  return process.env.GOOGLE_SCRIPT_URL?.trim() || undefined;
-}
 
 function buildFormBody(payload: Record<string, string>): string {
   const params = new URLSearchParams();
@@ -43,19 +41,14 @@ async function parseGoogleAppsScriptResponse(
 }
 
 function isSuccessfulResult(result: GoogleAppsScriptResult): boolean {
-  if (result.success === true) {
-    return true;
-  }
-
-  // A POST that was downgraded to GET during redirect returns this payload.
-  return false;
+  return result.success === true;
 }
 
 async function postToGoogleAppsScript(
   payload: Record<string, string>,
   contentType: "json" | "form"
 ): Promise<GoogleAppsScriptResult> {
-  const scriptUrl = getScriptUrl();
+  const scriptUrl = getGoogleScriptUrl();
 
   if (!scriptUrl) {
     throw new Error("GOOGLE_SCRIPT_URL is not configured");
@@ -107,11 +100,9 @@ export async function submitPayloadToGoogleAppsScript(
   payload: Record<string, string>
 ): Promise<GoogleAppsScriptResult> {
   let lastError: Error | null = null;
+  const strategies: Array<"json" | "form"> = ["form", "json"];
 
   for (let attempt = 1; attempt <= GAS_MAX_ATTEMPTS; attempt += 1) {
-    const strategies: Array<"json" | "form"> =
-      attempt === 1 ? ["json", "form"] : ["form"];
-
     for (const strategy of strategies) {
       try {
         return await postToGoogleAppsScript(payload, strategy);
@@ -131,6 +122,4 @@ export async function submitPayloadToGoogleAppsScript(
   throw lastError ?? new Error("Google Sheets sync failed");
 }
 
-export function isGoogleAppsScriptConfigured(): boolean {
-  return Boolean(getScriptUrl());
-}
+export { isGoogleAppsScriptConfigured };
