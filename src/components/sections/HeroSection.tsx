@@ -63,22 +63,42 @@ function HighlightCard({
 
 function HeroHighlightCards() {
   return (
-    <ul className="hero-highlight-grid grid grid-cols-2 gap-2 sm:gap-2.5" role="list">
-      <HighlightCard
-        label="Investment: ₹45 Lakhs+"
-        icon={IndianRupee}
-        fullWidth
-        centered
-      />
-      {highlightCards.map((card) => (
+    <>
+      <ul
+        className="hero-highlight-grid grid grid-cols-2 gap-2 sm:gap-2.5 lg:hidden"
+        role="list"
+      >
+        <HighlightCard label="Investment: ₹45 Lakhs+" icon={IndianRupee} />
+        <HighlightCard label="Model: FICO" icon={Tag} />
+        <HighlightCard label="Agreement Term: 5 years" icon={Calendar} />
+        <HighlightCard label="45+ Outlets" icon={Building2} />
         <HighlightCard
-          key={card.label}
-          label={card.label}
-          icon={card.icon}
-          fullWidth={"fullWidth" in card ? card.fullWidth : false}
+          label="Franchise Types: Master Franchise · Unit Franchise"
+          icon={Briefcase}
+          fullWidth
         />
-      ))}
-    </ul>
+      </ul>
+
+      <ul
+        className="hero-highlight-grid hidden grid-cols-2 gap-2 sm:gap-2.5 lg:grid"
+        role="list"
+      >
+        <HighlightCard
+          label="Investment: ₹45 Lakhs+"
+          icon={IndianRupee}
+          fullWidth
+          centered
+        />
+        {highlightCards.map((card) => (
+          <HighlightCard
+            key={card.label}
+            label={card.label}
+            icon={card.icon}
+            fullWidth={"fullWidth" in card ? card.fullWidth : false}
+          />
+        ))}
+      </ul>
+    </>
   );
 }
 
@@ -88,38 +108,40 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="viewport-section relative snap-section overflow-hidden"
+      className="viewport-section relative snap-section overflow-x-clip max-lg:min-h-[100dvh] max-lg:overflow-visible lg:overflow-hidden"
     >
-      <Image
-        src={MobHeroImage}
-        alt=""
-        fill
-        priority
-        quality={100}
-        className="object-cover object-[center_20%] lg:hidden"
-        sizes="100vw"
-      />
-      <Image
-        src={HeroImage}
-        alt=""
-        fill
-        priority
-        quality={100}
-        className="hidden object-cover object-[50%_35%] lg:block"
-        sizes="100vw"
-      />
+      <div className="hero-bg pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
+        <Image
+          src={MobHeroImage}
+          alt=""
+          fill
+          priority
+          quality={100}
+          className="object-cover object-center lg:hidden"
+          sizes="100vw"
+        />
+        <Image
+          src={HeroImage}
+          alt=""
+          fill
+          priority
+          quality={100}
+          className="hidden object-cover object-[50%_35%] lg:block"
+          sizes="100vw"
+        />
+      </div>
 
       <div
         className="pointer-events-none absolute inset-0 z-[1] hidden bg-gradient-to-r from-white/55 from-0% via-white/25 via-[24%] to-transparent to-[46%] lg:block"
         aria-hidden
       />
 
-      <div className="page-container relative z-10 box-border flex w-full flex-col overflow-hidden pb-8 pt-[var(--header-height)] max-lg:h-full max-lg:min-h-0 max-lg:justify-start max-lg:overflow-hidden max-lg:pb-2.5 max-lg:pt-[calc(var(--header-height)+0.75rem)] lg:h-full lg:justify-center lg:overflow-hidden">
+      <div className="page-container relative z-10 box-border flex w-full flex-col pb-8 pt-[var(--header-height)] max-lg:overflow-visible max-lg:pb-6 max-lg:pt-[calc(var(--header-height)+0.75rem)] lg:h-full lg:justify-center lg:overflow-hidden">
         <motion.div
           initial={false}
           animate="visible"
           variants={staggerContainer}
-          className="hero-stack w-full min-h-0 flex-1 max-lg:grid max-lg:gap-2 max-lg:overflow-hidden lg:flex lg:flex-row lg:items-center lg:justify-between lg:gap-8 xl:gap-12"
+          className="hero-stack w-full min-h-0 flex-1 max-lg:flex max-lg:flex-col max-lg:gap-2.5 max-lg:overflow-visible lg:flex lg:flex-row lg:items-center lg:justify-between lg:gap-8 xl:gap-12"
         >
           <div className="hero-left flex w-full max-w-2xl flex-col items-center overflow-visible max-lg:mx-auto max-lg:shrink-0 max-lg:pt-0 max-lg:text-center lg:w-[580px] lg:max-w-[580px] lg:items-start lg:shrink-0 lg:pt-0 lg:text-left xl:w-[640px] xl:max-w-[640px]">
             <motion.div variants={fadeUp} className="max-lg:flex max-lg:w-full max-lg:justify-center">
@@ -156,7 +178,7 @@ export function HeroSection() {
                   e.preventDefault();
                   document.getElementById("hero-form")?.scrollIntoView({
                     behavior: "smooth",
-                    block: "nearest",
+                    block: "start",
                   });
                 }}
                 className={`mt-2 lg:hidden ${ctaButtonClass({ fullWidth: true })} uppercase tracking-[0.06em]`}
@@ -180,7 +202,7 @@ export function HeroSection() {
 
           <motion.div
             variants={fadeUp}
-            className="hero-form-wrap flex min-h-0 w-full max-lg:mx-auto max-lg:mt-0 max-lg:min-h-0 max-lg:max-w-[19.5rem] max-lg:flex-none lg:ml-auto lg:mr-[-0.75rem] lg:mt-0 lg:w-[380px] lg:shrink-0 lg:self-center lg:translate-x-2 xl:mr-[-1rem] xl:w-[400px] xl:translate-x-3"
+            className="hero-form-wrap flex min-h-0 w-full max-lg:mx-auto max-lg:mt-0 max-lg:max-w-[19.5rem] max-lg:flex-none lg:ml-auto lg:mr-[-0.75rem] lg:mt-0 lg:w-[380px] lg:shrink-0 lg:self-center lg:translate-x-2 xl:mr-[-1rem] xl:w-[400px] xl:translate-x-3"
           >
             <EnquiryForm
               variant="hero"
