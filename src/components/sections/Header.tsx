@@ -1,6 +1,7 @@
 "use client";
 
 import Logo from "@/assets/ifran.ico";
+import { ctaButtonClass } from "@/components/ui/GoldButton";
 import { NAV_LINKS } from "@/lib/site";
 import { handleSectionNavClick } from "@/lib/scroll";
 import { AnimatePresence, motion } from "framer-motion";
@@ -250,7 +251,7 @@ export function Header() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25, delay: 0.3, ease: "easeOut" }}
                 onClick={(e) => goToSection(e, "#contact", closeMenu)}
-                className="inline-flex w-full items-center justify-center rounded-full bg-cta px-5 py-3.5 text-sm font-semibold text-white shadow-[0_4px_16px_rgba(91,45,139,0.28)]"
+                className={ctaButtonClass({ fullWidth: true })}
               >
                 Book a call
               </motion.a>

@@ -4,9 +4,12 @@ import HeroImage from "@/assets/Hero.png";
 import MobHeroImage from "@/assets/MobHero.png";
 import { handleSectionNavClick } from "@/lib/scroll";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import Image from "next/image";
+import { useLayoutEffect, useRef, useState } from "react";
 import { fadeUp, staggerContainer } from "../ui/AnimatedSection";
+import { ctaButtonClass } from "../ui/GoldButton";
+import { EnquiryForm } from "../ui/EnquiryForm";
 
 const heroHighlights = [
   "Premium Fashion Brand",
@@ -16,6 +19,36 @@ const heroHighlights = [
 ];
 
 export function HeroSection() {
+  const lastHighlightRef = useRef<HTMLLIElement>(null);
+  const [ctaWidth, setCtaWidth] = useState<number>();
+
+  useLayoutEffect(() => {
+    const node = lastHighlightRef.current;
+    if (!node) return;
+
+    const updateWidth = () => {
+      if (window.matchMedia("(min-width: 1024px)").matches) {
+        setCtaWidth(node.offsetWidth);
+      } else {
+        setCtaWidth(undefined);
+      }
+    };
+
+    updateWidth();
+
+    const observer = new ResizeObserver(updateWidth);
+    observer.observe(node);
+    window.addEventListener("resize", updateWidth);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateWidth);
+    };
+  }, []);
+
+  const lastHighlight = heroHighlights[heroHighlights.length - 1];
+  const otherHighlights = heroHighlights.slice(0, -1);
+
   return (
     <section
       id="hero"
@@ -41,64 +74,92 @@ export function HeroSection() {
       />
 
       <div
-        className="pointer-events-none absolute inset-0 z-[1] hidden bg-gradient-to-r from-white from-0% via-white via-[22%] via-ivory/85 via-[34%] to-transparent to-[52%] lg:block"
+        className="pointer-events-none absolute inset-0 z-[1] hidden bg-gradient-to-r from-white/55 from-0% via-white/25 via-[24%] to-transparent to-[46%] lg:block"
         aria-hidden
       />
 
-      <div className="page-container relative z-10 box-border flex w-full flex-col overflow-hidden pb-8 pt-[var(--header-height)] max-lg:h-auto max-lg:min-h-0 max-lg:justify-start max-lg:overflow-visible max-lg:pb-6 max-lg:pt-[calc(var(--header-height)+2.25rem)] lg:h-full lg:justify-center lg:overflow-hidden">
+      <div className="page-container relative z-10 box-border flex w-full flex-col overflow-hidden pb-8 pt-[var(--header-height)] max-lg:h-auto max-lg:min-h-0 max-lg:justify-start max-lg:overflow-visible max-lg:pb-5 max-lg:pt-[calc(var(--header-height)+1.35rem)] lg:h-full lg:justify-center lg:overflow-hidden">
         <motion.div
           initial={false}
           animate="visible"
           variants={staggerContainer}
-          className="w-full max-w-2xl min-w-0 max-lg:mx-auto max-lg:flex max-lg:flex-col max-lg:items-center max-lg:text-center"
+          className="flex w-full min-h-0 flex-1 flex-col gap-3.5 max-lg:gap-3 max-lg:overflow-hidden lg:flex-row lg:items-stretch lg:justify-between lg:gap-8 xl:gap-12"
         >
-          <motion.div variants={fadeUp} className="max-lg:flex max-lg:w-full max-lg:justify-center">
-            <span className="inline-flex items-center rounded-full border border-cta/20 bg-white/95 px-4 py-1.5 text-[11px] font-semibold leading-snug text-charcoal backdrop-blur-sm sm:text-xs">
-              Premium Women&apos;s Fashion Franchise Opportunity
-            </span>
-          </motion.div>
+          <div className="hero-left flex h-full w-full max-w-2xl flex-col overflow-visible max-lg:mx-auto max-lg:pt-1 max-lg:text-center lg:w-[580px] lg:max-w-[580px] lg:shrink-0 lg:pt-0 xl:w-[640px] xl:max-w-[640px]">
+            <motion.div variants={fadeUp} className="max-lg:flex max-lg:w-full max-lg:justify-center">
+              <span className="inline-flex items-center justify-center rounded-full border border-cta/20 bg-white/95 px-4 py-1.5 font-semibold text-charcoal backdrop-blur-sm max-lg:whitespace-nowrap max-lg:px-2.5 max-lg:py-1 max-lg:text-[8px] max-lg:tracking-[0.02em] lg:text-[11px] lg:leading-snug lg:tracking-normal xl:text-xs">
+                Premium Women&apos;s Fashion Franchise Opportunity
+              </span>
+            </motion.div>
 
-          <motion.h1
-            variants={fadeUp}
-            className="mt-3 font-display text-[1.65rem] leading-[1.22] tracking-tight text-charcoal max-lg:mt-3 sm:text-[2rem] lg:mt-4 lg:text-[2.35rem]"
-          >
-            Own an Odette Franchise &amp; Build a Profitable Fashion Business
-          </motion.h1>
-
-          <motion.p
-            variants={fadeUp}
-            className="mt-3 max-w-xl text-sm leading-relaxed text-black max-lg:mx-auto sm:text-base lg:mt-4"
-          >
-            Launch your Odette franchise with expert guidance from iFranchise—from planning
-            and setup to a successful store launch.
-          </motion.p>
-
-          <motion.div variants={fadeUp} className="mt-5 max-lg:flex max-lg:w-full max-lg:justify-center lg:mt-6">
-            <a
-              href="#contact"
-              onClick={(e) => handleSectionNavClick(e, "#contact")}
-              className="inline-flex items-center justify-center rounded-full bg-cta px-8 py-3.5 text-sm font-semibold text-white shadow-[0_4px_16px_rgba(91,45,139,0.28)] transition-colors duration-300 hover:bg-cta-hover"
+            <motion.h1
+              variants={fadeUp}
+              className="mt-3 font-display text-[1.6rem] font-bold uppercase leading-[1.2] tracking-[0.03em] text-charcoal max-lg:mt-2.5 max-lg:text-[1.3rem] max-lg:leading-[1.15] lg:mt-4 lg:text-[2.25rem] xl:text-[2.5rem]"
             >
-              Start Your Franchise Journey
-            </a>
-          </motion.div>
+              <span className="block lg:whitespace-nowrap">Own an Odette Franchise &amp;</span>
+              <span className="block lg:whitespace-nowrap">Build a Profitable</span>
+              <span className="block lg:whitespace-nowrap">Fashion Business</span>
+            </motion.h1>
 
-          <motion.ul
-            variants={fadeUp}
-            className="mt-5 hidden gap-2 lg:grid sm:grid-cols-2 sm:gap-x-6 sm:gap-y-2.5"
-          >
-            {heroHighlights.map((item, index) => (
-              <li
-                key={item}
-                className={`flex items-center gap-2 ${index % 2 === 1 ? "sm:-ml-10 sm:gap-1" : ""}`}
-              >
+            <motion.p
+              variants={fadeUp}
+              className="mt-3 text-sm leading-relaxed text-black max-lg:mx-auto max-lg:mt-2.5 max-lg:max-w-[19rem] max-lg:text-[11px] max-lg:leading-snug lg:mt-4 lg:max-w-none lg:text-[15px] xl:text-base"
+            >
+              Launch your Odette franchise with expert guidance from iFranchise—
+              <span className="block">from planning and setup to a successful store launch.</span>
+            </motion.p>
+
+            <motion.ul
+              variants={fadeUp}
+              className="mt-5 hidden w-full flex-col gap-2.5 lg:flex lg:items-start"
+            >
+              {otherHighlights.map((item) => (
+                <li key={item} className="flex items-center gap-2">
+                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cta/10">
+                    <Check className="h-3 w-3 text-cta" strokeWidth={2.5} />
+                  </span>
+                  <span className="text-sm font-medium text-charcoal">{item}</span>
+                </li>
+              ))}
+              <li ref={lastHighlightRef} className="flex items-center gap-2">
                 <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cta/10">
                   <Check className="h-3 w-3 text-cta" strokeWidth={2.5} />
                 </span>
-                <span className="text-sm font-medium text-charcoal">{item}</span>
+                <span className="text-sm font-medium text-charcoal">{lastHighlight}</span>
               </li>
-            ))}
-          </motion.ul>
+            </motion.ul>
+
+            <motion.div
+              variants={fadeUp}
+              className="mt-2.5 max-lg:mx-auto max-lg:hidden lg:mt-2.5"
+              style={ctaWidth ? { width: ctaWidth } : undefined}
+            >
+              <a
+                href="#contact"
+                onClick={(e) => handleSectionNavClick(e, "#contact")}
+                className={ctaButtonClass({ fullWidth: true })}
+              >
+                Start Your Franchise Journey
+                <ArrowRight className="h-3.5 w-3.5 shrink-0" strokeWidth={2.25} />
+              </a>
+            </motion.div>
+          </div>
+
+          <motion.div
+            variants={fadeUp}
+            className="hero-form-wrap flex min-h-0 w-full max-lg:mx-auto max-lg:mt-0.5 max-lg:max-w-[20rem] max-lg:shrink-0 lg:h-full lg:ml-auto lg:mr-[-0.75rem] lg:mt-0 lg:w-[380px] lg:shrink-0 lg:translate-x-2 xl:mr-[-1rem] xl:w-[400px] xl:translate-x-3"
+          >
+            <EnquiryForm
+              variant="hero"
+              id="hero-form"
+              heading="Check if This Opportunity is Right for You"
+              buttonText="Book Free Consultation"
+              showHeading
+              showEmail
+              showBudget
+              stackStateCityOnMobile
+            />
+          </motion.div>
         </motion.div>
       </div>
     </section>

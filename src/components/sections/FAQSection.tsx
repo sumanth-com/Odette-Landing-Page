@@ -12,7 +12,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="rounded-xl border border-border/60 bg-white px-4 py-2.5 shadow-[0_2px_16px_rgba(43,43,43,0.05)] sm:px-5 sm:py-3">
+    <div className="rounded-xl border border-cta/25 bg-white px-4 py-2.5 shadow-[0_2px_16px_rgba(91,45,139,0.06)] sm:px-5 sm:py-3">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}

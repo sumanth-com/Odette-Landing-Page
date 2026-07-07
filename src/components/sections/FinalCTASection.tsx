@@ -3,7 +3,7 @@
 import { EnquiryForm } from "@/components/ui/EnquiryForm";
 import { fadeUp } from "@/components/ui/AnimatedSection";
 import { GoogleMeetIcon } from "@/components/ui/GoogleMeetIcon";
-import { SectionPill } from "@/components/ui/GoldButton";
+import { SectionPill, ctaButtonClass } from "@/components/ui/GoldButton";
 import { SectionShell } from "@/components/ui/SectionShell";
 import {
   CONTACT_EMAIL,
@@ -17,35 +17,33 @@ import { Globe, Mail, Phone } from "lucide-react";
 export function FinalCTASection() {
   return (
     <SectionShell id="contact">
-      <div className="flex w-full max-w-6xl flex-col items-center justify-center">
-        <div className="grid w-full items-center gap-6 lg:grid-cols-2 lg:gap-10">
+      <div className="section-fit mx-auto flex min-h-0 w-full max-w-6xl flex-col">
+        <div className="grid min-h-0 flex-1 grid-cols-1 items-center gap-4 lg:grid-cols-2 lg:gap-8">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
             variants={fadeUp}
-            className="flex flex-col items-start justify-center text-left"
+            className="flex flex-col items-start justify-center text-left max-lg:items-center max-lg:text-center"
           >
-            <div className="w-full max-lg:flex max-lg:justify-center">
-              <SectionPill>Contact</SectionPill>
-            </div>
-            <h2 className="mt-4 font-display text-2xl leading-snug tracking-tight text-charcoal md:text-3xl lg:text-[2rem]">
+            <SectionPill>Contact</SectionPill>
+            <h2 className="mt-3 font-display text-xl leading-snug tracking-tight text-charcoal sm:text-2xl lg:text-[1.75rem]">
               Get in Touch With Our Team
             </h2>
-            <p className="mt-3 text-sm font-medium text-cta md:text-base">
+            <p className="mt-2 text-sm font-medium text-cta">
               Limited franchise slots in select cities — act now before allocation closes.
             </p>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-taupe md:text-base">
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-taupe">
               Book a meeting with our franchise consultants to discuss the Odette opportunity and
               get your questions answered.
             </p>
 
-            <div className="mt-5 flex flex-wrap items-center gap-2">
+            <div className="mt-4 flex flex-wrap items-center gap-2 max-lg:justify-center">
               <a
                 href={MEETING_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full bg-cta px-4 py-2.5 text-[13px] font-semibold text-white shadow-[0_2px_10px_rgba(91,45,139,0.22)] transition-colors duration-200 hover:bg-cta-hover sm:px-5 sm:text-sm"
+                className={ctaButtonClass()}
               >
                 <GoogleMeetIcon className="h-4 w-4 text-white" />
                 Book a Meeting with Us
@@ -81,18 +79,21 @@ export function FinalCTASection() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
             variants={fadeUp}
-            className="w-full min-w-0"
+            className="flex min-h-0 w-full min-w-0 max-w-[400px] justify-center lg:ml-auto lg:justify-end"
           >
             <EnquiryForm
               variant="hero"
               id="contact-form"
               heading="Check if This Opportunity is Right for You"
               buttonText="Book Free Consultation"
+              showHeading
+              showEmail
+              showBudget
             />
           </motion.div>
         </div>
 
-        <p className="mt-6 shrink-0 text-center text-[11px] text-taupe/80">
+        <p className="mt-2 shrink-0 text-center text-[10px] text-taupe/80 sm:text-[11px]">
           &copy; {new Date().getFullYear()} iFranchise. All rights reserved.
         </p>
       </div>

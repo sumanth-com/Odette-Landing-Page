@@ -115,13 +115,13 @@ export function FormSelect({
         aria-expanded={open}
         title={selected?.title ?? selected?.label ?? placeholder}
         onClick={() => (open ? setOpen(false) : openList())}
-        className={`${fieldClassName} flex w-full items-center justify-between gap-2 text-left disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-taupe/70 ${
-          !value ? "text-taupe/60" : "text-charcoal"
+        className={`${fieldClassName} flex w-full items-center justify-between gap-2 text-left disabled:cursor-not-allowed disabled:bg-[#f7f5f2] disabled:text-charcoal/45 ${
+          !value ? "text-charcoal/50" : "text-charcoal"
         }`}
       >
         <span className="truncate">{displayLabel}</span>
         <ChevronDown
-          className={`h-4 w-4 shrink-0 text-taupe transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 shrink-0 text-charcoal/65 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           strokeWidth={2}
         />
       </button>

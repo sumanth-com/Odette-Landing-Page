@@ -3,7 +3,14 @@
 import { CITIES_BY_STATE, INDIAN_STATES, STATE_DISPLAY_LABELS, type IndianState } from "@/lib/indianLocations";
 import { submitLead } from "@/lib/submitLead";
 import { motion } from "framer-motion";
-import { FormEvent, useMemo, useState } from "react";
+import {
+  Mail,
+  Phone,
+  Send,
+  Shield,
+  UserRound,
+} from "lucide-react";
+import { FormEvent, type ReactNode, useMemo, useState } from "react";
 import { FormSelect } from "./FormSelect";
 import { GoldButton } from "./GoldButton";
 
@@ -28,6 +35,7 @@ interface EnquiryFormProps {
   nameLabel?: string;
   phoneLabel?: string;
   id?: string;
+  stackStateCityOnMobile?: boolean;
 }
 
 const budgetOptions = [
@@ -49,6 +57,41 @@ const countryCodes = [
   { code: "+973", label: "BH +973" },
 ];
 
+function resolveStateFromCity(city: string) {
+  const normalized = city.trim().toLowerCase();
+  if (!normalized) return "";
+
+  for (const state of INDIAN_STATES) {
+    const cities = CITIES_BY_STATE[state];
+    if (cities.some((entry) => entry.toLowerCase() === normalized)) {
+      return state;
+    }
+  }
+
+  return "";
+}
+
+function HeroIconField({
+  icon,
+  children,
+  className = "",
+}: {
+  icon: ReactNode;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={`flex h-10 w-full min-w-0 items-stretch overflow-hidden rounded-xl border border-border bg-white shadow-[0_1px_4px_rgba(43,43,43,0.08)] focus-within:border-cta focus-within:ring-[3px] focus-within:ring-cta/20 ${className}`}
+    >
+      <span className="flex w-10 shrink-0 items-center justify-center border-r border-border/80 bg-[#f7f5f2] text-charcoal/80">
+        {icon}
+      </span>
+      <div className="flex min-w-0 flex-1 items-center">{children}</div>
+    </div>
+  );
+}
+
 export function EnquiryForm({
   heading = "Check if This Opportunity is Right for You",
   buttonText = "Book Free Consultation",
@@ -60,6 +103,7 @@ export function EnquiryForm({
   nameLabel = "Full Name",
   phoneLabel = "Mobile Number",
   id = "enquiry-form",
+  stackStateCityOnMobile = false,
 }: EnquiryFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const [mobileError, setMobileError] = useState("");
@@ -97,23 +141,22 @@ export function EnquiryForm({
     []
   );
 
-  const locationSuggestions = useMemo(() => {
-    if (!formData.state) return [];
-    return CITIES_BY_STATE[formData.state as IndianState] ?? [];
-  }, [formData.state]);
+  const heroFieldClass =
+    "form-field-hero gold-focus flex w-full min-w-0 items-center rounded-xl border border-border bg-white text-sm font-medium text-charcoal shadow-[0_1px_4px_rgba(43,43,43,0.08)] placeholder:font-normal placeholder:text-charcoal/50";
+
+  const heroInputClass =
+    "h-10 w-full min-w-0 border-0 bg-transparent px-3 text-sm font-medium text-charcoal placeholder:font-normal placeholder:text-charcoal/50 focus:outline-none";
 
   const inputClasses = isHero
-    ? "form-field-hero gold-focus w-full min-w-0 rounded-xl border border-border bg-white text-sm text-charcoal placeholder:text-taupe/60 transition-all duration-300"
+    ? heroFieldClass
     : "form-field-secondary gold-focus w-full min-w-0 rounded-2xl border border-border bg-white text-sm text-charcoal placeholder:text-taupe/60 transition-all duration-300 md:text-base";
-
-  const fieldClasses = `${inputClasses}`;
 
   const labelClasses = isHero
     ? "mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-taupe"
     : "mb-2 block text-xs font-medium uppercase tracking-wider text-taupe";
 
   const shellClasses = isHero
-    ? "w-full max-w-full overflow-hidden rounded-[22px] border border-border/90 bg-white p-5 shadow-[0_6px_28px_rgba(43,43,43,0.05)] lg:p-6"
+    ? "hero-form-scroll flex h-full w-full max-w-full flex-col overflow-y-auto rounded-[20px] border border-white bg-white/90 p-4 shadow-[0_16px_48px_rgba(43,43,43,0.16)] backdrop-blur-2xl sm:p-5"
     : `luxury-shadow-lg w-full max-w-full rounded-[22px] bg-white p-8 md:p-10`;
 
   const handleMobileChange = (value: string) => {
@@ -135,13 +178,20 @@ export function EnquiryForm({
       return;
     }
 
-    if (!formData.state) {
+    const resolvedState = formData.state || resolveStateFromCity(formData.city);
+
+    if (isHero && !formData.state) {
       setLocationError("Please select your state.");
       return;
     }
 
+    if (!resolvedState) {
+      setLocationError("Please enter a valid city from the suggestions.");
+      return;
+    }
+
     if (!formData.city.trim()) {
-      setLocationError("Please enter your city or area.");
+      setLocationError("Please enter your city.");
       return;
     }
 
@@ -151,13 +201,15 @@ export function EnquiryForm({
 
     setIsSubmitting(true);
 
+    const cityValue = formData.city.trim();
+
     try {
       await submitLead({
         fullName: formData.fullName.trim(),
         mobileNumber: `${formData.countryCode} ${formData.mobile}`,
         email: formData.email.trim(),
-        state: formData.state,
-        city: formData.city.trim(),
+        state: resolvedState,
+        city: cityValue,
         investmentBudget: formData.investmentBudget,
       });
 
@@ -201,12 +253,190 @@ export function EnquiryForm({
             Our franchise consultant will contact you within one business day.
           </p>
           <div className="mt-8 w-full max-w-xs">
-            <GoldButton type="button" fullWidth size={isHero ? "default" : "large"} onClick={handleSubmitAnother}>
+            <GoldButton
+              type="button"
+              fullWidth
+              size={isHero ? "default" : "large"}
+              staticButton={isHero}
+              onClick={handleSubmitAnother}
+            >
               Submit Another Enquiry
             </GoldButton>
           </div>
         </div>
       </motion.div>
+    );
+  }
+
+  if (isHero) {
+    const cityEnabled = Boolean(formData.state);
+
+    return (
+      <div className={shellClasses}>
+        {showHeading && (
+          <div className="flex flex-col items-center text-center">
+            <div className="flex h-11 w-11 items-center justify-center rounded-full border border-border/60 bg-white shadow-sm">
+              <UserRound className="h-5 w-5 text-cta" strokeWidth={2.5} />
+            </div>
+            <h3 className="mt-3 font-display text-[15px] font-semibold leading-tight text-charcoal sm:text-base lg:whitespace-nowrap xl:text-[17px]">
+              {heading}
+            </h3>
+            {helperText ? (
+              <p className="mt-2.5 max-w-[18rem] text-xs leading-relaxed text-taupe sm:text-[13px]">
+                {helperText}
+              </p>
+            ) : null}
+          </div>
+        )}
+
+        <form
+          id={id}
+          onSubmit={handleSubmit}
+          className={`${showHeading ? "mt-5" : "mt-0"} flex flex-1 flex-col gap-2.5`}
+          noValidate
+        >
+          <HeroIconField icon={<UserRound className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} />}>
+            <input
+              id={`${id}-name`}
+              type="text"
+              required
+              autoComplete="name"
+              placeholder="Enter your full name"
+              className={heroInputClass}
+              value={formData.fullName}
+              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+            />
+          </HeroIconField>
+
+          <div className="grid grid-cols-[6.25rem_minmax(0,1fr)] gap-2">
+            <FormSelect
+              id={`${id}-country-code`}
+              value={formData.countryCode}
+              onChange={(code) => setFormData({ ...formData, countryCode: code })}
+              options={countryOptions}
+              placeholder="Code"
+              fieldClassName={`${heroFieldClass} px-2.5`}
+            />
+            <HeroIconField icon={<Phone className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} />}>
+              <input
+                id={`${id}-mobile`}
+                type="tel"
+                required
+                inputMode="numeric"
+                autoComplete="tel-national"
+                placeholder="10-digit number"
+                pattern="[0-9]{10}"
+                minLength={10}
+                maxLength={10}
+                className={heroInputClass}
+                value={formData.mobile}
+                onChange={(e) => handleMobileChange(e.target.value)}
+                aria-invalid={!!mobileError}
+                aria-describedby={mobileError ? `${id}-mobile-error` : undefined}
+              />
+            </HeroIconField>
+          </div>
+          {mobileError && (
+            <p id={`${id}-mobile-error`} className="-mt-1 text-xs text-red-600/80">
+              {mobileError}
+            </p>
+          )}
+
+          {showEmail && (
+            <HeroIconField icon={<Mail className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} />}>
+              <input
+                id={`${id}-email`}
+                type="email"
+                autoComplete="email"
+                placeholder="Email address (optional)"
+                className={heroInputClass}
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              />
+            </HeroIconField>
+          )}
+
+          <div
+            className={`grid gap-2 ${
+              stackStateCityOnMobile ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-2"
+            }`}
+          >
+            <FormSelect
+              id={`${id}-state`}
+              value={formData.state}
+              onChange={handleStateChange}
+              options={stateOptions}
+              placeholder="State"
+              fieldClassName={`${heroFieldClass} px-2.5`}
+            />
+            <input
+              id={`${id}-city`}
+              type="text"
+              required
+              list={cityEnabled ? `${id}-city-suggestions` : undefined}
+              autoComplete="address-level2"
+              readOnly={!cityEnabled}
+              placeholder={cityEnabled ? "City" : "Select state first"}
+              className={`${heroFieldClass} px-2.5 ${
+                cityEnabled
+                  ? "text-charcoal"
+                  : "cursor-not-allowed bg-[#f7f5f2] text-charcoal/45"
+              }`}
+              value={formData.city}
+              onChange={(e) => {
+                setFormData({ ...formData, city: e.target.value });
+                if (locationError) setLocationError("");
+              }}
+              onFocus={(e) => {
+                if (!cityEnabled) e.target.blur();
+              }}
+              aria-invalid={!!locationError}
+              aria-describedby={locationError ? `${id}-location-error` : undefined}
+            />
+          </div>
+
+          {cityEnabled && CITIES_BY_STATE[formData.state as IndianState]?.length > 0 && (
+            <datalist id={`${id}-city-suggestions`}>
+              {CITIES_BY_STATE[formData.state as IndianState].map((city) => (
+                <option key={city} value={city} />
+              ))}
+            </datalist>
+          )}
+          {locationError && (
+            <p id={`${id}-location-error`} className="-mt-1 text-xs text-red-600/80">
+              {locationError}
+            </p>
+          )}
+
+          {showBudget && (
+            <FormSelect
+              id={`${id}-budget`}
+              value={formData.investmentBudget}
+              onChange={(budget) => setFormData({ ...formData, investmentBudget: budget })}
+              options={budgetSelectOptions}
+              placeholder="Select budget"
+              fieldClassName={`${heroFieldClass} px-3.5 pr-3`}
+            />
+          )}
+
+          <div className="mt-auto flex flex-col gap-2.5 pt-4">
+            <GoldButton
+              type="submit"
+              fullWidth
+              staticButton
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : buttonText}
+              {!isSubmitting && <Send className="h-4 w-4" strokeWidth={2} />}
+            </GoldButton>
+
+            <p className="flex items-center justify-center gap-1.5 text-center text-[10px] leading-relaxed text-charcoal/65 sm:text-[11px]">
+              <Shield className="h-3 w-3 shrink-0 text-charcoal/60" strokeWidth={2.5} />
+              Your information is secure and will not be shared
+            </p>
+          </div>
+        </form>
+      </div>
     );
   }
 
@@ -216,18 +446,12 @@ export function EnquiryForm({
     <div className={shellClasses}>
       {showHeading && (
         <>
-          <h3
-            className={`font-display leading-snug text-charcoal ${
-              isHero ? "text-base lg:text-lg" : "text-xl md:text-2xl"
-            }`}
-          >
-            {heading}
-          </h3>
-          <div className={`divider-line ${isHero ? "my-4" : "my-6"}`} aria-hidden="true" />
+          <h3 className="font-display text-xl leading-snug text-charcoal md:text-2xl">{heading}</h3>
+          <div className="divider-line my-6" aria-hidden="true" />
         </>
       )}
 
-      <form id={id} onSubmit={handleSubmit} className={isHero ? "space-y-2.5" : "space-y-5"} noValidate>
+      <form id={id} onSubmit={handleSubmit} className="space-y-5" noValidate>
         <div>
           <label htmlFor={`${id}-name`} className={labelClasses}>
             {nameLabel}
@@ -238,7 +462,7 @@ export function EnquiryForm({
             required
             autoComplete="name"
             placeholder="Enter your full name"
-            className={fieldClasses}
+            className={inputClasses}
             value={formData.fullName}
             onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
           />
@@ -256,7 +480,7 @@ export function EnquiryForm({
                 onChange={(code) => setFormData({ ...formData, countryCode: code })}
                 options={countryOptions}
                 placeholder="Code"
-                fieldClassName={fieldClasses}
+                fieldClassName={inputClasses}
               />
             </div>
             <input
@@ -269,7 +493,7 @@ export function EnquiryForm({
               pattern="[0-9]{10}"
               minLength={10}
               maxLength={10}
-              className={`${fieldClasses} min-w-0 flex-1`}
+              className={`${inputClasses} min-w-0 flex-1`}
               value={formData.mobile}
               onChange={(e) => handleMobileChange(e.target.value)}
               aria-invalid={!!mobileError}
@@ -294,7 +518,7 @@ export function EnquiryForm({
               type="email"
               autoComplete="email"
               placeholder="Email address"
-              className={fieldClasses}
+              className={inputClasses}
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             />
@@ -313,7 +537,7 @@ export function EnquiryForm({
                 onChange={handleStateChange}
                 options={stateOptions}
                 placeholder="Select state"
-                fieldClassName={fieldClasses}
+                fieldClassName={inputClasses}
               />
             </div>
 
@@ -329,7 +553,7 @@ export function EnquiryForm({
                 autoComplete="address-level2"
                 readOnly={!cityEnabled}
                 placeholder={cityEnabled ? "Type your city" : "Select state first"}
-                className={`${fieldClasses} ${
+                className={`${inputClasses} ${
                   cityEnabled
                     ? "bg-white text-charcoal"
                     : "cursor-not-allowed bg-gray-50 text-taupe/70"
@@ -348,9 +572,9 @@ export function EnquiryForm({
             </div>
           </div>
 
-          {cityEnabled && locationSuggestions.length > 0 && (
+          {cityEnabled && CITIES_BY_STATE[formData.state as IndianState]?.length > 0 && (
             <datalist id={`${id}-city-suggestions`}>
-              {locationSuggestions.map((city) => (
+              {CITIES_BY_STATE[formData.state as IndianState].map((city) => (
                 <option key={city} value={city} />
               ))}
             </datalist>
@@ -373,13 +597,13 @@ export function EnquiryForm({
               onChange={(budget) => setFormData({ ...formData, investmentBudget: budget })}
               options={budgetSelectOptions}
               placeholder="Select budget"
-              fieldClassName={fieldClasses}
+              fieldClassName={inputClasses}
             />
           </div>
         )}
 
-        <div className={isHero ? "pt-1" : "pt-2"}>
-          <GoldButton type="submit" fullWidth size={isHero ? "default" : "large"} disabled={isSubmitting}>
+        <div className="pt-2">
+          <GoldButton type="submit" fullWidth size="large" disabled={isSubmitting}>
             {isSubmitting ? "Submitting..." : buttonText}
           </GoldButton>
         </div>

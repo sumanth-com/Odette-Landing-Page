@@ -1,7 +1,29 @@
 "use client";
 
+import { type ElementType } from "react";
+import {
+  Building2,
+  CalendarClock,
+  Clock3,
+  IndianRupee,
+  MapPin,
+  Receipt,
+  Ruler,
+  TrendingUp,
+} from "lucide-react";
 import { handleSectionNavClick } from "@/lib/scroll";
-import { CardTitleHighlight } from "./GoldButton";
+import { CardTitleHighlight, ctaButtonClass } from "./GoldButton";
+import { PremiumPanel } from "./PremiumPanel";
+
+const rowIcons: Record<string, ElementType> = {
+  Investment: IndianRupee,
+  "Franchise Fee": Receipt,
+  "Space Required": Ruler,
+  Returns: TrendingUp,
+  "Lock-in Period": Clock3,
+  "Payback Period": CalendarClock,
+  Outlets: MapPin,
+};
 
 const investmentOverview = [
   { label: "Investment", value: "₹45 Lakhs onwards" },
@@ -26,26 +48,13 @@ type OverviewRow = {
   subValue?: string;
 };
 
-const mobileRowOrder: Record<string, string> = {
-  Investment: "max-lg:order-1",
-  "Franchise Fee": "max-lg:order-2",
-  "Space Required": "max-lg:order-3",
-  Outlets: "max-lg:order-4",
-  Returns: "max-lg:order-5",
-  "Lock-in Period": "max-lg:order-6",
-  "Payback Period": "max-lg:order-7",
-};
-
-function getMobileRowOrder(label: string) {
-  return mobileRowOrder[label] ?? "";
-}
-
 interface InvestmentOverviewCardProps {
   showCta?: boolean;
   className?: string;
   compact?: boolean;
   extended?: boolean;
   fillHeight?: boolean;
+  purpleBorder?: boolean;
 }
 
 export function InvestmentOverviewCard({
@@ -54,23 +63,24 @@ export function InvestmentOverviewCard({
   compact = false,
   extended = false,
   fillHeight = false,
+  purpleBorder = false,
 }: InvestmentOverviewCardProps) {
   const rows: OverviewRow[] = extended
     ? [...investmentOverview, ...extendedOverviewRows]
     : [...investmentOverview];
 
   const rowTextClass = fillHeight
-    ? "text-sm sm:text-[15px]"
+    ? "text-[12px] sm:text-[13px] lg:text-sm"
     : compact
-      ? "text-xs"
+      ? "text-sm"
       : "text-sm";
 
+  const panelClass = `${fillHeight ? "h-full min-h-0 justify-between" : ""} ${className}`;
+
   return (
-    <div
-      className={`luxury-shadow flex w-full flex-col rounded-[20px] border border-border bg-white ${fillHeight ? "h-full" : ""} ${compact ? "p-3 sm:p-3.5" : "p-5 sm:p-6"} ${className}`}
-    >
+    <PremiumPanel compact={compact || fillHeight} purpleBorder={purpleBorder} className={panelClass}>
       {compact ? (
-        <CardTitleHighlight>Investment Overview</CardTitleHighlight>
+        <CardTitleHighlight compact>Investment Overview</CardTitleHighlight>
       ) : (
         <h2 className="text-center font-display text-lg text-charcoal sm:text-xl">
           Investment Overview
@@ -78,31 +88,45 @@ export function InvestmentOverviewCard({
       )}
 
       <dl
-        className={`${compact ? "mt-2 sm:mt-3" : "mt-4"} grid grid-cols-2 gap-2 lg:flex lg:grid-cols-1 lg:gap-0 lg:divide-y lg:divide-border ${fillHeight ? "lg:flex-1 lg:flex-col lg:justify-between" : ""}`}
+        className={`${compact || fillHeight ? "mt-2.5" : "mt-5"} ${
+          fillHeight
+            ? "grid min-h-0 flex-1 grid-cols-2 gap-x-2 lg:flex lg:flex-col lg:divide-y lg:divide-border/80"
+            : "flex flex-col divide-y divide-border/80"
+        }`}
       >
         {rows.map((row) => {
+          const RowIcon = rowIcons[row.label] ?? Building2;
           const isWideRow = row.label === "Returns";
 
           return (
             <div
               key={row.label}
-              className={`flex flex-col gap-0.5 rounded-lg border border-border/60 bg-beige/50 p-2 lg:order-none lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 ${getMobileRowOrder(row.label)} ${
-                isWideRow ? "col-span-2 lg:col-span-1" : ""
-              } ${
+              className={`flex items-center justify-between gap-2 ${
                 fillHeight
-                  ? "lg:min-h-[3rem] lg:py-2.5"
+                  ? `border-b border-border/60 py-1.5 last:border-b-0 lg:border-b-0 lg:py-2 lg:first:pt-0 lg:last:pb-0 ${
+                      isWideRow ? "col-span-2" : ""
+                    }`
                   : compact
-                    ? "lg:py-1.5"
-                    : "lg:py-3"
-              } lg:flex-row lg:items-center lg:justify-between lg:gap-3`}
+                    ? "py-2.5 first:pt-0 last:pb-0"
+                    : "py-3.5"
+              }`}
             >
-              <dt className={`shrink-0 text-taupe ${rowTextClass}`}>{row.label}</dt>
+              <dt
+                className={`flex min-w-0 items-center gap-1.5 text-taupe lg:gap-2 ${rowTextClass}`}
+              >
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-cta/10 bg-cta/[0.05] text-cta lg:h-7 lg:w-7">
+                  <RowIcon className="h-3 w-3 lg:h-3.5 lg:w-3.5" strokeWidth={2} />
+                </span>
+                <span className="leading-snug">{row.label}</span>
+              </dt>
               <dd
-                className={`min-w-0 font-semibold leading-snug text-charcoal lg:text-right ${rowTextClass} ${!fillHeight && !compact ? "lg:max-w-[62%]" : ""}`}
+                className={`shrink-0 text-right font-semibold leading-snug text-charcoal ${rowTextClass} ${
+                  isWideRow ? "max-w-[70%]" : "max-w-[56%]"
+                } sm:max-w-[52%]`}
               >
                 {row.value}
                 {row.subValue ? (
-                  <span className={`mt-0.5 block font-medium text-charcoal/90 ${rowTextClass}`}>
+                  <span className="mt-0.5 block text-[10px] font-medium leading-tight text-charcoal/75 sm:text-[11px] lg:text-xs">
                     {row.subValue}
                   </span>
                 ) : null}
@@ -116,11 +140,11 @@ export function InvestmentOverviewCard({
         <a
           href="#contact"
           onClick={(e) => handleSectionNavClick(e, "#contact")}
-          className={`flex w-full items-center justify-center rounded-xl bg-cta font-semibold text-white shadow-[0_4px_16px_rgba(91,45,139,0.28)] transition-colors duration-200 hover:bg-cta-hover ${compact ? "mt-2.5 py-2 text-xs" : "mt-5 px-6 py-3 text-sm"} ${fillHeight ? "text-sm sm:text-[15px]" : ""}`}
+          className={`mt-2.5 shrink-0 ${ctaButtonClass({ fullWidth: true })}`}
         >
           Request Information
         </a>
       )}
-    </div>
+    </PremiumPanel>
   );
 }
