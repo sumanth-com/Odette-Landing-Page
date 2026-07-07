@@ -40,7 +40,7 @@ const investmentOverview = [
 
 const extendedOverviewRows = [
   { label: "Payback Period", value: "24 - 28 months" },
-  { label: "Outlets", value: "40+" },
+  { label: "Outlets", value: "45+" },
 ] as const;
 
 type OverviewRow = {

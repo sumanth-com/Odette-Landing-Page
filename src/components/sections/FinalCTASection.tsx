@@ -88,7 +88,7 @@ export function FinalCTASection() {
               heading="Check Your Franchise Eligibility"
               buttonText="CHECK FRANCHISE AVAILABILITY"
               showHeading
-              showEmail
+              showEmail={true}
               showBudget
               stackStateCityOnMobile
               showSecurityNote={false}

@@ -1,4 +1,4 @@
-export const MEETING_URL = "https://cal.com/ifranchise.in/ifranchise";
+export const MEETING_URL = "https://cal.com/team-ifranchise-lycrhq/ifranchise";
 
 export const CONTACT_PHONE = "tel:+919129130303";
 export const CONTACT_PHONE_DISPLAY = "+91 91291 30303";

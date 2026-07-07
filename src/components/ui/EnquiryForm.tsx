@@ -1,6 +1,6 @@
 "use client";
 
-import { CITIES_BY_STATE, INDIAN_STATES, STATE_DISPLAY_LABELS, type IndianState } from "@/lib/indianLocations";
+import { INDIAN_STATES, STATE_DISPLAY_LABELS } from "@/lib/indianLocations";
 import { submitLead } from "@/lib/submitLead";
 import { motion } from "framer-motion";
 import {
@@ -40,10 +40,10 @@ interface EnquiryFormProps {
 }
 
 const budgetOptions = [
-  "₹25–45 Lakhs",
+  "₹45 Lakhs",
   "₹45–75 Lakhs",
   "Above ₹75 Lakhs",
-];
+] as const;
 
 const countryCodes = [
   { code: "+91", label: "IN +91" },
@@ -58,19 +58,6 @@ const countryCodes = [
   { code: "+973", label: "BH +973" },
 ];
 
-function resolveStateFromCity(city: string) {
-  const normalized = city.trim().toLowerCase();
-  if (!normalized) return "";
-
-  for (const state of INDIAN_STATES) {
-    const cities = CITIES_BY_STATE[state];
-    if (cities.some((entry) => entry.toLowerCase() === normalized)) {
-      return state;
-    }
-  }
-
-  return "";
-}
 
 function HeroIconField({
   icon,
@@ -108,6 +95,7 @@ export function EnquiryForm({
   showSecurityNote = true,
 }: EnquiryFormProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [mobileError, setMobileError] = useState("");
   const [locationError, setLocationError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -180,15 +168,8 @@ export function EnquiryForm({
       return;
     }
 
-    const resolvedState = formData.state || resolveStateFromCity(formData.city);
-
-    if (isHero && !formData.state) {
+    if (!formData.state) {
       setLocationError("Please select your state.");
-      return;
-    }
-
-    if (!resolvedState) {
-      setLocationError("Please enter a valid city from the suggestions.");
       return;
     }
 
@@ -202,6 +183,7 @@ export function EnquiryForm({
     }
 
     setIsSubmitting(true);
+    setSubmitError("");
 
     const cityValue = formData.city.trim();
 
@@ -210,12 +192,18 @@ export function EnquiryForm({
         fullName: formData.fullName.trim(),
         mobileNumber: `${formData.countryCode} ${formData.mobile}`,
         email: formData.email.trim(),
-        state: resolvedState,
+        state: formData.state,
         city: cityValue,
         investmentBudget: formData.investmentBudget,
       });
 
       setSubmitted(true);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Unable to submit your inquiry. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -223,6 +211,7 @@ export function EnquiryForm({
 
   const handleSubmitAnother = () => {
     setSubmitted(false);
+    setSubmitError("");
     setMobileError("");
     setLocationError("");
     setFormData({
@@ -345,7 +334,10 @@ export function EnquiryForm({
           )}
 
           {showEmail && (
-            <HeroIconField icon={<Mail className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} />}>
+            <HeroIconField
+              className="hero-form-email-field"
+              icon={<Mail className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} />}
+            >
               <input
                 id={`${id}-email`}
                 type="email"
@@ -375,8 +367,7 @@ export function EnquiryForm({
               id={`${id}-city`}
               type="text"
               required
-              list={cityEnabled ? `${id}-city-suggestions` : undefined}
-              autoComplete="address-level2"
+              autoComplete="off"
               readOnly={!cityEnabled}
               placeholder={cityEnabled ? "City" : "Select state first"}
               className={`${heroFieldClass} px-2.5 ${
@@ -397,16 +388,15 @@ export function EnquiryForm({
             />
           </div>
 
-          {cityEnabled && CITIES_BY_STATE[formData.state as IndianState]?.length > 0 && (
-            <datalist id={`${id}-city-suggestions`}>
-              {CITIES_BY_STATE[formData.state as IndianState].map((city) => (
-                <option key={city} value={city} />
-              ))}
-            </datalist>
-          )}
           {locationError && (
             <p id={`${id}-location-error`} className="-mt-1 text-xs text-red-600/80">
               {locationError}
+            </p>
+          )}
+
+          {submitError && (
+            <p className="-mt-1 text-xs text-red-600/80" role="alert">
+              {submitError}
             </p>
           )}
 
@@ -553,10 +543,9 @@ export function EnquiryForm({
                 id={`${id}-city`}
                 type="text"
                 required
-                list={cityEnabled ? `${id}-city-suggestions` : undefined}
-                autoComplete="address-level2"
+                autoComplete="off"
                 readOnly={!cityEnabled}
-                placeholder={cityEnabled ? "Type your city" : "Select state first"}
+                placeholder={cityEnabled ? "Enter your city" : "Select state first"}
                 className={`${inputClasses} ${
                   cityEnabled
                     ? "bg-white text-charcoal"
@@ -576,19 +565,18 @@ export function EnquiryForm({
             </div>
           </div>
 
-          {cityEnabled && CITIES_BY_STATE[formData.state as IndianState]?.length > 0 && (
-            <datalist id={`${id}-city-suggestions`}>
-              {CITIES_BY_STATE[formData.state as IndianState].map((city) => (
-                <option key={city} value={city} />
-              ))}
-            </datalist>
-          )}
           {locationError && (
             <p id={`${id}-location-error`} className="mt-1.5 text-xs text-red-600/80">
               {locationError}
             </p>
           )}
         </div>
+
+        {submitError && (
+          <p className="text-xs text-red-600/80" role="alert">
+            {submitError}
+          </p>
+        )}
 
         {showBudget && (
           <div>

@@ -28,18 +28,51 @@ export function sectionIdFromPath(path: string): SectionId | null {
 export function getSectionScrollTop(id: string) {
   const el = document.getElementById(id);
   if (!el) return null;
-  return el.getBoundingClientRect().top + window.scrollY;
+
+  const rect = el.getBoundingClientRect();
+  const top = rect.top + window.scrollY;
+
+  if (id === "contact") {
+    const maxScroll = Math.max(
+      0,
+      document.documentElement.scrollHeight - window.innerHeight
+    );
+    return Math.min(top, maxScroll);
+  }
+
+  return top;
+}
+
+function applySectionScroll(top: number) {
+  window.scrollTo({
+    top: Math.max(0, top),
+    behavior: prefersReducedMotion() ? "auto" : "smooth",
+  });
 }
 
 export function scrollToSection(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return false;
+
+  markProgrammaticScroll();
   const top = getSectionScrollTop(id);
   if (top === null) return false;
 
-  markProgrammaticScroll();
-  window.scrollTo({
-    top,
-    behavior: prefersReducedMotion() ? "auto" : "smooth",
-  });
+  applySectionScroll(top);
+
+  if (id === "contact") {
+    const settle = () => {
+      const nextTop = getSectionScrollTop(id);
+      if (nextTop !== null) {
+        window.scrollTo({ top: Math.max(0, nextTop), behavior: "auto" });
+      }
+    };
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(settle);
+    });
+  }
+
   return true;
 }
 

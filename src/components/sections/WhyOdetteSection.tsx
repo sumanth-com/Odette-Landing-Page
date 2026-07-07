@@ -28,10 +28,10 @@ export function WhyOdetteSection() {
         />
 
         <div className="grid w-full items-stretch gap-3 sm:gap-4 md:grid-cols-2 md:gap-6">
-          <StaggerGroup className="grid min-w-0 auto-rows-fr grid-cols-2 gap-2 lg:gap-3">
+          <StaggerGroup className="grid min-w-0 grid-cols-2 grid-rows-3 gap-2 self-stretch md:h-full lg:gap-3">
             {features.map((feature) => (
-              <StaggerItem key={feature} className="h-full">
-                <div className="group flex h-full items-center gap-2 rounded-[14px] border border-cta/25 bg-white px-2.5 py-2.5 shadow-[0_8px_32px_rgba(91,45,139,0.08)] transition-all duration-300 hover:border-cta/45 hover:shadow-[0_16px_48px_rgba(91,45,139,0.12)] lg:min-h-[4.25rem] lg:gap-3 lg:rounded-[20px] lg:px-4 lg:py-3.5">
+              <StaggerItem key={feature} className="h-full min-h-0">
+                <div className="group flex h-full min-h-[3.5rem] items-center gap-2 rounded-[14px] border border-cta/25 bg-white px-2.5 py-2.5 shadow-[0_8px_32px_rgba(91,45,139,0.08)] transition-all duration-300 hover:border-cta/45 hover:shadow-[0_16px_48px_rgba(91,45,139,0.12)] lg:gap-3 lg:rounded-[20px] lg:px-4 lg:py-3.5">
                   <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-cta/10 transition-colors duration-300 group-hover:bg-cta/15 lg:h-8 lg:w-8">
                     <Check className="h-3.5 w-3.5 text-cta lg:h-4 lg:w-4" strokeWidth={2.5} />
                   </div>
@@ -43,8 +43,8 @@ export function WhyOdetteSection() {
             ))}
           </StaggerGroup>
 
-          <div className="flex min-h-[15.5rem] min-w-0 flex-col sm:min-h-[17rem] md:min-h-0 md:h-full">
-            <ImageGallery className="h-full" />
+          <div className="flex min-w-0 flex-col self-stretch">
+            <ImageGallery className="w-full" />
           </div>
         </div>
       </div>

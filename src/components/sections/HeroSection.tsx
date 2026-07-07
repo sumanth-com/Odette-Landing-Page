@@ -4,19 +4,76 @@ import HeroImage from "@/assets/Hero.png";
 import MobHeroImage from "@/assets/MobHero.png";
 import { CONTACT_PATH } from "@/lib/site";
 import { useSectionNavigation } from "@/lib/useSectionNavigation";
+import { type ElementType } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRight, Briefcase, Building2, Calendar, IndianRupee, MapPinned, Tag } from "lucide-react";
 import Image from "next/image";
 import { fadeUp, staggerContainer } from "../ui/AnimatedSection";
 import { ctaButtonClass } from "../ui/GoldButton";
 import { EnquiryForm } from "../ui/EnquiryForm";
 
-const investmentHighlights = [
-  "Company Operated",
-  "5-Year Agreement",
-  "40+ Outlets",
-  "Premium Women's Fashion",
+const highlightCards = [
+  { label: "Major cities across India", icon: MapPinned },
+  { label: "Model: FICO", icon: Tag },
+  { label: "Agreement Term: 5 years", icon: Calendar },
+  { label: "45+ Outlets", icon: Building2 },
+  {
+    label: "Franchise Types: Master Franchise · Unit Franchise",
+    icon: Briefcase,
+    fullWidth: true,
+  },
 ] as const;
+
+function HighlightCard({
+  label,
+  icon: Icon,
+  fullWidth = false,
+}: {
+  label: string;
+  icon: ElementType;
+  fullWidth?: boolean;
+}) {
+  return (
+    <li
+      className={`flex items-center gap-1.5 rounded-[12px] border border-cta/20 bg-white px-2 py-2 shadow-[0_4px_14px_rgba(91,45,139,0.07)] sm:gap-2 sm:px-2.5 sm:py-2.5 lg:px-3 lg:py-3 ${
+        fullWidth ? "col-span-2" : "min-h-[2.75rem] lg:min-h-0"
+      }`}
+    >
+      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cta/10 sm:h-6 sm:w-6">
+        <Icon className="h-2.5 w-2.5 text-cta sm:h-3 sm:w-3" strokeWidth={2.25} />
+      </span>
+      <span
+        className={`min-w-0 flex-1 text-left font-semibold leading-snug text-charcoal ${
+          fullWidth
+            ? "text-[7.5px] leading-tight sm:text-[10px] sm:leading-snug lg:text-[11px] xl:text-sm"
+            : "text-[8.5px] sm:text-xs lg:text-sm"
+        }`}
+      >
+        {label}
+      </span>
+    </li>
+  );
+}
+
+function HeroHighlightCards() {
+  return (
+    <ul className="hero-highlight-grid grid grid-cols-2 gap-2 sm:gap-2.5" role="list">
+      <HighlightCard
+        label="Investment: ₹45 Lakhs+"
+        icon={IndianRupee}
+        fullWidth
+      />
+      {highlightCards.map((card) => (
+        <HighlightCard
+          key={card.label}
+          label={card.label}
+          icon={card.icon}
+          fullWidth={"fullWidth" in card ? card.fullWidth : false}
+        />
+      ))}
+    </ul>
+  );
+}
 
 export function HeroSection() {
   const { navigate } = useSectionNavigation();
@@ -24,7 +81,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="viewport-section relative snap-section overflow-hidden max-lg:overflow-visible"
+      className="viewport-section relative snap-section overflow-hidden"
     >
       <Image
         src={MobHeroImage}
@@ -50,14 +107,14 @@ export function HeroSection() {
         aria-hidden
       />
 
-      <div className="page-container relative z-10 box-border flex w-full flex-col overflow-hidden pb-8 pt-[var(--header-height)] max-lg:h-auto max-lg:min-h-0 max-lg:justify-start max-lg:overflow-visible max-lg:pb-5 max-lg:pt-[calc(var(--header-height)+1.35rem)] lg:h-full lg:justify-center lg:overflow-hidden">
+      <div className="page-container relative z-10 box-border flex w-full flex-col overflow-hidden pb-8 pt-[var(--header-height)] max-lg:h-full max-lg:min-h-0 max-lg:justify-start max-lg:overflow-hidden max-lg:pb-2.5 max-lg:pt-[calc(var(--header-height)+0.75rem)] lg:h-full lg:justify-center lg:overflow-hidden">
         <motion.div
           initial={false}
           animate="visible"
           variants={staggerContainer}
-          className="flex w-full min-h-0 flex-1 flex-col gap-3.5 max-lg:gap-3 max-lg:overflow-hidden lg:flex-row lg:items-center lg:justify-between lg:gap-8 xl:gap-12"
+          className="hero-stack w-full min-h-0 flex-1 max-lg:grid max-lg:gap-2 max-lg:overflow-hidden lg:flex lg:flex-row lg:items-center lg:justify-between lg:gap-8 xl:gap-12"
         >
-          <div className="hero-left flex w-full max-w-2xl flex-col overflow-visible max-lg:mx-auto max-lg:pt-1 max-lg:text-center lg:w-[580px] lg:max-w-[580px] lg:shrink-0 lg:pt-0 xl:w-[640px] xl:max-w-[640px]">
+          <div className="hero-left flex w-full max-w-2xl flex-col items-center overflow-visible max-lg:mx-auto max-lg:shrink-0 max-lg:pt-0 max-lg:text-center lg:w-[580px] lg:max-w-[580px] lg:items-start lg:shrink-0 lg:pt-0 lg:text-left xl:w-[640px] xl:max-w-[640px]">
             <motion.div variants={fadeUp} className="max-lg:flex max-lg:w-full max-lg:justify-center">
               <span className="inline-flex items-center justify-center rounded-full border border-cta/20 bg-white/95 px-4 py-1.5 font-semibold text-charcoal backdrop-blur-sm max-lg:whitespace-nowrap max-lg:px-2.5 max-lg:py-1 max-lg:text-[8px] max-lg:tracking-[0.02em] lg:text-[11px] lg:leading-snug lg:tracking-normal xl:text-xs">
                 Premium Women&apos;s Fashion Franchise Opportunity
@@ -66,7 +123,7 @@ export function HeroSection() {
 
             <motion.h1
               variants={fadeUp}
-              className="mt-3 font-display text-[1.28rem] font-bold uppercase leading-[1.2] tracking-[0.03em] text-charcoal max-lg:mt-2.5 max-lg:text-[1.02rem] max-lg:leading-[1.15] lg:mt-4 lg:text-[1.85rem] xl:text-[2.05rem]"
+              className="mt-3 font-display text-[1.28rem] font-bold uppercase leading-[1.2] tracking-[0.03em] text-charcoal max-lg:mt-1.5 max-lg:text-[0.95rem] max-lg:leading-[1.12] lg:mt-4 lg:text-[1.85rem] xl:text-[2.05rem]"
             >
               <span className="block">You Invest.</span>
               <span className="block">WE RUN THE BUSINESS.</span>
@@ -74,7 +131,7 @@ export function HeroSection() {
 
             <motion.p
               variants={fadeUp}
-              className="mt-3 text-sm leading-relaxed text-black max-lg:mx-auto max-lg:mt-2.5 max-lg:max-w-[19rem] max-lg:text-[11px] max-lg:leading-snug lg:mt-4 lg:max-w-xl lg:text-[15px] xl:text-base"
+              className="mt-3 text-sm leading-relaxed text-black max-lg:mx-auto max-lg:mt-1.5 max-lg:max-w-[17.5rem] max-lg:text-[10px] max-lg:leading-snug lg:mt-4 lg:max-w-xl lg:text-[15px] xl:text-base"
             >
               Own a premium women&apos;s fashion store with a professionally{" "}
               <span className="block">managed FICO business model.</span>
@@ -82,34 +139,27 @@ export function HeroSection() {
 
             <motion.div
               variants={fadeUp}
-              className="mt-4 w-full max-lg:mx-auto max-lg:max-w-[20rem] lg:mt-5 lg:max-w-md"
+              className="mt-4 w-full max-lg:mx-auto max-lg:mt-2 max-lg:max-w-[19.5rem] lg:mt-5 lg:max-w-md"
             >
-              <div className="rounded-[16px] border border-cta/20 bg-white/95 p-3.5 shadow-[0_8px_32px_rgba(91,45,139,0.08)] backdrop-blur-sm sm:p-4 lg:rounded-[18px] lg:p-4">
-                <div className="flex items-center justify-between gap-3 border-b border-border/70 pb-3">
-                  <span className="text-xs font-semibold uppercase tracking-[0.08em] text-black sm:text-sm">
-                    Investment
-                  </span>
-                  <span className="font-display text-base font-bold text-charcoal sm:text-lg lg:text-xl">
-                    ₹45 Lakhs+
-                  </span>
-                </div>
+              <HeroHighlightCards />
 
-                <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-x-3 sm:gap-y-2">
-                  {investmentHighlights.map((item) => (
-                    <li key={item} className="flex items-center gap-2">
-                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cta/10">
-                        <Check className="h-3 w-3 text-cta" strokeWidth={2.5} />
-                      </span>
-                      <span className="text-[11px] font-medium leading-snug text-charcoal sm:text-xs lg:text-sm">
-                        {item}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              <a
+                href="#hero-form"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById("hero-form")?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                  });
+                }}
+                className={`mt-2 lg:hidden ${ctaButtonClass({ fullWidth: true })} uppercase tracking-[0.06em]`}
+              >
+                Enquire Now
+                <ArrowRight className="h-3.5 w-3.5 shrink-0" strokeWidth={2.25} />
+              </a>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="mt-4 max-lg:mx-auto lg:mt-5">
+            <motion.div variants={fadeUp} className="mt-4 max-lg:hidden lg:mt-5">
               <a
                 href={CONTACT_PATH}
                 onClick={(e) => navigate(e, CONTACT_PATH)}
@@ -123,7 +173,7 @@ export function HeroSection() {
 
           <motion.div
             variants={fadeUp}
-            className="hero-form-wrap flex min-h-0 w-full max-lg:mx-auto max-lg:mt-0.5 max-lg:max-w-[20rem] max-lg:shrink-0 lg:ml-auto lg:mr-[-0.75rem] lg:mt-0 lg:w-[380px] lg:shrink-0 lg:self-center lg:translate-x-2 xl:mr-[-1rem] xl:w-[400px] xl:translate-x-3"
+            className="hero-form-wrap flex min-h-0 w-full max-lg:mx-auto max-lg:mt-0 max-lg:min-h-0 max-lg:max-w-[19.5rem] max-lg:flex-none lg:ml-auto lg:mr-[-0.75rem] lg:mt-0 lg:w-[380px] lg:shrink-0 lg:self-center lg:translate-x-2 xl:mr-[-1rem] xl:w-[400px] xl:translate-x-3"
           >
             <EnquiryForm
               variant="hero"
@@ -131,7 +181,7 @@ export function HeroSection() {
               heading="Check Your Franchise Eligibility"
               buttonText="CHECK FRANCHISE AVAILABILITY"
               showHeading
-              showEmail
+              showEmail={true}
               showBudget
               stackStateCityOnMobile
             />

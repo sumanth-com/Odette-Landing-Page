@@ -36,7 +36,7 @@ This folder contains the **Google Apps Script** project that saves form leads to
 8. In your Next.js project root, create `.env.local`:
 
 ```env
-NEXT_PUBLIC_GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
+GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
 ```
 
 9. Restart the dev server: `npm run dev`

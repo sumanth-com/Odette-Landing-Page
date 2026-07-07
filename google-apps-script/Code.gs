@@ -9,10 +9,17 @@
  * 2. Extensions → Apps Script → paste this file
  * 3. Run setupSheet() once → allow permissions
  * 4. Deploy → New deployment → Web app (Execute as: Me, Access: Anyone)
- * 5. Copy Web App URL → .env.local as NEXT_PUBLIC_GOOGLE_SCRIPT_URL
+ * 5. Copy Web App URL → .env.local as GOOGLE_SCRIPT_URL
  */
 
 const SHEET_NAME = "Leads";
+
+/** Must match budget options in the enquiry form */
+const ALLOWED_BUDGETS = [
+  "₹45 Lakhs",
+  "₹45–75 Lakhs",
+  "Above ₹75 Lakhs",
+];
 
 /** Sheet columns: timestamp (auto) + the 6 enquiry form fields */
 const SHEET_HEADERS = [
@@ -55,6 +62,10 @@ function doPost(e) {
 
     if (!investmentBudget) {
       return jsonResponse_({ success: false, error: "Investment budget is required" });
+    }
+
+    if (ALLOWED_BUDGETS.indexOf(investmentBudget) === -1) {
+      return jsonResponse_({ success: false, error: "Invalid investment budget" });
     }
 
     appendLeadRow_(sheet, {

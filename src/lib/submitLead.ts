@@ -7,18 +7,39 @@ export interface LeadPayload {
   investmentBudget: string;
 }
 
-export async function submitLead(payload: LeadPayload): Promise<void> {
-  const scriptUrl = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
+export interface SubmitLeadResult {
+  confirmationSent: boolean;
+}
 
-  if (!scriptUrl) {
-    console.warn("NEXT_PUBLIC_GOOGLE_SCRIPT_URL is not set. Lead was not sent to Google Sheets.");
-    return;
+export class LeadSubmissionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "LeadSubmissionError";
   }
+}
 
-  await fetch(scriptUrl, {
+export async function submitLead(payload: LeadPayload): Promise<SubmitLeadResult> {
+  const response = await fetch("/api/contact", {
     method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(payload),
   });
+
+  const result = (await response.json()) as {
+    success?: boolean;
+    error?: string;
+    confirmationSent?: boolean;
+  };
+
+  if (!response.ok || !result.success) {
+    throw new LeadSubmissionError(
+      result.error || "Unable to submit your inquiry. Please try again."
+    );
+  }
+
+  return {
+    confirmationSent: Boolean(result.confirmationSent),
+  };
 }

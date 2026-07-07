@@ -58,8 +58,8 @@ export function WhyConsiderSection() {
               pocket-friendly prices for ages 15 to 65.
               <br />
               <br />
-              Founded in Bengaluru in 2021, it has grown to 35+ stores with ethnic, Western, and
-              lifestyle collections customers trust.
+              Founded in Bengaluru in 2020, it has grown to 45+ stores with Western and lifestyle
+              collections customers trust.
               <br />
               <br />
               Fresh designs, premium quality, and accessible pricing — a brand built to scale for
