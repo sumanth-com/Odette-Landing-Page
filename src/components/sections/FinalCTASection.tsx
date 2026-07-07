@@ -85,11 +85,12 @@ export function FinalCTASection() {
             <EnquiryForm
               variant="hero"
               id="contact-form"
-              heading="Check if This Opportunity is Right for You"
-              buttonText="Book Free Consultation"
+              heading="Check Your Franchise Eligibility"
+              buttonText="CHECK FRANCHISE AVAILABILITY"
               showHeading
               showEmail
               showBudget
+              stackStateCityOnMobile
               showSecurityNote={false}
             />
           </motion.div>

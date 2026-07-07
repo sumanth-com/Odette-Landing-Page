@@ -11,17 +11,15 @@ import { fadeUp, staggerContainer } from "../ui/AnimatedSection";
 import { ctaButtonClass } from "../ui/GoldButton";
 import { EnquiryForm } from "../ui/EnquiryForm";
 
-const heroHighlights = [
-  "Premium Fashion Brand",
-  "End-to-End Franchise Support",
-  "High Growth Retail Opportunity",
-  "Dedicated Business Consultants",
-];
+const investmentHighlights = [
+  "Company Operated",
+  "5-Year Agreement",
+  "40+ Outlets",
+  "Premium Women's Fashion",
+] as const;
 
 export function HeroSection() {
   const { navigate } = useSectionNavigation();
-  const lastHighlight = heroHighlights[heroHighlights.length - 1];
-  const otherHighlights = heroHighlights.slice(0, -1);
 
   return (
     <section
@@ -70,46 +68,54 @@ export function HeroSection() {
               variants={fadeUp}
               className="mt-3 font-display text-[1.28rem] font-bold uppercase leading-[1.2] tracking-[0.03em] text-charcoal max-lg:mt-2.5 max-lg:text-[1.02rem] max-lg:leading-[1.15] lg:mt-4 lg:text-[1.85rem] xl:text-[2.05rem]"
             >
-              <span className="block lg:whitespace-nowrap">Own an Odette Franchise &amp;</span>
-              <span className="block lg:whitespace-nowrap">Build a Profitable</span>
-              <span className="block lg:whitespace-nowrap">Fashion Business</span>
+              <span className="block">You Invest.</span>
+              <span className="block">WE RUN THE BUSINESS.</span>
             </motion.h1>
 
             <motion.p
               variants={fadeUp}
               className="mt-3 text-sm leading-relaxed text-black max-lg:mx-auto max-lg:mt-2.5 max-lg:max-w-[19rem] max-lg:text-[11px] max-lg:leading-snug lg:mt-4 lg:max-w-xl lg:text-[15px] xl:text-base"
             >
-              Launch your Odette franchise with expert guidance from iFranchise—
-              <span className="block">from planning and setup to a successful store launch.</span>
+              Own a premium women&apos;s fashion store with a professionally{" "}
+              <span className="block">managed FICO business model.</span>
             </motion.p>
 
-            <motion.ul
+            <motion.div
               variants={fadeUp}
-              className="mt-5 hidden w-full flex-col gap-2.5 lg:flex lg:items-start"
+              className="mt-4 w-full max-lg:mx-auto max-lg:max-w-[20rem] lg:mt-5 lg:max-w-md"
             >
-              {otherHighlights.map((item) => (
-                <li key={item} className="flex items-center gap-2">
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cta/10">
-                    <Check className="h-3 w-3 text-cta" strokeWidth={2.5} />
+              <div className="rounded-[16px] border border-cta/20 bg-white/95 p-3.5 shadow-[0_8px_32px_rgba(91,45,139,0.08)] backdrop-blur-sm sm:p-4 lg:rounded-[18px] lg:p-4">
+                <div className="flex items-center justify-between gap-3 border-b border-border/70 pb-3">
+                  <span className="text-xs font-semibold uppercase tracking-[0.08em] text-black sm:text-sm">
+                    Investment
                   </span>
-                  <span className="text-sm font-medium text-charcoal">{item}</span>
-                </li>
-              ))}
-              <li className="flex items-center gap-2">
-                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cta/10">
-                  <Check className="h-3 w-3 text-cta" strokeWidth={2.5} />
-                </span>
-                <span className="text-sm font-medium text-charcoal">{lastHighlight}</span>
-              </li>
-            </motion.ul>
+                  <span className="font-display text-base font-bold text-charcoal sm:text-lg lg:text-xl">
+                    ₹45 Lakhs+
+                  </span>
+                </div>
 
-            <motion.div variants={fadeUp} className="mt-2.5 max-lg:mx-auto max-lg:hidden lg:mt-6">
+                <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-x-3 sm:gap-y-2">
+                  {investmentHighlights.map((item) => (
+                    <li key={item} className="flex items-center gap-2">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cta/10">
+                        <Check className="h-3 w-3 text-cta" strokeWidth={2.5} />
+                      </span>
+                      <span className="text-[11px] font-medium leading-snug text-charcoal sm:text-xs lg:text-sm">
+                        {item}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="mt-4 max-lg:mx-auto lg:mt-5">
               <a
                 href={CONTACT_PATH}
                 onClick={(e) => navigate(e, CONTACT_PATH)}
-                className={`${ctaButtonClass()} whitespace-nowrap`}
+                className={`${ctaButtonClass()} whitespace-nowrap uppercase tracking-[0.06em]`}
               >
-                Start Your Franchise Journey
+                Enquire Now
                 <ArrowRight className="h-3.5 w-3.5 shrink-0" strokeWidth={2.25} />
               </a>
             </motion.div>
@@ -122,8 +128,8 @@ export function HeroSection() {
             <EnquiryForm
               variant="hero"
               id="hero-form"
-              heading="Check if This Opportunity is Right for You"
-              buttonText="Book Free Consultation"
+              heading="Check Your Franchise Eligibility"
+              buttonText="CHECK FRANCHISE AVAILABILITY"
               showHeading
               showEmail
               showBudget
