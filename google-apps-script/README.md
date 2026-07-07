@@ -33,20 +33,17 @@ This folder contains the **Google Apps Script** project that saves form leads to
    - Who has access: **Anyone**
    - Click **Deploy** and copy the **Web App URL**
 
-8. In your Next.js project root, create `.env.local`:
+8. Add the Web App URL to your environment variables:
 
 ```env
 GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
 ```
 
-9. Restart the dev server: `npm run dev`
+Set this in:
+- `.env.local` for local development
+- Your production host (e.g. Vercel → Project → Settings → Environment Variables)
 
-## Unlimited submissions
-
-Every form submit adds **one new row**. There is no limit on:
-- Number of leads
-- Same person submitting multiple times
-- Hero form + secondary form submissions
+9. Restart the dev server after changing env vars: `npm run dev`
 
 ## Sheet columns
 
@@ -54,21 +51,20 @@ Every form submit adds **one new row**. There is no limit on:
 |--------|-------------|
 | Timestamp | Date & time of submission |
 | Full Name | Visitor name |
-| Country Code | e.g. +91 |
-| Mobile Number | 10-digit number |
-| Full Phone | Country code + mobile |
-| Email | Optional |
-| City | City |
-| Investment Budget | Hero form only |
-| Form Source | Hero Form / Secondary Form |
-| Page URL | Page URL when submitted |
+| Mobile Number | Full phone number with country code |
+| Email | Visitor email |
+| State | Selected state |
+| City | City entered by visitor |
+| Investment Budget | Selected budget option |
 
 ## Test
 
 Open your Web App URL in a browser. You should see:
 
 ```json
-{"status":"running","message":"Odette Franchise lead capture API is active..."}
+{"status":"running","version":"2.1.0","message":"Odette lead capture API is active."}
 ```
 
 Then submit a test lead from the website and confirm a new row appears in the **Leads** sheet.
+
+If emails arrive but rows do not appear, verify `GOOGLE_SCRIPT_URL` is set in production and redeploy the Apps Script after updating `Code.gs`.

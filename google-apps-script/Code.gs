@@ -9,10 +9,11 @@
  * 2. Extensions → Apps Script → paste this file
  * 3. Run setupSheet() once → allow permissions
  * 4. Deploy → New deployment → Web app (Execute as: Me, Access: Anyone)
- * 5. Copy Web App URL → .env.local as GOOGLE_SCRIPT_URL
+ * 5. Copy Web App URL → GOOGLE_SCRIPT_URL in your hosting environment
  */
 
 const SHEET_NAME = "Leads";
+const SCRIPT_VERSION = "2.1.0";
 
 /** Must match budget options in the enquiry form */
 const ALLOWED_BUDGETS = [
@@ -37,12 +38,23 @@ function doPost(e) {
     const sheet = getSheet_();
     const data = parseRequest_(e);
 
-    const fullName = String(data.fullName || "").trim();
-    const mobileNumber = String(data.mobileNumber || "").trim();
-    const email = String(data.email || "").trim();
-    const state = String(data.state || "").trim();
-    const city = String(data.city || "").trim();
-    const investmentBudget = String(data.investmentBudget || "").trim();
+    const fullName = pickField_(data, ["fullName", "full_name", "name"]);
+    const mobileNumber = pickField_(data, [
+      "mobileNumber",
+      "mobile_number",
+      "mobile",
+      "phone",
+      "fullPhone",
+      "full_phone",
+    ]);
+    const email = pickField_(data, ["email", "emailAddress", "email_address"]);
+    const state = pickField_(data, ["state"]);
+    const city = pickField_(data, ["city"]);
+    const investmentBudget = pickField_(data, [
+      "investmentBudget",
+      "investment_budget",
+      "budget",
+    ]);
 
     if (!fullName) {
       return jsonResponse_({ success: false, error: "Full name is required" });
@@ -50,6 +62,10 @@ function doPost(e) {
 
     if (!mobileNumber) {
       return jsonResponse_({ success: false, error: "Mobile number is required" });
+    }
+
+    if (!email) {
+      return jsonResponse_({ success: false, error: "Email is required" });
     }
 
     if (!state) {
@@ -65,7 +81,10 @@ function doPost(e) {
     }
 
     if (ALLOWED_BUDGETS.indexOf(investmentBudget) === -1) {
-      return jsonResponse_({ success: false, error: "Invalid investment budget" });
+      return jsonResponse_({
+        success: false,
+        error: "Invalid investment budget: " + investmentBudget,
+      });
     }
 
     appendLeadRow_(sheet, {
@@ -87,6 +106,7 @@ function doPost(e) {
 function doGet() {
   return jsonResponse_({
     status: "running",
+    version: SCRIPT_VERSION,
     message: "Odette lead capture API is active.",
   });
 }
@@ -163,26 +183,66 @@ function appendLeadRow_(sheet, lead) {
   sheet.getRange(nextRow, 7).setValue(lead.investmentBudget);
 }
 
+function pickField_(data, keys) {
+  for (var i = 0; i < keys.length; i++) {
+    var value = data[keys[i]];
+    if (value !== undefined && value !== null && String(value).trim() !== "") {
+      return String(value).trim();
+    }
+  }
+
+  return "";
+}
+
 function parseRequest_(e) {
-  if (!e || !e.postData || !e.postData.contents) {
-    throw new Error("No data received");
+  if (!e) {
+    throw new Error("No request received");
   }
 
-  const contentType = e.postData.type || "";
+  if (e.postData && e.postData.contents) {
+    var contentType = String(e.postData.type || "").toLowerCase();
+    var contents = String(e.postData.contents || "");
 
-  if (contentType.indexOf("application/json") > -1) {
-    return JSON.parse(e.postData.contents);
+    if (contentType.indexOf("application/json") > -1 || contents.charAt(0) === "{") {
+      return JSON.parse(contents);
+    }
+
+    if (contentType.indexOf("application/x-www-form-urlencoded") > -1) {
+      return parseFormBody_(contents);
+    }
+
+    try {
+      return JSON.parse(contents);
+    } catch (err) {
+      return parseFormBody_(contents);
+    }
   }
 
-  if (contentType.indexOf("application/x-www-form-urlencoded") > -1) {
-    return e.parameter || {};
+  if (e.parameter) {
+    return e.parameter;
   }
 
-  try {
-    return JSON.parse(e.postData.contents);
-  } catch (err) {
-    return e.parameter || {};
+  throw new Error("No data received");
+}
+
+function parseFormBody_(body) {
+  var params = {};
+  var pairs = String(body).split("&");
+
+  for (var i = 0; i < pairs.length; i++) {
+    var pair = pairs[i];
+    if (!pair) continue;
+
+    var parts = pair.split("=");
+    var key = decodeURIComponent(parts[0] || "").trim();
+    var value = decodeURIComponent((parts[1] || "").replace(/\+/g, " ")).trim();
+
+    if (key) {
+      params[key] = value;
+    }
   }
+
+  return params;
 }
 
 function jsonResponse_(obj) {
