@@ -25,3 +25,20 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 npm run build
 npm start
 ```
+
+## Troubleshooting
+
+If you see a runtime error like `Cannot find module './611.js'`, the local Next.js cache is stale. Run:
+
+```bash
+npm run dev:clean
+```
+
+Or manually:
+
+```bash
+npm run clean
+npm run dev
+```
+
+Only run one dev server at a time (do not start `npm run dev` in multiple terminals).
