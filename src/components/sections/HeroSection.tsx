@@ -6,50 +6,32 @@ import { CONTACT_PATH } from "@/lib/site";
 import { useSectionNavigation } from "@/lib/useSectionNavigation";
 import { type ElementType } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Briefcase, Building2, Calendar, IndianRupee, MapPinned, Tag } from "lucide-react";
+import { ArrowRight, Briefcase, Building2, Calendar, IndianRupee, Tag } from "lucide-react";
 import Image from "next/image";
 import { fadeUp, staggerContainer } from "../ui/AnimatedSection";
 import { ctaButtonClass } from "../ui/GoldButton";
 import { EnquiryForm } from "../ui/EnquiryForm";
 
-const highlightCards = [
-  { label: "Major cities across India", icon: MapPinned },
-  { label: "Model: FICO", icon: Tag },
-  { label: "Agreement Term: 5 years", icon: Calendar },
-  { label: "45+ Outlets", icon: Building2 },
-  {
-    label: "Franchise Types: Master Franchise · Unit Franchise",
-    icon: Briefcase,
-    fullWidth: true,
-  },
-] as const;
-
 function HighlightCard({
   label,
   icon: Icon,
   fullWidth = false,
-  centered = false,
 }: {
   label: string;
   icon: ElementType;
   fullWidth?: boolean;
-  centered?: boolean;
 }) {
   return (
     <li
       className={`flex items-center gap-1.5 rounded-[12px] border border-cta/20 bg-white px-2 py-2 shadow-[0_4px_14px_rgba(91,45,139,0.07)] sm:gap-2 sm:px-2.5 sm:py-2.5 lg:px-3 lg:py-3 ${
         fullWidth ? "col-span-2" : "min-h-[2.75rem] lg:min-h-0"
-      } ${centered ? "max-lg:justify-center lg:justify-start" : ""}`}
+      }`}
     >
       <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cta/10 sm:h-6 sm:w-6">
         <Icon className="h-2.5 w-2.5 text-cta sm:h-3 sm:w-3" strokeWidth={2.25} />
       </span>
       <span
-        className={`min-w-0 font-semibold leading-snug text-charcoal ${
-          centered
-            ? "max-lg:flex-none max-lg:text-center lg:flex-1 lg:text-left"
-            : "flex-1 text-left"
-        } ${
+        className={`min-w-0 flex-1 text-left font-semibold leading-snug text-charcoal ${
           fullWidth
             ? "text-[9px] leading-tight sm:text-[11px] sm:leading-snug lg:text-xs xl:text-sm"
             : "text-[10px] sm:text-xs lg:text-sm"
@@ -63,42 +45,20 @@ function HighlightCard({
 
 function HeroHighlightCards() {
   return (
-    <>
-      <ul
-        className="hero-highlight-grid grid grid-cols-2 gap-2 sm:gap-2.5 lg:hidden"
-        role="list"
-      >
-        <HighlightCard label="Investment: ₹45 Lakhs+" icon={IndianRupee} />
-        <HighlightCard label="Model: FICO" icon={Tag} />
-        <HighlightCard label="Agreement Term: 5 years" icon={Calendar} />
-        <HighlightCard label="45+ Outlets" icon={Building2} />
-        <HighlightCard
-          label="Franchise Types: Master Franchise · Unit Franchise"
-          icon={Briefcase}
-          fullWidth
-        />
-      </ul>
-
-      <ul
-        className="hero-highlight-grid hidden grid-cols-2 gap-2 sm:gap-2.5 lg:grid"
-        role="list"
-      >
-        <HighlightCard
-          label="Investment: ₹45 Lakhs+"
-          icon={IndianRupee}
-          fullWidth
-          centered
-        />
-        {highlightCards.map((card) => (
-          <HighlightCard
-            key={card.label}
-            label={card.label}
-            icon={card.icon}
-            fullWidth={"fullWidth" in card ? card.fullWidth : false}
-          />
-        ))}
-      </ul>
-    </>
+    <ul
+      className="hero-highlight-grid grid grid-cols-2 gap-2 sm:gap-2.5"
+      role="list"
+    >
+      <HighlightCard label="Investment: ₹45 Lakhs+" icon={IndianRupee} />
+      <HighlightCard label="Model: FICO" icon={Tag} />
+      <HighlightCard label="Agreement Term: 5 years" icon={Calendar} />
+      <HighlightCard label="45+ Outlets" icon={Building2} />
+      <HighlightCard
+        label="Franchise Types: Master Franchise · Unit Franchise"
+        icon={Briefcase}
+        fullWidth
+      />
+    </ul>
   );
 }
 
