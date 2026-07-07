@@ -3,7 +3,7 @@
 import { EnquiryForm } from "@/components/ui/EnquiryForm";
 import { fadeUp } from "@/components/ui/AnimatedSection";
 import { GoogleMeetIcon } from "@/components/ui/GoogleMeetIcon";
-import { SectionPill, ctaButtonClass } from "@/components/ui/GoldButton";
+import { SectionHeading, ctaButtonClass, sectionBodyTextClass } from "@/components/ui/GoldButton";
 import { SectionShell } from "@/components/ui/SectionShell";
 import {
   CONTACT_EMAIL,
@@ -26,14 +26,15 @@ export function FinalCTASection() {
             variants={fadeUp}
             className="flex flex-col items-start justify-center text-left max-lg:items-center max-lg:text-center"
           >
-            <SectionPill>Contact</SectionPill>
-            <h2 className="mt-3 font-display text-xl leading-snug tracking-tight text-black sm:text-2xl lg:text-[1.75rem]">
-              Get in Touch With Our Team
-            </h2>
+            <SectionHeading
+              compact
+              pill="Contact"
+              title="Get in Touch With Our Team"
+            />
             <p className="mt-2 text-sm font-medium text-cta">
               Limited franchise slots in select cities — act now before allocation closes.
             </p>
-            <p className="mt-2 max-w-md text-sm leading-relaxed text-black">
+            <p className={`mt-2 max-w-md ${sectionBodyTextClass}`}>
               Book a meeting with our franchise consultants to discuss the Odette opportunity and
               get your questions answered.
             </p>

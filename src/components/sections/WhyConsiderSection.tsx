@@ -4,7 +4,7 @@ import Logo from "@/assets/Logo.webp";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { fadeUp } from "../ui/AnimatedSection";
-import { SectionHeading } from "../ui/GoldButton";
+import { SectionHeading, sectionBodyTextClass } from "../ui/GoldButton";
 import { SectionShell } from "../ui/SectionShell";
 
 function OdetteBrandCard() {
@@ -53,7 +53,7 @@ export function WhyConsiderSection() {
             variants={fadeUp}
             className="min-w-0 text-left"
           >
-            <p className="text-sm leading-relaxed text-black sm:text-[15px] sm:leading-[1.7]">
+            <p className={sectionBodyTextClass}>
               Odette is India&apos;s mass-premium fashion brand — high-fashion style at
               pocket-friendly prices for ages 15 to 65.
               <br />

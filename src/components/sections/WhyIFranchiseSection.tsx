@@ -74,12 +74,10 @@ export function WhyIFranchiseSection() {
         className="section-fit mx-auto flex min-h-0 w-full max-w-5xl flex-col items-center px-1 sm:px-2 lg:px-3"
       >
         <SectionHeading
-          dense
-          tight
           compact
           centered
           pill="iFranchise"
-          tagline="India's Trusted Franchise Consulting Partner"
+          title="India's Trusted Franchise Consulting Partner"
           subtitle="Expert franchise consulting for investors and brands—from opportunity assessment to store launch and growth."
         />
 

@@ -68,7 +68,7 @@ export function HeroSection() {
 
             <motion.h1
               variants={fadeUp}
-              className="mt-3 font-display text-[1.35rem] font-bold uppercase leading-[1.2] tracking-[0.03em] text-charcoal max-lg:mt-2.5 max-lg:text-[1.08rem] max-lg:leading-[1.15] lg:mt-4 lg:text-[1.95rem] xl:text-[2.18rem]"
+              className="mt-3 font-display text-[1.28rem] font-bold uppercase leading-[1.2] tracking-[0.03em] text-charcoal max-lg:mt-2.5 max-lg:text-[1.02rem] max-lg:leading-[1.15] lg:mt-4 lg:text-[1.85rem] xl:text-[2.05rem]"
             >
               <span className="block lg:whitespace-nowrap">Own an Odette Franchise &amp;</span>
               <span className="block lg:whitespace-nowrap">Build a Profitable</span>

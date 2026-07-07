@@ -78,6 +78,19 @@ export function GoldButton({
   );
 }
 
+export const sectionTitleClass = (light = false) =>
+  `font-display text-2xl leading-tight tracking-tight md:text-3xl lg:text-[2.25rem] ${
+    light ? "text-white" : "text-black"
+  }`;
+
+export const sectionSubtitleClass = (light = false, centered = false) =>
+  `mt-2 max-w-4xl text-xs leading-snug sm:text-sm lg:mt-3 lg:text-base lg:leading-relaxed ${
+    centered ? "mx-auto" : ""
+  } ${light ? "text-white/75" : "text-black"}`;
+
+export const sectionBodyTextClass =
+  "text-sm leading-relaxed text-black sm:text-[15px] sm:leading-[1.7]";
+
 interface SectionHeadingProps {
   pill?: string;
   title?: string;
@@ -131,7 +144,14 @@ export function SectionHeading({
   dense = false,
   tight = false,
 }: SectionHeadingProps) {
-  const spacing = tight ? "mb-2 lg:mb-2.5" : dense ? "mb-3" : compact ? "mb-3 lg:mb-5" : "mb-14 md:mb-16";
+  const useCompactLayout = compact || dense || tight;
+  const spacing = tight
+    ? "mb-2 lg:mb-2.5"
+    : dense
+      ? "mb-3"
+      : useCompactLayout
+        ? "mb-3 lg:mb-5"
+        : "mb-14 md:mb-16";
 
   return (
     <motion.div
@@ -148,53 +168,13 @@ export function SectionHeading({
           <SectionPill>{pill}</SectionPill>
         </div>
       )}
-      {title ? (
-        <h2
-          className={`font-display leading-tight tracking-tight ${
-            tight
-              ? "text-lg md:text-xl lg:text-[1.65rem]"
-              : dense
-                ? "text-xl md:text-2xl lg:text-[1.75rem]"
-                : compact
-                  ? "text-2xl md:text-3xl lg:text-[2.25rem]"
-                  : "text-3xl md:text-4xl lg:text-[2.75rem]"
-          } ${light ? "text-white" : "text-black"}`}
-        >
-          {title}
-        </h2>
+      {title ? <h2 className={sectionTitleClass(light)}>{title}</h2> : null}
+      {!title && tagline ? (
+        <h2 className={sectionTitleClass(light)}>{tagline}</h2>
       ) : null}
-      {tagline && (
-        <p
-          className={`font-display font-semibold leading-snug ${
-            dense
-              ? "mt-2 text-sm sm:text-base"
-              : compact
-                ? "mt-2 text-base lg:mt-3 lg:text-lg"
-                : "mt-4 text-lg md:text-xl"
-          } ${centered ? "mx-auto" : ""} ${light ? "text-white/90" : "text-black"}`}
-        >
-          {tagline}
-        </p>
-      )}
-      {subtitle && (
-        <p
-          className={`leading-relaxed ${
-            compact ? "max-w-4xl" : "max-w-2xl"
-          } ${
-            tight
-              ? "mt-1.5 text-[11px] leading-snug sm:text-xs"
-              : dense
-                ? "mt-2 text-xs leading-snug sm:text-sm"
-                : compact
-                ? "mt-2 text-xs leading-snug lg:mt-3 lg:text-sm lg:leading-relaxed lg:text-base"
-                : "mt-5 text-base md:text-lg"
-          } ${centered ? "mx-auto" : ""} ${light ? "text-white/75" : "text-black"}`}
-        >
-          {subtitle}
-        </p>
-      )}
+      {subtitle ? <p className={sectionSubtitleClass(light, centered)}>{subtitle}</p> : null}
       <div
-        className={`h-px w-16 bg-cta ${tight ? "mt-2" : dense ? "mt-3" : compact ? "mt-3 lg:mt-4" : "mt-8"} ${centered ? "mx-auto" : ""}`}
+        className={`h-px w-16 bg-cta ${tight ? "mt-2" : "mt-3 lg:mt-4"} ${centered ? "mx-auto" : ""}`}
         aria-hidden="true"
       />
     </motion.div>

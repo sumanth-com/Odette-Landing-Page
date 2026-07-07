@@ -52,7 +52,7 @@ export function FAQSection() {
     <SectionShell id="faq" gradientTone={4}>
       <div className="section-fit mx-auto flex w-full max-w-3xl flex-col items-center justify-center">
         <SectionHeading
-          dense
+          compact
           centered
           pill="FAQ"
           title="Frequently Asked Questions"

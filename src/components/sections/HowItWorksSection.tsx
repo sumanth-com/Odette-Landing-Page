@@ -17,8 +17,7 @@ export function HowItWorksSection() {
         className="section-fit mx-auto flex min-h-0 w-full max-w-6xl flex-col items-center justify-center"
       >
         <SectionHeading
-          dense
-          tight
+          compact
           centered
           pill="Franchise Investment"
           title="Franchise Investment in India"
