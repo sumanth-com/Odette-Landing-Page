@@ -18,7 +18,7 @@ export function FinalCTASection() {
   return (
     <SectionShell id="contact">
       <div className="section-fit mx-auto flex min-h-0 w-full max-w-6xl flex-col">
-        <div className="grid min-h-0 flex-1 grid-cols-1 items-center gap-4 lg:grid-cols-2 lg:gap-8">
+        <div className="grid min-h-0 flex-1 grid-cols-1 items-center gap-3 max-lg:gap-2.5 lg:grid-cols-2 lg:gap-8">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -89,11 +89,12 @@ export function FinalCTASection() {
               showHeading
               showEmail
               showBudget
+              showSecurityNote={false}
             />
           </motion.div>
         </div>
 
-        <p className="mt-2 shrink-0 text-center text-[10px] text-taupe/80 sm:text-[11px]">
+        <p className="mt-1 shrink-0 text-center text-[10px] text-taupe/80 max-lg:mt-0.5 sm:text-[11px]">
           &copy; {new Date().getFullYear()} iFranchise. All rights reserved.
         </p>
       </div>

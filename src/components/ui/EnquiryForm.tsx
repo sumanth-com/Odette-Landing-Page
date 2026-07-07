@@ -36,6 +36,7 @@ interface EnquiryFormProps {
   phoneLabel?: string;
   id?: string;
   stackStateCityOnMobile?: boolean;
+  showSecurityNote?: boolean;
 }
 
 const budgetOptions = [
@@ -104,6 +105,7 @@ export function EnquiryForm({
   phoneLabel = "Mobile Number",
   id = "enquiry-form",
   stackStateCityOnMobile = false,
+  showSecurityNote = true,
 }: EnquiryFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const [mobileError, setMobileError] = useState("");
@@ -430,10 +432,12 @@ export function EnquiryForm({
               {!isSubmitting && <Send className="h-4 w-4" strokeWidth={2} />}
             </GoldButton>
 
-            <p className="flex items-center justify-center gap-1.5 text-center text-[10px] leading-relaxed text-charcoal/65 sm:text-[11px]">
-              <Shield className="h-3 w-3 shrink-0 text-charcoal/60" strokeWidth={2.5} />
-              Your information is secure and will not be shared
-            </p>
+            {showSecurityNote ? (
+              <p className="flex items-center justify-center gap-1.5 text-center text-[10px] leading-relaxed text-charcoal/65 sm:text-[11px]">
+                <Shield className="h-3 w-3 shrink-0 text-charcoal/60" strokeWidth={2.5} />
+                Your information is secure and will not be shared
+              </p>
+            ) : null}
           </div>
         </form>
       </div>

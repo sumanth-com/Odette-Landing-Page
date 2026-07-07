@@ -85,7 +85,7 @@ export function WhyIFranchiseSection() {
 
         <motion.div variants={fadeUp} className="flex w-full flex-col">
           {/* Mobile: Why grid, then Process grid */}
-          <div className="flex flex-col gap-3 lg:hidden">
+          <div className="flex flex-col gap-2 lg:hidden">
             <div className="flex flex-col gap-2">
               <CardTitleHighlight compact>Why iFranchise</CardTitleHighlight>
               <CardGrid items={whyCards} />
