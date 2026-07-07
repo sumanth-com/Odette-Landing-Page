@@ -1,3 +1,3 @@
-export { EMAIL_BRAND, getOdetteLogoUrl } from "./brand";
+export { EMAIL_BRAND } from "./brand";
 export { LeadConfirmationEmail } from "./LeadConfirmationEmail";
 export { LeadNotificationEmail } from "./LeadNotificationEmail";

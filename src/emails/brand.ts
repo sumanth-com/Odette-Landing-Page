@@ -15,17 +15,3 @@ export const EMAIL_BRAND = {
   websiteUrl: CONTACT_WEBSITE,
   websiteLabel: "www.ifranchise.in",
 } as const;
-
-export function getOdetteLogoUrl(): string {
-  const configured = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
-  if (configured) {
-    return `${configured}/odette-logo.webp`;
-  }
-
-  const vercel = process.env.VERCEL_URL?.replace(/\/$/, "");
-  if (vercel) {
-    return `https://${vercel}/odette-logo.webp`;
-  }
-
-  return "http://localhost:3000/odette-logo.webp";
-}

@@ -1,14 +1,15 @@
 import { Img, Section, Text } from "@react-email/components";
-import { EMAIL_BRAND, getOdetteLogoUrl } from "../brand";
+import { EMAIL_BRAND } from "../brand";
+import { getOdetteLogoDataUri } from "../odetteLogo";
 
 export function EmailLogo() {
   return (
     <Section style={logoSectionStyle}>
       <Img
-        src={getOdetteLogoUrl()}
+        src={getOdetteLogoDataUri()}
         alt="Odette"
-        width="168"
-        height="48"
+        width="220"
+        height="80"
         style={logoImageStyle}
       />
       <Text style={taglineStyle}>{EMAIL_BRAND.tagline}</Text>
@@ -24,7 +25,8 @@ const logoSectionStyle = {
 const logoImageStyle = {
   margin: "0 auto",
   display: "block",
-  maxWidth: "168px",
+  maxWidth: "220px",
+  width: "220px",
   height: "auto",
 };
 

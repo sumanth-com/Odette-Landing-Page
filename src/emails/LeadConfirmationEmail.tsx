@@ -34,7 +34,7 @@ export function LeadConfirmationEmail({ lead }: LeadConfirmationEmailProps) {
       </Section>
 
       <Text style={bodyStyle}>
-        Odette is India's mass-premium fashion brand — built for investors who want a
+        Odette is India{"'"}s mass-premium fashion brand — built for investors who want a
         professionally managed franchise experience with premium retail positioning.
       </Text>
 
