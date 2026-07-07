@@ -1,15 +1,15 @@
 import { Img, Section, Text } from "@react-email/components";
 import { EMAIL_BRAND } from "../brand";
-import { getOdetteLogoDataUri } from "../odetteLogo";
+import { getOdetteLogoCidSrc } from "../odetteLogo";
 
 export function EmailLogo() {
   return (
     <Section style={logoSectionStyle}>
       <Img
-        src={getOdetteLogoDataUri()}
+        src={getOdetteLogoCidSrc()}
         alt="Odette"
         width="220"
-        height="80"
+        height="auto"
         style={logoImageStyle}
       />
       <Text style={taglineStyle}>{EMAIL_BRAND.tagline}</Text>

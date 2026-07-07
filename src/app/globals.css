@@ -156,10 +156,56 @@ body {
   }
 
   #contact.snap-section {
-    height: 100dvh;
+    height: auto;
     min-height: 100dvh;
-    max-height: 100dvh;
-    overflow: hidden;
+    max-height: none;
+    overflow: visible;
+  }
+
+  #contact .snap-section-body {
+    height: auto;
+    min-height: calc(100dvh - var(--header-height));
+    overflow: visible;
+    padding-top: calc(var(--header-height) + 0.5rem);
+    padding-bottom: 5.5rem;
+  }
+
+  #contact .snap-section-inner {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+    justify-content: flex-start;
+    padding-top: 0;
+    padding-bottom: 0.5rem;
+  }
+
+  #contact .snap-section-inner > .section-fit {
+    flex: none;
+    max-height: none;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  #contact .hero-form-scroll {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+    padding: 0.875rem 0.875rem 0.75rem;
+  }
+
+  #contact .hero-form-scroll h3 {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.35;
+  }
+
+  #contact .hero-form-scroll form {
+    margin-top: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  #contact .hero-form-scroll .h-10 {
+    height: 2.25rem;
   }
 
   #hero .page-container {
@@ -334,14 +380,6 @@ body {
   #contact .hero-form-scroll .mt-auto {
     gap: 0;
     padding-top: 0.5rem;
-  }
-
-  #contact .snap-section-body {
-    padding-bottom: 5.5rem;
-  }
-
-  #contact .section-fit {
-    padding-bottom: 0.25rem;
   }
 
   #why-ifranchise .snap-section-inner {

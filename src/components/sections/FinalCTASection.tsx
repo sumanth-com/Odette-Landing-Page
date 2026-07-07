@@ -23,29 +23,29 @@ export function FinalCTASection() {
 
   return (
     <SectionShell id="contact" gradientTone={5}>
-      <div className="section-fit mx-auto flex min-h-0 w-full max-w-6xl flex-col">
-        <div className="grid min-h-0 flex-1 grid-cols-1 items-center gap-3 max-lg:gap-2.5 lg:grid-cols-2 lg:gap-8">
+      <div className="section-fit mx-auto flex min-h-0 w-full max-w-6xl flex-col max-lg:py-1">
+        <div className="grid min-h-0 flex-1 grid-cols-1 items-center gap-3 max-lg:items-start max-lg:gap-2 lg:grid-cols-2 lg:gap-8">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
             variants={fadeUp}
-            className="flex flex-col items-start justify-center text-left max-lg:items-center max-lg:text-center"
+            className="flex flex-col items-start justify-center text-left max-lg:shrink-0 max-lg:items-center max-lg:text-center"
           >
             <SectionHeading
               compact
               pill="Contact"
               title="Get in Touch With Our Team"
             />
-            <p className="mt-2 text-sm font-medium text-cta">
+            <p className="mt-1.5 text-sm font-medium text-cta max-lg:mt-1">
               Limited franchise slots in select cities — act now before allocation closes.
             </p>
-            <p className={`mt-2 max-w-md ${sectionBodyTextClass}`}>
+            <p className={`mt-1.5 max-w-md max-lg:mt-1 max-lg:text-sm ${sectionBodyTextClass}`}>
               Book a meeting with our franchise consultants to discuss the Odette opportunity and
               get your questions answered.
             </p>
 
-            <div className="mt-4 flex flex-wrap items-center gap-2 max-lg:justify-center">
+            <div className="mt-3 flex flex-wrap items-center gap-2 max-lg:mt-2 max-lg:justify-center">
               <a
                 href={MEETING_URL}
                 target="_blank"
@@ -86,7 +86,7 @@ export function FinalCTASection() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
             variants={fadeUp}
-            className="flex min-h-0 w-full min-w-0 max-w-[400px] justify-center lg:ml-auto lg:justify-end"
+            className="flex w-full min-w-0 max-w-[400px] justify-center max-lg:mx-auto lg:ml-auto lg:justify-end"
           >
             <EnquiryForm
               variant="hero"
@@ -103,9 +103,9 @@ export function FinalCTASection() {
           </motion.div>
         </div>
 
-        <p className="mt-1 hidden shrink-0 text-center text-[10px] text-black/70 sm:text-[11px] lg:block">
+        <div className="mt-1 hidden shrink-0 lg:block">
           {copyright}
-        </p>
+        </div>
       </div>
     </SectionShell>
   );

@@ -1,5 +1,6 @@
 import { LeadConfirmationEmail } from "@/emails/LeadConfirmationEmail";
 import { LeadNotificationEmail } from "@/emails/LeadNotificationEmail";
+import { getOdetteLogoAttachment } from "@/emails/odetteLogo";
 import { CONTACT_EMAIL } from "@/lib/site";
 import type { LeadRecord } from "@/lib/leadSchema";
 import { Resend } from "resend";
@@ -31,6 +32,10 @@ function getNotificationRecipient() {
   return process.env.CONTACT_NOTIFICATION_EMAIL?.trim() || CONTACT_EMAIL;
 }
 
+function getEmailAttachments() {
+  return [getOdetteLogoAttachment()];
+}
+
 export async function sendLeadNotificationEmail(lead: LeadRecord) {
   const resend = getResendClient();
 
@@ -40,6 +45,7 @@ export async function sendLeadNotificationEmail(lead: LeadRecord) {
     replyTo: lead.email || undefined,
     subject: `New Odette Franchise Inquiry — ${lead.fullName}`,
     react: LeadNotificationEmail({ lead }),
+    attachments: getEmailAttachments(),
   });
 
   if (error) {
@@ -62,6 +68,7 @@ export async function sendLeadConfirmationEmail(lead: LeadRecord) {
     replyTo: getNotificationRecipient(),
     subject: "Thank you for contacting Odette",
     react: LeadConfirmationEmail({ lead }),
+    attachments: getEmailAttachments(),
   });
 
   if (error) {

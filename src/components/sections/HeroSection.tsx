@@ -28,25 +28,31 @@ function HighlightCard({
   label,
   icon: Icon,
   fullWidth = false,
+  centered = false,
 }: {
   label: string;
   icon: ElementType;
   fullWidth?: boolean;
+  centered?: boolean;
 }) {
   return (
     <li
       className={`flex items-center gap-1.5 rounded-[12px] border border-cta/20 bg-white px-2 py-2 shadow-[0_4px_14px_rgba(91,45,139,0.07)] sm:gap-2 sm:px-2.5 sm:py-2.5 lg:px-3 lg:py-3 ${
         fullWidth ? "col-span-2" : "min-h-[2.75rem] lg:min-h-0"
-      }`}
+      } ${centered ? "max-lg:justify-center lg:justify-start" : ""}`}
     >
       <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cta/10 sm:h-6 sm:w-6">
         <Icon className="h-2.5 w-2.5 text-cta sm:h-3 sm:w-3" strokeWidth={2.25} />
       </span>
       <span
-        className={`min-w-0 flex-1 text-left font-semibold leading-snug text-charcoal ${
+        className={`min-w-0 font-semibold leading-snug text-charcoal ${
+          centered
+            ? "max-lg:flex-none max-lg:text-center lg:flex-1 lg:text-left"
+            : "flex-1 text-left"
+        } ${
           fullWidth
-            ? "text-[7.5px] leading-tight sm:text-[10px] sm:leading-snug lg:text-[11px] xl:text-sm"
-            : "text-[8.5px] sm:text-xs lg:text-sm"
+            ? "text-[9px] leading-tight sm:text-[11px] sm:leading-snug lg:text-xs xl:text-sm"
+            : "text-[10px] sm:text-xs lg:text-sm"
         }`}
       >
         {label}
@@ -62,6 +68,7 @@ function HeroHighlightCards() {
         label="Investment: ₹45 Lakhs+"
         icon={IndianRupee}
         fullWidth
+        centered
       />
       {highlightCards.map((card) => (
         <HighlightCard
