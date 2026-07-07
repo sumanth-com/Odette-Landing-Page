@@ -2,12 +2,13 @@
 
 import Logo from "@/assets/ifran.ico";
 import { ctaButtonClass } from "@/components/ui/GoldButton";
-import { NAV_LINKS } from "@/lib/site";
-import { handleSectionNavClick } from "@/lib/scroll";
+import { MEETING_URL, NAV_LINKS, HOME_PATH, SECTION_ID_TO_PATH, type SectionId } from "@/lib/site";
+import { isScrollingProgrammatically } from "@/lib/scroll";
+import { useSectionNavigation } from "@/lib/useSectionNavigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 
 const HEADER_HEIGHT_WITH_TAGLINE = "4.75rem";
 const HEADER_HEIGHT_COMPACT = "4rem";
@@ -32,6 +33,8 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showHeroTagline, setShowHeroTagline] = useState(true);
   const [activeSection, setActiveSection] = useState<string>("hero");
+  const { navigate } = useSectionNavigation();
+  const urlSyncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -71,7 +74,23 @@ export function Header() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
 
         if (visible[0]) {
-          setActiveSection(visible[0].target.id);
+          const sectionId = visible[0].target.id as SectionId;
+          setActiveSection(sectionId);
+
+          if (isScrollingProgrammatically()) return;
+
+          const path = SECTION_ID_TO_PATH[sectionId];
+          if (!path || window.location.pathname === path) return;
+
+          if (urlSyncTimer.current) {
+            clearTimeout(urlSyncTimer.current);
+          }
+
+          urlSyncTimer.current = setTimeout(() => {
+            if (!isScrollingProgrammatically() && window.location.pathname !== path) {
+              window.history.replaceState({ sectionPath: path }, "", path);
+            }
+          }, 120);
         }
       },
       { threshold: [0, 0.2, 0.4, 0.6], rootMargin: "-25% 0px -55% 0px" }
@@ -82,6 +101,9 @@ export function Header() {
     return () => {
       heroObserver.disconnect();
       sectionObserver.disconnect();
+      if (urlSyncTimer.current) {
+        clearTimeout(urlSyncTimer.current);
+      }
     };
   }, []);
 
@@ -92,10 +114,18 @@ export function Header() {
     href: string,
     onAfterScroll?: () => void
   ) => {
-    if (href.startsWith("#")) {
-      setActiveSection(href.slice(1));
+    if (href.startsWith("/")) {
+      const sectionId =
+        href === HOME_PATH
+          ? "hero"
+          : NAV_LINKS.find((link) => link.href === href)?.sectionId;
+
+      if (sectionId) {
+        setActiveSection(sectionId);
+      }
     }
-    handleSectionNavClick(event, href, onAfterScroll);
+
+    navigate(event, href, onAfterScroll);
   };
 
   return (
@@ -107,8 +137,8 @@ export function Header() {
       >
         <div className="page-container flex h-full items-center justify-between gap-4">
           <a
-            href="#hero"
-            onClick={(e) => goToSection(e, "#hero")}
+            href={HOME_PATH}
+            onClick={(e) => goToSection(e, HOME_PATH)}
             className="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3"
           >
             <Image
@@ -134,8 +164,7 @@ export function Header() {
 
           <nav className="hidden items-center gap-1 xl:flex" aria-label="Main navigation">
             {NAV_LINKS.map((link) => {
-              const sectionId = link.href.slice(1);
-              const isActive = activeSection === sectionId;
+              const isActive = activeSection === link.sectionId;
 
               return (
                 <a
@@ -153,8 +182,9 @@ export function Header() {
 
           <div className="flex items-center gap-2">
             <a
-              href="#contact"
-              onClick={(e) => goToSection(e, "#contact")}
+              href={MEETING_URL}
+              target="_blank"
+              rel="noopener noreferrer"
               className="hidden items-center justify-center rounded-full bg-white px-3.5 py-2 text-[13px] font-semibold text-cta shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition-all duration-300 hover:bg-white/90 sm:inline-flex lg:px-4"
             >
               Book a call
@@ -221,8 +251,7 @@ export function Header() {
           >
             <nav className="flex flex-1 flex-col gap-1 overflow-y-auto p-5" aria-label="Mobile navigation">
               {NAV_LINKS.map((link, index) => {
-                const sectionId = link.href.slice(1);
-                const isActive = activeSection === sectionId;
+                const isActive = activeSection === link.sectionId;
 
                 return (
                   <motion.a
@@ -246,11 +275,13 @@ export function Header() {
             </nav>
             <div className="border-t border-border p-5">
               <motion.a
-                href="#contact"
+                href={MEETING_URL}
+                target="_blank"
+                rel="noopener noreferrer"
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25, delay: 0.3, ease: "easeOut" }}
-                onClick={(e) => goToSection(e, "#contact", closeMenu)}
+                onClick={closeMenu}
                 className={ctaButtonClass({ fullWidth: true })}
               >
                 Book a call

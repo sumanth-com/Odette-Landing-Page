@@ -22,7 +22,7 @@ function OdetteBrandCard() {
           <p className="mt-8 font-display text-[11px] font-medium uppercase tracking-[0.32em] text-charcoal sm:mt-10 sm:text-xs">
             Odette
           </p>
-          <p className="mt-2 text-[10px] font-medium uppercase tracking-[0.22em] text-taupe sm:text-[11px]">
+          <p className="mt-2 text-[10px] font-medium uppercase tracking-[0.22em] text-black sm:text-[11px]">
             Premium Fashion Retail
           </p>
         </div>
@@ -33,7 +33,7 @@ function OdetteBrandCard() {
 
 export function WhyConsiderSection() {
   return (
-    <SectionShell id="about-odette">
+    <SectionShell id="about-odette" gradientTone={0}>
       <div className="flex w-full max-w-6xl flex-col items-center">
         <SectionHeading
           compact
@@ -53,7 +53,7 @@ export function WhyConsiderSection() {
             variants={fadeUp}
             className="min-w-0 text-left"
           >
-            <p className="text-sm leading-relaxed text-taupe sm:text-[15px] sm:leading-[1.7]">
+            <p className="text-sm leading-relaxed text-black sm:text-[15px] sm:leading-[1.7]">
               Odette is India&apos;s mass-premium fashion brand — high-fashion style at
               pocket-friendly prices for ages 15 to 65.
               <br />

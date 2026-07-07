@@ -7,7 +7,7 @@
   --color-gold-hover: #4a2472;
   --color-cta: #5b2d8b;
   --color-cta-hover: #4a2472;
-  --color-charcoal: #2b2b2b;
+  --color-charcoal: #000000;
   --color-taupe: #6b7280;
   --color-border: #e5e7eb;
 
@@ -39,8 +39,8 @@ html {
 }
 
 body {
-  background-color: #ffffff;
-  color: var(--color-charcoal);
+  background-color: #f3ebf9;
+  color: #000000;
   font-family: var(--font-body), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -297,6 +297,46 @@ body {
 }
 
 @media (min-width: 1024px) {
+  #about-odette.snap-section,
+  #why-odette.snap-section,
+  #invest-process.snap-section,
+  #why-ifranchise.snap-section,
+  #faq.snap-section,
+  #contact.snap-section {
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  #about-odette .snap-section-body,
+  #why-odette .snap-section-body,
+  #invest-process .snap-section-body,
+  #why-ifranchise .snap-section-body,
+  #faq .snap-section-body,
+  #contact .snap-section-body,
+  #about-odette .snap-section-inner,
+  #why-odette .snap-section-inner,
+  #invest-process .snap-section-inner,
+  #why-ifranchise .snap-section-inner,
+  #faq .snap-section-inner,
+  #contact .snap-section-inner {
+    height: auto;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  #about-odette .snap-section-inner > .section-fit,
+  #why-odette .snap-section-inner > .section-fit,
+  #invest-process .snap-section-inner > .section-fit,
+  #why-ifranchise .snap-section-inner > .section-fit,
+  #faq .snap-section-inner > .section-fit,
+  #contact .snap-section-inner > .section-fit {
+    flex: none;
+    max-height: none;
+    overflow: visible;
+  }
+
   .snap-section-inner {
     justify-content: center;
     padding-top: 0;
@@ -345,6 +385,23 @@ body {
 .form-field-hero {
   height: 2.5rem;
   padding-inline: 0.875rem;
+}
+
+@media (min-width: 1024px) {
+  #hero .page-container {
+    justify-content: center;
+  }
+
+  #hero .hero-left,
+  #hero .hero-form-wrap {
+    height: auto;
+  }
+
+  #hero .hero-form-scroll {
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
 }
 
 #hero .hero-left a,
@@ -399,6 +456,14 @@ body {
   background: #ffffff;
 }
 
+.premium-rotating-border--gallery {
+  border-radius: 20px;
+}
+
+.premium-rotating-border--gallery .premium-rotating-border__inner {
+  border-radius: 18px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .premium-rotating-border::before {
     animation: none;
@@ -411,4 +476,155 @@ body {
       color-mix(in srgb, var(--color-cta) 35%, transparent)
     );
   }
+
+  .post-hero-canvas__glow,
+  .post-hero-canvas__sheen {
+    animation: none;
+  }
+}
+
+/* Post-hero continuous purple + white canvas */
+.post-hero-canvas {
+  color: #000000;
+  background: linear-gradient(
+    180deg,
+    #f5eefb 0%,
+    #ebe0f5 8%,
+    #e2d4f0 22%,
+    #efe6f7 42%,
+    #dccdee 62%,
+    #eadff5 82%,
+    #f0e8f8 100%
+  );
+}
+
+.post-hero-canvas h1,
+.post-hero-canvas h2,
+.post-hero-canvas h3,
+.post-hero-canvas h4,
+.post-hero-canvas p,
+.post-hero-canvas li,
+.post-hero-canvas dt,
+.post-hero-canvas dd {
+  color: #000000;
+}
+
+.post-hero-canvas input::placeholder,
+.post-hero-canvas textarea::placeholder {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.post-hero-canvas__mesh {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 95% 60% at 10% 8%, rgba(91, 45, 139, 0.32), transparent 55%),
+    radial-gradient(ellipse 80% 55% at 92% 18%, rgba(91, 45, 139, 0.26), transparent 50%),
+    radial-gradient(ellipse 85% 50% at 48% 42%, rgba(91, 45, 139, 0.18), transparent 58%),
+    radial-gradient(ellipse 70% 60% at 8% 72%, rgba(91, 45, 139, 0.28), transparent 52%),
+    radial-gradient(ellipse 80% 55% at 94% 80%, rgba(91, 45, 139, 0.24), transparent 50%),
+    radial-gradient(ellipse 55% 40% at 50% 92%, rgba(91, 45, 139, 0.2), transparent 58%);
+}
+
+.post-hero-canvas__glow {
+  pointer-events: none;
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(50px);
+  opacity: 0.78;
+  animation: mesh-drift 18s ease-in-out infinite;
+}
+
+.post-hero-canvas__glow--left {
+  top: 10%;
+  left: -10%;
+  width: min(50vw, 34rem);
+  height: min(50vw, 34rem);
+  background: radial-gradient(circle, rgba(91, 45, 139, 0.42), transparent 65%);
+}
+
+.post-hero-canvas__glow--right {
+  top: 34%;
+  right: -12%;
+  width: min(54vw, 36rem);
+  height: min(54vw, 36rem);
+  background: radial-gradient(circle, rgba(91, 45, 139, 0.36), transparent 66%);
+  animation-delay: -9s;
+}
+
+.post-hero-canvas__sheen {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      118deg,
+      transparent 28%,
+      rgba(255, 255, 255, 0.35) 48%,
+      transparent 68%
+    ),
+    linear-gradient(
+      298deg,
+      transparent 22%,
+      rgba(91, 45, 139, 0.14) 46%,
+      transparent 64%
+    );
+  opacity: 0.92;
+  animation: sheen-drift 24s ease-in-out infinite;
+}
+
+@keyframes mesh-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(2%, -1.5%) scale(1.04);
+  }
+}
+
+@keyframes sheen-drift {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: translateX(0);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translateX(1.5%);
+  }
+}
+
+/* Per-section accent overlays */
+.section-gradient {
+  z-index: 0;
+}
+
+.section-gradient--tone-0 {
+  background: radial-gradient(ellipse 85% 65% at 18% 20%, rgba(91, 45, 139, 0.22), transparent 58%);
+}
+
+.section-gradient--tone-1 {
+  background: radial-gradient(ellipse 80% 60% at 82% 15%, rgba(91, 45, 139, 0.24), transparent 56%);
+}
+
+.section-gradient--tone-2 {
+  background: radial-gradient(ellipse 90% 55% at 50% 0%, rgba(91, 45, 139, 0.2), transparent 54%);
+}
+
+.section-gradient--tone-3 {
+  background:
+    radial-gradient(ellipse 75% 60% at 12% 55%, rgba(91, 45, 139, 0.22), transparent 54%),
+    radial-gradient(ellipse 65% 50% at 88% 40%, rgba(91, 45, 139, 0.14), transparent 52%);
+}
+
+.section-gradient--tone-4 {
+  background: radial-gradient(ellipse 95% 60% at 50% 50%, rgba(91, 45, 139, 0.18), transparent 60%);
+}
+
+.section-gradient--tone-5 {
+  background:
+    radial-gradient(ellipse 85% 55% at 75% 85%, rgba(91, 45, 139, 0.26), transparent 54%),
+    linear-gradient(180deg, transparent 50%, rgba(235, 224, 245, 0.65) 100%);
 }

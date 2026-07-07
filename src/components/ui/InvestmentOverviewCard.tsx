@@ -11,7 +11,8 @@ import {
   Ruler,
   TrendingUp,
 } from "lucide-react";
-import { handleSectionNavClick } from "@/lib/scroll";
+import { CONTACT_PATH } from "@/lib/site";
+import { useSectionNavigation } from "@/lib/useSectionNavigation";
 import { CardTitleHighlight, ctaButtonClass } from "./GoldButton";
 import { PremiumPanel } from "./PremiumPanel";
 
@@ -65,6 +66,7 @@ export function InvestmentOverviewCard({
   fillHeight = false,
   purpleBorder = false,
 }: InvestmentOverviewCardProps) {
+  const { navigate } = useSectionNavigation();
   const rows: OverviewRow[] = extended
     ? [...investmentOverview, ...extendedOverviewRows]
     : [...investmentOverview];
@@ -112,7 +114,7 @@ export function InvestmentOverviewCard({
               }`}
             >
               <dt
-                className={`flex min-w-0 items-center gap-1.5 text-taupe lg:gap-2 ${rowTextClass}`}
+                className={`flex min-w-0 items-center gap-1.5 text-black lg:gap-2 ${rowTextClass}`}
               >
                 <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-cta/10 bg-cta/[0.05] text-cta lg:h-7 lg:w-7">
                   <RowIcon className="h-3 w-3 lg:h-3.5 lg:w-3.5" strokeWidth={2} />
@@ -126,7 +128,7 @@ export function InvestmentOverviewCard({
               >
                 {row.value}
                 {row.subValue ? (
-                  <span className="mt-0.5 block text-[10px] font-medium leading-tight text-charcoal/75 sm:text-[11px] lg:text-xs">
+                  <span className="mt-0.5 block text-[10px] font-medium leading-tight text-black sm:text-[11px] lg:text-xs">
                     {row.subValue}
                   </span>
                 ) : null}
@@ -138,8 +140,8 @@ export function InvestmentOverviewCard({
 
       {showCta && (
         <a
-          href="#contact"
-          onClick={(e) => handleSectionNavClick(e, "#contact")}
+          href={CONTACT_PATH}
+          onClick={(e) => navigate(e, CONTACT_PATH)}
           className={`mt-2.5 shrink-0 ${ctaButtonClass({ fullWidth: true })}`}
         >
           Request Information

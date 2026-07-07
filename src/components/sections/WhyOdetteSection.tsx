@@ -17,7 +17,7 @@ const features = [
 
 export function WhyOdetteSection() {
   return (
-    <SectionShell id="why-odette">
+    <SectionShell id="why-odette" gradientTone={1}>
       <div className="flex w-full max-w-6xl flex-col items-center">
         <SectionHeading
           compact

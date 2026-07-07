@@ -39,7 +39,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
             transition={{ duration: 0.35, ease: "easeOut" }}
             className="overflow-hidden"
           >
-            <p className="pt-2 text-xs leading-relaxed text-taupe sm:text-sm">{answer}</p>
+            <p className="pt-2 text-xs leading-relaxed text-black sm:text-sm">{answer}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -49,7 +49,7 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
 
 export function FAQSection() {
   return (
-    <SectionShell id="faq">
+    <SectionShell id="faq" gradientTone={4}>
       <div className="section-fit mx-auto flex w-full max-w-3xl flex-col items-center justify-center">
         <SectionHeading
           dense

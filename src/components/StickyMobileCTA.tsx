@@ -1,6 +1,7 @@
 "use client";
 
-import { scrollToSection } from "@/lib/scroll";
+import { navigateToSectionPath } from "@/lib/scroll";
+import { CONTACT_PATH } from "@/lib/site";
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 import { GoldButton } from "./ui/GoldButton";
@@ -18,7 +19,7 @@ export function StickyMobileCTA() {
   }, []);
 
   const scrollToContact = () => {
-    scrollToSection("contact");
+    navigateToSectionPath(CONTACT_PATH);
   };
 
   return (

@@ -8,7 +8,7 @@ import { SectionShell } from "../ui/SectionShell";
 
 export function HowItWorksSection() {
   return (
-    <SectionShell id="invest-process">
+    <SectionShell id="invest-process" gradientTone={2}>
       <motion.div
         initial="hidden"
         whileInView="visible"

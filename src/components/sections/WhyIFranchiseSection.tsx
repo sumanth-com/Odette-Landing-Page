@@ -65,7 +65,7 @@ function CardGrid({
 
 export function WhyIFranchiseSection() {
   return (
-    <SectionShell id="why-ifranchise">
+    <SectionShell id="why-ifranchise" gradientTone={3}>
       <motion.div
         initial="hidden"
         whileInView="visible"

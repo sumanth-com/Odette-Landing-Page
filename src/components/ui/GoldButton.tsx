@@ -92,7 +92,7 @@ interface SectionHeadingProps {
 
 export function SectionPill({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-full border border-cta/20 bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-charcoal">
+    <span className="inline-flex items-center rounded-full border border-cta/20 bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-black">
       {children}
     </span>
   );
@@ -158,7 +158,7 @@ export function SectionHeading({
                 : compact
                   ? "text-2xl md:text-3xl lg:text-[2.25rem]"
                   : "text-3xl md:text-4xl lg:text-[2.75rem]"
-          } ${light ? "text-white" : "text-charcoal"}`}
+          } ${light ? "text-white" : "text-black"}`}
         >
           {title}
         </h2>
@@ -171,7 +171,7 @@ export function SectionHeading({
               : compact
                 ? "mt-2 text-base lg:mt-3 lg:text-lg"
                 : "mt-4 text-lg md:text-xl"
-          } ${centered ? "mx-auto" : ""} ${light ? "text-white/90" : "text-charcoal"}`}
+          } ${centered ? "mx-auto" : ""} ${light ? "text-white/90" : "text-black"}`}
         >
           {tagline}
         </p>
@@ -188,7 +188,7 @@ export function SectionHeading({
                 : compact
                 ? "mt-2 text-xs leading-snug lg:mt-3 lg:text-sm lg:leading-relaxed lg:text-base"
                 : "mt-5 text-base md:text-lg"
-          } ${centered ? "mx-auto" : ""} ${light ? "text-white/75" : "text-taupe"}`}
+          } ${centered ? "mx-auto" : ""} ${light ? "text-white/75" : "text-black"}`}
         >
           {subtitle}
         </p>

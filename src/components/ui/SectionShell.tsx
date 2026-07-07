@@ -1,5 +1,6 @@
 "use client";
 
+import { SectionGradient } from "@/components/ui/SectionGradient";
 import { type ReactNode } from "react";
 
 interface SectionShellProps {
@@ -7,6 +8,7 @@ interface SectionShellProps {
   className?: string;
   id?: string;
   fullViewport?: boolean;
+  gradientTone?: 0 | 1 | 2 | 3 | 4 | 5;
 }
 
 export function SectionShell({
@@ -14,20 +16,22 @@ export function SectionShell({
   className = "",
   id,
   fullViewport = true,
+  gradientTone = 0,
 }: SectionShellProps) {
   return (
     <section
       id={id}
-      className={`viewport-section relative bg-white ${
+      className={`viewport-section relative ${
         fullViewport ? "snap-section" : ""
       } ${className}`}
     >
+      <SectionGradient tone={gradientTone} />
       {fullViewport ? (
-        <div className="page-container snap-section-body w-full">
+        <div className="page-container relative z-[1] snap-section-body w-full">
           <div className="snap-section-inner">{children}</div>
         </div>
       ) : (
-        <div className="page-container w-full py-8 lg:py-10">{children}</div>
+        <div className="page-container relative z-[1] w-full py-8 lg:py-10">{children}</div>
       )}
     </section>
   );
