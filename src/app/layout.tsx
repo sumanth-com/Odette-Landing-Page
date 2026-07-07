@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { GoogleAnalyticsProvider } from "@/components/GoogleAnalyticsProvider";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import "./globals.css";
 
@@ -40,6 +41,7 @@ export default function RootLayout({
       <body className="font-body antialiased">
         {children}
         <WhatsAppButton />
+        <GoogleAnalyticsProvider />
       </body>
     </html>
   );

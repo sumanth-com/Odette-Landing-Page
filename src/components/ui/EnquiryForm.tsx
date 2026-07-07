@@ -1,6 +1,7 @@
 "use client";
 
 import { INDIAN_STATES, STATE_DISPLAY_LABELS } from "@/lib/indianLocations";
+import { trackGenerateLead } from "@/lib/analytics";
 import { submitLead } from "@/lib/submitLead";
 import { motion } from "framer-motion";
 import {
@@ -99,6 +100,7 @@ export function EnquiryForm({
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [mobileError, setMobileError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [locationError, setLocationError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<EnquiryFormData>({
@@ -170,6 +172,17 @@ export function EnquiryForm({
       return;
     }
 
+    const emailValue = formData.email.trim();
+    if (!emailValue) {
+      setEmailError("Please enter your email address.");
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
+      setEmailError("Please enter a valid email address.");
+      return;
+    }
+
     if (!formData.state) {
       setLocationError("Please select your state.");
       return;
@@ -193,12 +206,13 @@ export function EnquiryForm({
       await submitLead({
         fullName: formData.fullName.trim(),
         mobileNumber: `${formData.countryCode} ${formData.mobile}`,
-        email: formData.email.trim(),
+        email: emailValue,
         state: formData.state,
         city: cityValue,
         investmentBudget: formData.investmentBudget,
       });
 
+      trackGenerateLead();
       setSubmitted(true);
     } catch (error) {
       setSubmitError(
@@ -215,6 +229,7 @@ export function EnquiryForm({
     setSubmitted(false);
     setSubmitError("");
     setMobileError("");
+    setEmailError("");
     setLocationError("");
     setFormData({
       fullName: "",
@@ -339,20 +354,33 @@ export function EnquiryForm({
           )}
 
           {showEmail && (
-            <HeroIconField
-              className="hero-form-email-field"
-              icon={<Mail className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} />}
-            >
-              <input
-                id={`${id}-email`}
-                type="email"
-                autoComplete="email"
-                placeholder="Email address (optional)"
-                className={heroInputClass}
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              />
-            </HeroIconField>
+            <>
+              <HeroIconField
+                className="hero-form-email-field"
+                icon={<Mail className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} />}
+              >
+                <input
+                  id={`${id}-email`}
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder="Email address"
+                  className={heroInputClass}
+                  value={formData.email}
+                  onChange={(e) => {
+                    setFormData({ ...formData, email: e.target.value });
+                    if (emailError) setEmailError("");
+                  }}
+                  aria-invalid={!!emailError}
+                  aria-describedby={emailError ? `${id}-email-error` : undefined}
+                />
+              </HeroIconField>
+              {emailError && (
+                <p id={`${id}-email-error`} className="-mt-1 text-xs text-red-600/80">
+                  {emailError}
+                </p>
+              )}
+            </>
           )}
 
           <div
@@ -513,18 +541,28 @@ export function EnquiryForm({
         {showEmail && (
           <div>
             <label htmlFor={`${id}-email`} className={labelClasses}>
-              Email{" "}
-              <span className="normal-case tracking-normal text-taupe/70">(Optional)</span>
+              Email
             </label>
             <input
               id={`${id}-email`}
               type="email"
+              required
               autoComplete="email"
               placeholder="Email address"
               className={inputClasses}
               value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              onChange={(e) => {
+                setFormData({ ...formData, email: e.target.value });
+                if (emailError) setEmailError("");
+              }}
+              aria-invalid={!!emailError}
+              aria-describedby={emailError ? `${id}-email-error` : undefined}
             />
+            {emailError && (
+              <p id={`${id}-email-error`} className="mt-1.5 text-xs text-red-600/80">
+                {emailError}
+              </p>
+            )}
           </div>
         )}
 

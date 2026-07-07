@@ -1,7 +1,7 @@
 export interface LeadPayload {
   fullName: string;
   mobileNumber: string;
-  email?: string;
+  email: string;
   state: string;
   city: string;
   investmentBudget: string;

@@ -22,10 +22,9 @@ export const leadSchema = z.object({
   email: z
     .string()
     .trim()
+    .min(1, "Email address is required")
     .email("Please enter a valid email address")
-    .max(160, "Email is too long")
-    .optional()
-    .or(z.literal("")),
+    .max(160, "Email is too long"),
   state: z.string().trim().min(1, "State is required").max(80),
   city: z.string().trim().min(1, "City is required").max(80),
   investmentBudget: z.enum(BUDGET_OPTIONS, {
@@ -38,19 +37,16 @@ export type LeadInput = z.infer<typeof leadSchema>;
 
 export type LeadRecord = LeadInput & {
   franchiseInterest: string;
-  email?: string;
 };
 
 export function normalizeLeadInput(input: LeadInput): LeadRecord {
-  const email = input.email?.trim();
-
   return {
     ...input,
     fullName: input.fullName.trim(),
     mobileNumber: input.mobileNumber.trim(),
+    email: input.email.trim(),
     state: input.state.trim(),
     city: input.city.trim(),
-    email: email || undefined,
     franchiseInterest:
       input.franchiseInterest?.trim() || DEFAULT_FRANCHISE_INTEREST,
   };
