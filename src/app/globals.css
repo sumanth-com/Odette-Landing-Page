@@ -783,13 +783,6 @@ body.mobile-menu-open .whatsapp-floating-btn {
     padding-bottom: 0.75rem;
   }
 
-  #hero .hero-scroll-cta {
-    min-height: 3rem;
-    font-size: 0.8125rem;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-  }
-
   #contact .contact-form-wrap,
   #contact .contact-stack-width {
     max-width: min(100%, 36rem);
@@ -865,7 +858,6 @@ body.mobile-menu-open .whatsapp-floating-btn {
     gap: 0.375rem;
   }
 
-  #hero .hero-scroll-cta,
   #hero .hero-enquire-desktop {
     display: none;
   }
@@ -971,7 +963,6 @@ body.mobile-menu-open .whatsapp-floating-btn {
     align-self: center;
   }
 
-  #hero .hero-scroll-cta,
   #hero .hero-enquire-desktop {
     display: none;
   }

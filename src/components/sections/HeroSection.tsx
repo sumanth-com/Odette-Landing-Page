@@ -112,7 +112,7 @@ export function HeroSection() {
 
             <motion.h1
               variants={fadeUp}
-              className="mt-3 w-full max-w-full font-display text-[0.95rem] font-bold uppercase leading-[1.2] tracking-[0.03em] text-charcoal max-lg:mt-1.5 max-lg:leading-[1.12] md:text-[1.15rem] lg:mt-4 lg:text-[1.85rem] xl:text-[2.05rem]"
+              className="mt-3 w-full max-w-full font-display text-[1.1rem] font-bold uppercase leading-[1.18] tracking-[0.03em] text-charcoal max-lg:mt-1.5 max-lg:leading-[1.14] md:text-[1.2rem] lg:mt-4 lg:text-[1.85rem] lg:leading-[1.2] xl:text-[2.05rem]"
             >
               <span className="block">You Invest.</span>
               <span className="block">WE RUN THE BUSINESS.</span>
@@ -131,21 +131,6 @@ export function HeroSection() {
               className="mt-4 w-full max-w-full max-lg:mx-auto max-lg:mt-2 max-lg:max-w-[min(100%,19.5rem)] md:max-w-[min(100%,36rem)] lg:mt-5 lg:max-w-md"
             >
               <HeroHighlightCards />
-
-              <a
-                href="#hero-form"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById("hero-form")?.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start",
-                  });
-                }}
-                className={`hero-scroll-cta mt-2.5 min-h-[2.75rem] py-2.5 text-xs sm:text-[13px] lg:hidden ${ctaButtonClass({ fullWidth: true })} uppercase tracking-[0.06em]`}
-              >
-                Enquire Now
-                <ArrowRight className="h-3.5 w-3.5 shrink-0" strokeWidth={2.25} />
-              </a>
             </motion.div>
 
             <motion.div
