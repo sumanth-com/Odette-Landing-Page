@@ -10,7 +10,7 @@ import { SectionShell } from "../ui/SectionShell";
 function OdetteBrandCard() {
   return (
     <div className="flex w-full items-center justify-center py-2 md:py-0">
-      <div className="premium-rotating-border luxury-shadow w-full max-w-[320px] sm:max-w-[360px]">
+      <div className="premium-rotating-border luxury-shadow w-full max-w-[320px] sm:max-w-[360px] md:max-w-[400px]">
         <div className="premium-rotating-border__inner flex w-full flex-col items-center justify-center px-10 py-12 sm:px-12 sm:py-14">
           <Image
             src={Logo}

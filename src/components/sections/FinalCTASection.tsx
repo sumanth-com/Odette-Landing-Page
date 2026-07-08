@@ -86,7 +86,7 @@ export function FinalCTASection() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
             variants={fadeUp}
-            className="flex w-full min-w-0 max-w-[400px] justify-center max-lg:mx-auto lg:ml-auto lg:justify-end"
+            className="contact-form-wrap flex w-full min-w-0 max-w-[min(100%,19.5rem)] justify-center max-lg:mx-auto md:max-w-[min(100%,28rem)] lg:ml-auto lg:max-w-[400px] lg:justify-end"
           >
             <EnquiryForm
               variant="hero"

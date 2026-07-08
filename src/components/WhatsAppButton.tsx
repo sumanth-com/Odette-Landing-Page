@@ -25,7 +25,7 @@ export function WhatsAppButton() {
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       aria-label="Chat on WhatsApp — I am interested in the Odette franchise opportunity"
-      className="whatsapp-floating-btn fixed bottom-6 right-4 z-[100] flex h-14 w-14 items-center justify-center rounded-full bg-cta text-white opacity-100 shadow-[0_8px_24px_rgba(91,45,139,0.35)] transition-colors duration-300 hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 lg:right-6"
+      className="whatsapp-floating-btn fixed bottom-6 right-4 z-[100] flex h-14 w-14 items-center justify-center rounded-full bg-cta text-white opacity-100 shadow-[0_8px_24px_rgba(91,45,139,0.35)] transition-colors duration-300 hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 max-lg:h-12 max-lg:w-12 lg:right-6"
     >
       <WhatsAppIcon />
     </motion.a>
