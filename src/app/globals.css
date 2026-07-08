@@ -790,7 +790,8 @@ body.mobile-menu-open .whatsapp-floating-btn {
     padding-bottom: 0.75rem;
   }
 
-  #contact .contact-form-wrap {
+  #contact .contact-form-wrap,
+  #contact .contact-stack-width {
     max-width: min(100%, 36rem);
   }
 
