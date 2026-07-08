@@ -1,5 +1,5 @@
 import decodeIco from "decode-ico";
-import { copyFileSync, mkdirSync, readFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -13,9 +13,15 @@ const icoSource = join(root, "src", "assets", "ifran.ico");
 mkdirSync(publicDir, { recursive: true });
 mkdirSync(appDir, { recursive: true });
 
-copyFileSync(icoSource, join(publicDir, "favicon.ico"));
-copyFileSync(icoSource, join(appDir, "favicon.ico"));
-console.log("Created public/favicon.ico and src/app/favicon.ico from ifran.ico");
+// Next.js serves /favicon.ico from src/app/favicon.ico only.
+// Do NOT also place favicon.ico in public/ — that causes a route conflict (500).
+const appFavicon = join(appDir, "favicon.ico");
+const publicFavicon = join(publicDir, "favicon.ico");
+
+copyFileSync(icoSource, appFavicon);
+rmSync(publicFavicon, { force: true });
+console.log("Created src/app/favicon.ico from src/assets/ifran.ico");
+console.log("Removed public/favicon.ico (prevents Next.js conflict)");
 
 const decoded = decodeIco(readFileSync(icoSource));
 const source = decoded.reduce((best, frame) =>
