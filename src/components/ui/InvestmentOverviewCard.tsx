@@ -33,8 +33,8 @@ const investmentOverview = [
   { label: "Space Required", value: "700 Sq.ft" },
   {
     label: "Returns",
-    value: "₹1.25 Lakhs / Month or 12% Revenue Share",
-    subValue: "(Whichever Is Higher)",
+    value: "₹1.25 Lakhs / Month or",
+    valueLine2: "12% Revenue Share (Whichever Is Higher)",
   },
   { label: "Lock-in Period", value: "5 Years" },
 ] as const;
@@ -47,6 +47,7 @@ const extendedOverviewRows = [
 type OverviewRow = {
   label: string;
   value: string;
+  valueLine2?: string;
   subValue?: string;
 };
 
@@ -128,6 +129,7 @@ export function InvestmentOverviewCard({
                 } sm:max-w-[52%]`}
               >
                 {row.value}
+                {row.valueLine2 ? <span className="block">{row.valueLine2}</span> : null}
                 {row.subValue ? (
                   <span className="mt-0.5 block text-[10px] font-medium leading-tight text-black sm:text-[11px] lg:text-xs">
                     {row.subValue}
