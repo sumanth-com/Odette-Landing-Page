@@ -12,6 +12,8 @@
     "build:clean": "npm run clean && next build",
     "convert-images": "node scripts/convert-png-to-webp.mjs",
     "generate-favicons": "node scripts/generate-favicons.mjs",
+    "generate-sitemap": "node scripts/generate-sitemap.mjs",
+    "prebuild": "node scripts/generate-sitemap.mjs",
     "sync-images": "node scripts/sync-public-images.mjs"
   },
   "dependencies": {

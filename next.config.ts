@@ -41,28 +41,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/sitemap.xml",
-        headers: [
-          { key: "Content-Type", value: "application/xml; charset=utf-8" },
-          {
-            key: "Cache-Control",
-            value: "public, max-age=0, s-maxage=86400, stale-while-revalidate=86400",
-          },
-        ],
-      },
-      {
-        source: "/robots.txt",
-        headers: [
-          { key: "Content-Type", value: "text/plain; charset=utf-8" },
-          {
-            key: "Cache-Control",
-            value: "public, max-age=0, s-maxage=86400, stale-while-revalidate=86400",
-          },
-        ],
-      },
-      {
         source:
-          "/((?!sitemap\\.xml|robots\\.txt|manifest\\.webmanifest|favicon\\.ico|apple-touch-icon\\.png|icon-192\\.png|icon-512\\.png|images/).*)",
+          "/((?!robots\\.txt|sitemap\\.xml|manifest\\.webmanifest|favicon\\.ico|apple-touch-icon\\.png|icon-192\\.png|icon-512\\.png|images/).*)",
         headers: securityHeaders,
       },
       {
