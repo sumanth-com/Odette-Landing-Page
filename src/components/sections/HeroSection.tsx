@@ -1,8 +1,8 @@
 "use client";
 
-import HeroImage from "@/assets/Hero.webp";
-import MobHeroImage from "@/assets/MobHero.webp";
+import { SITE_IMAGES } from "@/lib/images";
 import { CONTACT_PATH } from "@/lib/site";
+import { trackBookConsultation } from "@/lib/analytics";
 import { useSectionNavigation } from "@/lib/useSectionNavigation";
 import { type ElementType } from "react";
 import { motion } from "framer-motion";
@@ -72,7 +72,7 @@ export function HeroSection() {
     >
       <div className="hero-bg pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
         <Image
-          src={MobHeroImage}
+          src={SITE_IMAGES.hero.mobile.src}
           alt=""
           fill
           priority
@@ -81,7 +81,7 @@ export function HeroSection() {
           sizes="100vw"
         />
         <Image
-          src={HeroImage}
+          src={SITE_IMAGES.hero.desktop.src}
           alt=""
           fill
           priority
@@ -139,7 +139,10 @@ export function HeroSection() {
             >
               <a
                 href={CONTACT_PATH}
-                onClick={(e) => navigate(e, CONTACT_PATH)}
+                onClick={(e) => {
+                  trackBookConsultation("hero_desktop_enquire");
+                  navigate(e, CONTACT_PATH);
+                }}
                 className={`${ctaButtonClass()} min-h-[2.75rem] whitespace-nowrap uppercase tracking-[0.06em]`}
               >
                 Enquire Now

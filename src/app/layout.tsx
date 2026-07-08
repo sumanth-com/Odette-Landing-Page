@@ -1,34 +1,25 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { GoogleAnalyticsProvider } from "@/components/GoogleAnalyticsProvider";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { rootMetadata } from "@/lib/seo";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-jakarta",
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
-export const metadata: Metadata = {
-  title: "Odette Franchise Opportunity | Premium Fashion Franchise",
-  description:
-    "Partner with Odette through a company-operated franchise model. Investment starts from ₹45 Lakhs. Premium fashion retail franchise opportunity across selected cities in India.",
-  keywords: [
-    "Clothing Franchise",
-    "Fashion Franchise",
-    "Premium Fashion Franchise",
-    "Retail Franchise",
-    "Women's Clothing Franchise",
-    "Odette Franchise",
-    "FICO Model",
-  ],
-  openGraph: {
-    title: "Odette Franchise Opportunity | Premium Fashion Franchise",
-    description:
-      "Own a premium fashion business with Odette. Company-operated franchise model with investment from ₹45 Lakhs.",
-    type: "website",
-  },
+export const metadata: Metadata = rootMetadata;
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#5b2d8b",
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -37,7 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={plusJakarta.variable}>
+    <html lang="en-IN" className={plusJakarta.variable}>
+      <head>
+        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
+      </head>
       <body className="font-body antialiased">
         {children}
         <WhatsAppButton />

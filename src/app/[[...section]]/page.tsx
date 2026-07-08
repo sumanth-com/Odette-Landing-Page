@@ -1,5 +1,8 @@
+import { JsonLd } from "@/components/JsonLd";
 import { LandingPage } from "@/components/LandingPage";
-import { isValidSectionPath, SITE_SECTIONS } from "@/lib/site";
+import { buildSectionMetadata } from "@/lib/seo";
+import { isValidSectionPath, SITE_SECTIONS, type SectionPath } from "@/lib/site";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 function pathFromSegments(section?: string[]) {
@@ -16,6 +19,21 @@ export function generateStaticParams() {
   ];
 }
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ section?: string[] }>;
+}): Promise<Metadata> {
+  const { section } = await params;
+  const path = pathFromSegments(section);
+
+  if (!isValidSectionPath(path)) {
+    return buildSectionMetadata("/");
+  }
+
+  return buildSectionMetadata(path);
+}
+
 export default async function Page({
   params,
 }: {
@@ -28,5 +46,10 @@ export default async function Page({
     notFound();
   }
 
-  return <LandingPage />;
+  return (
+    <>
+      <JsonLd path={path as SectionPath} />
+      <LandingPage />
+    </>
+  );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import Logo from "@/assets/Logo.webp";
+import { SITE_IMAGES } from "@/lib/images";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { fadeUp } from "../ui/AnimatedSection";
@@ -13,9 +13,11 @@ function OdetteBrandCard() {
       <div className="premium-rotating-border luxury-shadow w-full max-w-[320px] sm:max-w-[360px] md:max-w-[400px]">
         <div className="premium-rotating-border__inner flex w-full flex-col items-center justify-center px-10 py-12 sm:px-12 sm:py-14">
           <Image
-            src={Logo}
+            src={SITE_IMAGES.brand.odetteMark.src}
             alt=""
             aria-hidden
+            width={SITE_IMAGES.brand.odetteMark.width}
+            height={SITE_IMAGES.brand.odetteMark.height}
             sizes="(max-width: 640px) 220px, 250px"
             quality={85}
             className="h-auto w-full max-w-[220px] object-contain sm:max-w-[250px]"

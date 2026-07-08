@@ -12,6 +12,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { CONTACT_PATH } from "@/lib/site";
+import { trackBookConsultation } from "@/lib/analytics";
 import { useSectionNavigation } from "@/lib/useSectionNavigation";
 import { CardTitleHighlight, ctaButtonClass } from "./GoldButton";
 import { PremiumPanel } from "./PremiumPanel";
@@ -141,7 +142,10 @@ export function InvestmentOverviewCard({
       {showCta && (
         <a
           href={CONTACT_PATH}
-          onClick={(e) => navigate(e, CONTACT_PATH)}
+          onClick={(e) => {
+            trackBookConsultation("investment_overview_card");
+            navigate(e, CONTACT_PATH);
+          }}
           className={`mt-2.5 shrink-0 ${ctaButtonClass({ fullWidth: true })}`}
         >
           Request Information

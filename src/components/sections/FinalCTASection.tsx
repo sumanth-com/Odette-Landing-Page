@@ -11,6 +11,7 @@ import {
   CONTACT_WEBSITE,
   MEETING_URL,
 } from "@/lib/site";
+import { trackBookConsultation, trackPhoneClick } from "@/lib/analytics";
 import { motion } from "framer-motion";
 import { Globe, Mail, Phone } from "lucide-react";
 
@@ -54,6 +55,7 @@ export function FinalCTASection() {
                   href={MEETING_URL}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackBookConsultation("contact_meeting_button")}
                   className={`${ctaButtonClass()} min-h-[2.75rem] min-w-0 flex-1 justify-center whitespace-nowrap px-2.5 py-2.5 !font-medium text-[11px] leading-none sm:px-3 sm:text-xs lg:px-5 lg:!font-semibold lg:text-[13px]`}
                 >
                   <GoogleMeetIcon className="h-3.5 w-3.5 shrink-0 text-white sm:h-4 sm:w-4" />
@@ -64,6 +66,7 @@ export function FinalCTASection() {
                   <a
                     href={CONTACT_PHONE}
                     aria-label="Call us"
+                    onClick={() => trackPhoneClick("contact_section")}
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cta text-white shadow-[0_2px_10px_rgba(91,45,139,0.22)] transition-colors duration-200 hover:bg-cta-hover"
                   >
                     <Phone className="h-4 w-4" strokeWidth={1.5} />

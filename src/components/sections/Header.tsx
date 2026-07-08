@@ -1,7 +1,8 @@
 "use client";
 
-import Logo from "@/assets/ifran.ico";
+import { SITE_IMAGES } from "@/lib/images";
 import { ctaButtonClass } from "@/components/ui/GoldButton";
+import { trackBookConsultation } from "@/lib/analytics";
 import { CONTACT_PATH, NAV_LINKS, HOME_PATH, SECTION_ID_TO_PATH, type SectionId } from "@/lib/site";
 import { isScrollingProgrammatically } from "@/lib/scroll";
 import { useSectionNavigation } from "@/lib/useSectionNavigation";
@@ -144,9 +145,11 @@ export function Header() {
             className="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3"
           >
             <Image
-              src={Logo}
+              src={SITE_IMAGES.brand.iFranchiseLogo.src}
               alt=""
               aria-hidden
+              width={SITE_IMAGES.brand.iFranchiseLogo.width}
+              height={SITE_IMAGES.brand.iFranchiseLogo.height}
               priority
               className="h-9 w-9 shrink-0 object-contain sm:h-10 sm:w-10"
             />
@@ -185,7 +188,10 @@ export function Header() {
           <div className="flex items-center gap-2">
             <a
               href={CONTACT_PATH}
-              onClick={(e) => goToSection(e, CONTACT_PATH)}
+              onClick={(e) => {
+                trackBookConsultation("header_book_a_call");
+                goToSection(e, CONTACT_PATH);
+              }}
               className="hidden items-center justify-center rounded-full bg-white px-3.5 py-2 text-[13px] font-semibold text-cta shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition-all duration-300 hover:bg-white/90 sm:inline-flex lg:px-4"
             >
               Book a call
@@ -280,7 +286,10 @@ export function Header() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25, delay: 0.3, ease: "easeOut" }}
-                onClick={(e) => goToSection(e, CONTACT_PATH, closeMenu)}
+                onClick={(e) => {
+                  trackBookConsultation("header_mobile_book_a_call");
+                  goToSection(e, CONTACT_PATH, closeMenu);
+                }}
                 className={ctaButtonClass({ fullWidth: true })}
               >
                 Book a call

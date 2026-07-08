@@ -1,7 +1,6 @@
 "use client";
 
 import { FAQSection } from "@/components/sections/FAQSection";
-import { FaqJsonLd } from "@/components/FaqJsonLd";
 import { FinalCTASection } from "@/components/sections/FinalCTASection";
 import { Header } from "@/components/sections/Header";
 import { HeroSection } from "@/components/sections/HeroSection";
@@ -40,7 +39,6 @@ export function LandingPage() {
 
   return (
     <>
-      <FaqJsonLd />
       <Header />
       <main>
         <HeroSection />

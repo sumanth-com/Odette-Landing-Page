@@ -10,7 +10,9 @@
     "clean": "node -e \"require('node:fs').rmSync('.next',{recursive:true,force:true})\"",
     "dev:clean": "npm run clean && next dev",
     "build:clean": "npm run clean && next build",
-    "convert-images": "node scripts/convert-png-to-webp.mjs"
+    "convert-images": "node scripts/convert-png-to-webp.mjs",
+    "generate-favicons": "node scripts/generate-favicons.mjs",
+    "sync-images": "node scripts/sync-public-images.mjs"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.10",

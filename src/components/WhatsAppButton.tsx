@@ -1,5 +1,6 @@
 "use client";
 
+import { trackWhatsAppClick } from "@/lib/analytics";
 import { motion } from "framer-motion";
 
 const WHATSAPP_NUMBER = "919129130303";
@@ -21,7 +22,7 @@ export function WhatsAppButton() {
       href={whatsappUrl}
       target="_blank"
       rel="noopener noreferrer"
-      initial={false}
+      onClick={() => trackWhatsAppClick("floating_button")}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       aria-label="Chat on WhatsApp — I am interested in the Odette franchise opportunity"

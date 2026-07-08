@@ -1,0 +1,46 @@
+{
+  "hero.desktop": {
+    "width": 1672,
+    "height": 941
+  },
+  "hero.mobile": {
+    "width": 853,
+    "height": 1844
+  },
+  "brand.odette-mark": {
+    "width": 886,
+    "height": 624
+  },
+  "brand.odette-logo": {
+    "width": 886,
+    "height": 624
+  },
+  "gallery.store-interior": {
+    "width": 1672,
+    "height": 941
+  },
+  "gallery.retail-showroom": {
+    "width": 1536,
+    "height": 1024
+  },
+  "gallery.fashion-boutique": {
+    "width": 1463,
+    "height": 1075
+  },
+  "gallery.clothing-collection": {
+    "width": 1693,
+    "height": 929
+  },
+  "gallery.franchise-experience": {
+    "width": 1448,
+    "height": 1086
+  },
+  "gallery.brand-showcase": {
+    "width": 1672,
+    "height": 941
+  },
+  "brand.ifranchise-logo": {
+    "width": 80,
+    "height": 80
+  }
+}

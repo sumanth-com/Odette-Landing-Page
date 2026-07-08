@@ -29,18 +29,3 @@ export const FAQ_ITEMS: FaqItem[] = [
       "Submit the enquiry form and our franchise consultant will contact you to discuss the opportunity.",
   },
 ];
-
-export function getFaqJsonLd() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: FAQ_ITEMS.map((faq) => ({
-      "@type": "Question",
-      name: faq.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: faq.answer,
-      },
-    })),
-  };
-}
