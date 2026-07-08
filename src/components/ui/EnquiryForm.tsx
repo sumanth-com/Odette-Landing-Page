@@ -456,6 +456,7 @@ export function EnquiryForm({
               fullWidth
               staticButton
               disabled={isSubmitting}
+              className="hero-form-cta min-h-[2.75rem] py-2.5 text-xs sm:text-[13px]"
             >
               {isSubmitting ? "Submitting..." : buttonText}
               {!isSubmitting && <Send className="h-4 w-4" strokeWidth={2} />}

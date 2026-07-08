@@ -77,7 +77,7 @@ export function HeroSection() {
           fill
           priority
           quality={100}
-          className="object-cover object-center lg:hidden"
+          className="hero-mob-bg object-cover object-center lg:hidden"
           sizes="100vw"
         />
         <Image
@@ -86,13 +86,13 @@ export function HeroSection() {
           fill
           priority
           quality={100}
-          className="hidden object-cover object-[50%_35%] lg:block"
+          className="hero-desktop-bg hidden object-cover object-[50%_35%] lg:block"
           sizes="100vw"
         />
       </div>
 
       <div
-        className="pointer-events-none absolute inset-0 z-[1] hidden bg-gradient-to-r from-white/55 from-0% via-white/25 via-[24%] to-transparent to-[46%] lg:block"
+        className="hero-desktop-gradient pointer-events-none absolute inset-0 z-[1] hidden bg-gradient-to-r from-white/55 from-0% via-white/25 via-[24%] to-transparent to-[46%] lg:block"
         aria-hidden
       />
 
@@ -103,7 +103,7 @@ export function HeroSection() {
           variants={staggerContainer}
           className="hero-stack w-full min-h-0 flex-1 max-lg:flex max-lg:flex-col max-lg:gap-2.5 max-lg:overflow-visible lg:flex lg:flex-row lg:items-center lg:justify-between lg:gap-8 xl:gap-12"
         >
-          <div className="hero-left flex w-full max-w-2xl flex-col items-center overflow-visible max-lg:mx-auto max-lg:w-full max-lg:min-w-0 max-lg:max-w-[min(100%,19.5rem)] max-lg:shrink-0 max-lg:pt-0 max-lg:text-center md:max-w-[min(100%,34rem)] lg:w-[580px] lg:max-w-[580px] lg:items-start lg:shrink-0 lg:pt-0 lg:text-left xl:w-[640px] xl:max-w-[640px]">
+          <div className="hero-left flex w-full max-w-2xl flex-col items-center overflow-visible max-lg:mx-auto max-lg:w-full max-lg:min-w-0 max-lg:max-w-[min(100%,19.5rem)] max-lg:shrink-0 max-lg:pt-0 max-lg:text-center md:max-w-[min(100%,36rem)] lg:w-[580px] lg:max-w-[580px] lg:items-start lg:shrink-0 lg:pt-0 lg:text-left xl:w-[640px] xl:max-w-[640px]">
             <motion.div variants={fadeUp} className="max-lg:flex max-lg:w-full max-lg:justify-center">
               <span className="inline-flex max-w-full items-center justify-center rounded-full border border-cta/20 bg-white/95 px-4 py-1.5 text-center font-semibold text-charcoal backdrop-blur-sm max-lg:px-2.5 max-lg:py-1 max-lg:leading-tight max-lg:tracking-[0.02em] text-[8px] sm:whitespace-nowrap sm:text-[9px] md:text-[10px] lg:text-[11px] lg:leading-snug lg:tracking-normal xl:text-xs">
                 Premium Women&apos;s Fashion Franchise Opportunity
@@ -128,7 +128,7 @@ export function HeroSection() {
 
             <motion.div
               variants={fadeUp}
-              className="mt-4 w-full max-w-full max-lg:mx-auto max-lg:mt-2 max-lg:max-w-[min(100%,19.5rem)] md:max-w-[min(100%,34rem)] lg:mt-5 lg:max-w-md"
+              className="mt-4 w-full max-w-full max-lg:mx-auto max-lg:mt-2 max-lg:max-w-[min(100%,19.5rem)] md:max-w-[min(100%,36rem)] lg:mt-5 lg:max-w-md"
             >
               <HeroHighlightCards />
 
@@ -141,18 +141,18 @@ export function HeroSection() {
                     block: "start",
                   });
                 }}
-                className={`hero-scroll-cta mt-2 lg:hidden ${ctaButtonClass({ fullWidth: true })} uppercase tracking-[0.06em]`}
+                className={`hero-scroll-cta mt-2.5 min-h-[2.75rem] py-2.5 text-xs sm:text-[13px] lg:hidden ${ctaButtonClass({ fullWidth: true })} uppercase tracking-[0.06em]`}
               >
                 Enquire Now
                 <ArrowRight className="h-3.5 w-3.5 shrink-0" strokeWidth={2.25} />
               </a>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="mt-4 max-lg:hidden lg:mt-5">
+            <motion.div variants={fadeUp} className="hero-enquire-desktop mt-4 max-lg:hidden lg:mt-5">
               <a
                 href={CONTACT_PATH}
                 onClick={(e) => navigate(e, CONTACT_PATH)}
-                className={`${ctaButtonClass()} whitespace-nowrap uppercase tracking-[0.06em]`}
+                className={`${ctaButtonClass()} min-h-[2.75rem] whitespace-nowrap uppercase tracking-[0.06em]`}
               >
                 Enquire Now
                 <ArrowRight className="h-3.5 w-3.5 shrink-0" strokeWidth={2.25} />
@@ -162,7 +162,7 @@ export function HeroSection() {
 
           <motion.div
             variants={fadeUp}
-            className="hero-form-wrap flex min-h-0 w-full max-lg:mx-auto max-lg:mt-0 max-lg:max-w-[min(100%,19.5rem)] max-lg:min-w-0 max-lg:flex-none md:max-w-[min(100%,28rem)] lg:ml-auto lg:mr-[-0.75rem] lg:mt-0 lg:w-[380px] lg:max-w-[380px] lg:shrink-0 lg:self-center lg:translate-x-2 xl:mr-[-1rem] xl:w-[400px] xl:max-w-[400px] xl:translate-x-3"
+            className="hero-form-wrap flex min-h-0 w-full max-lg:mx-auto max-lg:mt-0 max-lg:max-w-[min(100%,19.5rem)] max-lg:min-w-0 max-lg:flex-none md:max-w-[min(100%,36rem)] lg:ml-auto lg:mr-[-0.75rem] lg:mt-0 lg:w-[380px] lg:max-w-[380px] lg:shrink-0 lg:self-center lg:translate-x-2 xl:mr-[-1rem] xl:w-[400px] xl:max-w-[400px] xl:translate-x-3"
           >
             <EnquiryForm
               variant="hero"
