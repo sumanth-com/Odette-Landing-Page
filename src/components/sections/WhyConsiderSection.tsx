@@ -16,7 +16,8 @@ function OdetteBrandCard() {
             src={Logo}
             alt=""
             aria-hidden
-            priority
+            sizes="(max-width: 640px) 220px, 250px"
+            quality={85}
             className="h-auto w-full max-w-[220px] object-contain sm:max-w-[250px]"
           />
           <p className="mt-8 font-display text-[11px] font-medium uppercase tracking-[0.32em] text-charcoal sm:mt-10 sm:text-xs">

@@ -1,7 +1,7 @@
 "use client";
 
-import HeroImage from "@/assets/Hero.png";
-import MobHeroImage from "@/assets/MobHero.png";
+import HeroImage from "@/assets/Hero.webp";
+import MobHeroImage from "@/assets/MobHero.webp";
 import { CONTACT_PATH } from "@/lib/site";
 import { useSectionNavigation } from "@/lib/useSectionNavigation";
 import { type ElementType } from "react";
@@ -76,7 +76,7 @@ export function HeroSection() {
           alt=""
           fill
           priority
-          quality={100}
+          quality={85}
           className="hero-mob-bg object-cover object-center lg:hidden"
           sizes="100vw"
         />
@@ -85,7 +85,7 @@ export function HeroSection() {
           alt=""
           fill
           priority
-          quality={100}
+          quality={85}
           className="hero-desktop-bg hidden object-cover object-[50%_35%] lg:block"
           sizes="100vw"
         />

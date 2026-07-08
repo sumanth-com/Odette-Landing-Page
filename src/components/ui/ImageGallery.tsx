@@ -1,13 +1,13 @@
 "use client";
 
-import image1 from "@/assets/1.png";
-import image2 from "@/assets/2.png";
-import image3 from "@/assets/3.png";
-import image4 from "@/assets/4.png";
-import image5 from "@/assets/5.png";
-import image6 from "@/assets/6.png";
+import image1 from "@/assets/1.webp";
+import image2 from "@/assets/2.webp";
+import image3 from "@/assets/3.webp";
+import image4 from "@/assets/4.webp";
+import image5 from "@/assets/5.webp";
+import image6 from "@/assets/6.webp";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { type StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { useCallback, useState } from "react";
 
 const galleryImages: { src: StaticImageData; alt: string }[] = [
@@ -50,15 +50,20 @@ export function ImageGallery({ className = "" }: ImageGalleryProps) {
               <ChevronLeft className="h-4 w-4" strokeWidth={2} />
             </button>
 
-            <div className="absolute inset-0 flex items-center justify-center px-11 py-4 sm:px-12 sm:py-5">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+            <div className="absolute inset-0 px-11 py-4 sm:px-12 sm:py-5">
+              <div className="relative h-full w-full">
+                <Image
                 key={current.alt}
-                src={current.src.src}
+                src={current.src}
                 alt={current.alt}
+                fill
+                quality={80}
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 480px"
+                loading={index === 0 ? "eager" : "lazy"}
                 draggable={false}
-                className="max-h-full max-w-full object-contain object-center"
+                className="object-contain object-center"
               />
+              </div>
             </div>
 
             <button
