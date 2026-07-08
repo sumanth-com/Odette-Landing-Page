@@ -33,7 +33,7 @@ const investmentOverview = [
   { label: "Space Required", value: "700 Sq.ft" },
   {
     label: "Returns",
-    value: "₹1.25 / Month or 12% Revenue Share",
+    value: "₹1.25 Lakhs / Month or 12% Revenue Share",
     subValue: "(Whichever Is Higher)",
   },
   { label: "Lock-in Period", value: "5 Years" },
