@@ -148,7 +148,10 @@ export function HeroSection() {
               </a>
             </motion.div>
 
-            <motion.div variants={fadeUp} className="hero-enquire-desktop mt-4 max-lg:hidden lg:mt-5">
+            <motion.div
+              variants={fadeUp}
+              className="hero-enquire-desktop mt-4 flex w-full max-w-md justify-center max-lg:hidden lg:mt-5"
+            >
               <a
                 href={CONTACT_PATH}
                 onClick={(e) => navigate(e, CONTACT_PATH)}
