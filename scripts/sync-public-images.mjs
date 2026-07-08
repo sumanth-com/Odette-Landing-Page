@@ -32,14 +32,8 @@ for (const { from, to } of imageMap) {
   console.log(`Synced images/${to}`);
 }
 
-await sharp(join(assetsDir, "Logo.png"))
-  .resize(80, 80, {
-    fit: "contain",
-    background: { r: 91, g: 45, b: 139, alpha: 0 },
-  })
-  .webp({ quality: 90 })
-  .toFile(join(imagesRoot, "brand", "ifranchise-logo.webp"));
-console.log("Synced images/brand/ifranchise-logo.webp");
+copyFileSync(join(assetsDir, "ifran.ico"), join(imagesRoot, "brand", "ifranchise-logo.ico"));
+console.log("Synced images/brand/ifranchise-logo.ico");
 
 const dimensions = {};
 
@@ -50,10 +44,9 @@ for (const { to } of imageMap) {
   dimensions[key] = { width: meta.width ?? 1, height: meta.height ?? 1 };
 }
 
-const ifranchiseMeta = await sharp(join(imagesRoot, "brand", "ifranchise-logo.webp")).metadata();
 dimensions["brand.ifranchise-logo"] = {
-  width: ifranchiseMeta.width ?? 80,
-  height: ifranchiseMeta.height ?? 80,
+  width: 48,
+  height: 48,
 };
 
 const outputPath = join(root, "src", "lib", "image-dimensions.json");

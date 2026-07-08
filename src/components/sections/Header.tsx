@@ -151,6 +151,7 @@ export function Header() {
               width={SITE_IMAGES.brand.iFranchiseLogo.width}
               height={SITE_IMAGES.brand.iFranchiseLogo.height}
               priority
+              unoptimized
               className="h-9 w-9 shrink-0 object-contain sm:h-10 sm:w-10"
             />
             <div className="min-w-0">

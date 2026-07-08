@@ -46,7 +46,7 @@ export const SITE_IMAGES = {
       "Odette premium fashion retail brand"
     ),
     iFranchiseLogo: image(
-      "/images/brand/ifranchise-logo.webp",
+      "/images/brand/ifranchise-logo.ico",
       dimensions["brand.ifranchise-logo"].width,
       dimensions["brand.ifranchise-logo"].height,
       "iFranchise logo"
