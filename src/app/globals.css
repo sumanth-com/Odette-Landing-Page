@@ -736,3 +736,7 @@ body {
     radial-gradient(ellipse 85% 55% at 75% 85%, rgba(91, 45, 139, 0.26), transparent 54%),
     linear-gradient(180deg, transparent 50%, rgba(235, 224, 245, 0.65) 100%);
 }
+
+body.mobile-menu-open .whatsapp-floating-btn {
+  display: none;
+}
