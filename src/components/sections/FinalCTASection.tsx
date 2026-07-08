@@ -61,6 +61,7 @@ export function FinalCTASection() {
                   <GoogleMeetIcon className="h-3.5 w-3.5 shrink-0 text-white sm:h-4 sm:w-4" />
                   <span className="lg:hidden">Book a Meeting</span>
                   <span className="hidden lg:inline">Book a Meeting with Us</span>
+                  <span className="sr-only"> (opens in a new tab)</span>
                 </a>
                 <div className="flex shrink-0 items-center gap-2">
                   <a
@@ -69,14 +70,14 @@ export function FinalCTASection() {
                     onClick={() => trackPhoneClick("contact_section")}
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cta text-white shadow-[0_2px_10px_rgba(91,45,139,0.22)] transition-colors duration-200 hover:bg-cta-hover"
                   >
-                    <Phone className="h-4 w-4" strokeWidth={1.5} />
+                    <Phone className="h-4 w-4" strokeWidth={1.5} aria-hidden />
                   </a>
                   <a
                     href={`mailto:${CONTACT_EMAIL}`}
                     aria-label="Email us"
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cta text-white shadow-[0_2px_10px_rgba(91,45,139,0.22)] transition-colors duration-200 hover:bg-cta-hover"
                   >
-                    <Mail className="h-4 w-4" strokeWidth={1.5} />
+                    <Mail className="h-4 w-4" strokeWidth={1.5} aria-hidden />
                   </a>
                   <a
                     href={CONTACT_WEBSITE}

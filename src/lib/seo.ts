@@ -45,7 +45,7 @@ export const SECTION_SEO: Record<
   { title: string; description: string; changeFrequency: "weekly" | "monthly"; priority: number }
 > = {
   "/": {
-    title: "Odette Franchise Opportunity | Premium Women's Fashion Franchise in India",
+    title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
     changeFrequency: "weekly",
     priority: 1,
@@ -94,6 +94,29 @@ export const SECTION_SEO: Record<
   },
 };
 
+const CANONICAL_HOME = SITE_URL.endsWith("/") ? SITE_URL : `${SITE_URL}/`;
+
+const INDEXABLE_ROBOTS: Metadata["robots"] = {
+  index: true,
+  follow: true,
+  googleBot: {
+    index: true,
+    follow: true,
+    "max-image-preview": "large",
+    "max-snippet": -1,
+    "max-video-preview": -1,
+  },
+};
+
+const SECTION_ROUTE_ROBOTS: Metadata["robots"] = {
+  index: false,
+  follow: true,
+  googleBot: {
+    index: false,
+    follow: true,
+  },
+};
+
 export function absoluteUrl(path: string = "/"): string {
   const normalized = path.startsWith("/") ? path : `/${path}`;
   return new URL(normalized, SITE_URL).toString();
@@ -108,7 +131,7 @@ function buildOpenGraph(path: SectionPath, title: string, description: string): 
   return {
     type: "website",
     locale: "en_IN",
-    url: absoluteUrl(path),
+    url: path === "/" ? CANONICAL_HOME : absoluteUrl(path),
     siteName: SITE_NAME,
     title,
     description,
@@ -118,6 +141,7 @@ function buildOpenGraph(path: SectionPath, title: string, description: string): 
         width: 1200,
         height: 630,
         alt: `${BRAND_NAME} Franchise Opportunity — Premium Fashion Franchise in India`,
+        type: "image/png",
       },
     ],
   };
@@ -129,33 +153,32 @@ function buildTwitter(title: string, description: string): Metadata["twitter"] {
     title,
     description,
     images: ["/twitter-image"],
+    creator: PUBLISHER_NAME,
+    site: PUBLISHER_NAME,
   };
 }
 
 export function buildSectionMetadata(path: SectionPath): Metadata {
   const section = SECTION_SEO[path];
-  const canonical = absoluteUrl(path);
+  const isHome = path === "/";
 
   return {
     title: { absolute: section.title },
     description: section.description,
     keywords: [...SEO_KEYWORDS],
     alternates: {
-      canonical,
+      canonical: CANONICAL_HOME,
     },
     openGraph: buildOpenGraph(path, section.title, section.description),
     twitter: buildTwitter(section.title, section.description),
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-        "max-video-preview": -1,
-      },
-    },
+    robots: isHome ? INDEXABLE_ROBOTS : SECTION_ROUTE_ROBOTS,
+  };
+}
+
+export function buildNotFoundMetadata(): Metadata {
+  return {
+    title: { absolute: "Page Not Found" },
+    robots: { index: false, follow: false },
   };
 }
 
@@ -173,27 +196,27 @@ export const rootMetadata: Metadata = {
   publisher: PUBLISHER_NAME,
   category: "Franchise",
   alternates: {
-    canonical: SITE_URL,
+    canonical: CANONICAL_HOME,
   },
   openGraph: buildOpenGraph("/", DEFAULT_TITLE, DEFAULT_DESCRIPTION),
   twitter: buildTwitter(DEFAULT_TITLE, DEFAULT_DESCRIPTION),
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
-  },
+  robots: INDEXABLE_ROBOTS,
   icons: {
     icon: [{ url: "/favicon.ico", sizes: "any" }],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
     shortcut: ["/favicon.ico"],
   },
   manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "Odette Franchise",
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: true,
+    email: true,
+    address: false,
+  },
   verification: getGoogleSiteVerification()
     ? { google: getGoogleSiteVerification() }
     : undefined,
@@ -202,6 +225,18 @@ export const rootMetadata: Metadata = {
     "geo.placename": "India",
   },
 };
+
+function getLogoImageObject() {
+  return {
+    "@type": "ImageObject",
+    "@id": `${SITE_URL}/#logo`,
+    url: absoluteUrl(SITE_IMAGES.brand.odetteLogo.src),
+    contentUrl: absoluteUrl(SITE_IMAGES.brand.odetteLogo.src),
+    width: SITE_IMAGES.brand.odetteLogo.width,
+    height: SITE_IMAGES.brand.odetteLogo.height,
+    caption: `${BRAND_NAME} franchise brand logo`,
+  };
+}
 
 export function getBreadcrumbJsonLd(path: SectionPath) {
   const crumbs = [{ name: "Home", path: "/" as SectionPath }];
@@ -224,17 +259,27 @@ export function getBreadcrumbJsonLd(path: SectionPath) {
 }
 
 export function getStructuredDataGraph(path: SectionPath) {
+  const lastModified = new Date().toISOString().slice(0, 10);
+
   const organization = {
     "@type": "Organization",
     "@id": `${SITE_URL}/#organization`,
     name: PUBLISHER_NAME,
     url: CONTACT_WEBSITE,
-    logo: {
-      "@type": "ImageObject",
-      url: absoluteUrl(SITE_IMAGES.brand.odetteLogo.src),
-    },
+    logo: { "@id": `${SITE_URL}/#logo` },
+    image: { "@id": `${SITE_URL}/#logo` },
     email: CONTACT_EMAIL,
     telephone: CONTACT_PHONE_DISPLAY,
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        telephone: CONTACT_PHONE_DISPLAY,
+        email: CONTACT_EMAIL,
+        contactType: "franchise sales",
+        areaServed: "IN",
+        availableLanguage: ["en", "hi"],
+      },
+    ],
     sameAs: [CONTACT_WEBSITE],
   };
 
@@ -250,21 +295,38 @@ export function getStructuredDataGraph(path: SectionPath) {
 
   const webPage = {
     "@type": "WebPage",
-    "@id": `${absoluteUrl(path)}#webpage`,
-    url: absoluteUrl(path),
+    "@id": `${CANONICAL_HOME}#webpage`,
+    url: CANONICAL_HOME,
     name: SECTION_SEO[path].title,
     description: SECTION_SEO[path].description,
     isPartOf: { "@id": `${SITE_URL}/#website` },
     about: { "@id": `${SITE_URL}/#franchise-service` },
+    primaryImageOfPage: { "@id": `${SITE_URL}/#logo` },
+    dateModified: lastModified,
     inLanguage: "en-IN",
+  };
+
+  const localBusiness = {
+    "@type": "LocalBusiness",
+    "@id": `${SITE_URL}/#odette-brand`,
+    name: `${BRAND_NAME} Premium Fashion Retail`,
+    description:
+      "Mass-premium women's fashion retail brand in India offering franchise investment opportunities through the FICO model.",
+    url: CANONICAL_HOME,
+    image: { "@id": `${SITE_URL}/#logo` },
+    parentOrganization: { "@id": `${SITE_URL}/#organization` },
+    areaServed: {
+      "@type": "Country",
+      name: "India",
+    },
   };
 
   const professionalService = {
     "@type": "ProfessionalService",
     "@id": `${SITE_URL}/#franchise-service`,
     name: `${BRAND_NAME} Franchise Consulting by ${PUBLISHER_NAME}`,
-    url: absoluteUrl(path),
-    image: absoluteUrl(SITE_IMAGES.brand.odetteLogo.src),
+    url: CANONICAL_HOME,
+    image: { "@id": `${SITE_URL}/#logo` },
     description:
       "Franchise consulting and Odette premium women's fashion franchise opportunities across India.",
     provider: { "@id": `${SITE_URL}/#organization` },
@@ -283,7 +345,7 @@ export function getStructuredDataGraph(path: SectionPath) {
 
   const faqPage = {
     "@type": "FAQPage",
-    "@id": `${SITE_URL}/faq#faq`,
+    "@id": `${SITE_URL}/#faq`,
     mainEntity: FAQ_ITEMS.map((faq) => ({
       "@type": "Question",
       name: faq.question,
@@ -295,16 +357,15 @@ export function getStructuredDataGraph(path: SectionPath) {
   };
 
   const graph: Record<string, unknown>[] = [
+    getLogoImageObject(),
     organization,
     website,
     webPage,
+    localBusiness,
     professionalService,
     getBreadcrumbJsonLd(path),
+    faqPage,
   ];
-
-  if (path === "/faq" || path === "/") {
-    graph.push(faqPage);
-  }
 
   return {
     "@context": "https://schema.org",

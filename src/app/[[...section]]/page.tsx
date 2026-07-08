@@ -1,6 +1,6 @@
 import { JsonLd } from "@/components/JsonLd";
 import { LandingPage } from "@/components/LandingPage";
-import { buildSectionMetadata } from "@/lib/seo";
+import { buildNotFoundMetadata, buildSectionMetadata } from "@/lib/seo";
 import { isValidSectionPath, SITE_SECTIONS, type SectionPath } from "@/lib/site";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -28,7 +28,7 @@ export async function generateMetadata({
   const path = pathFromSegments(section);
 
   if (!isValidSectionPath(path)) {
-    return buildSectionMetadata("/");
+    return buildNotFoundMetadata();
   }
 
   return buildSectionMetadata(path);

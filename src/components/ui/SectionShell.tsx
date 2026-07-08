@@ -7,6 +7,7 @@ interface SectionShellProps {
   children: ReactNode;
   className?: string;
   id?: string;
+  ariaLabel?: string;
   fullViewport?: boolean;
   gradientTone?: 0 | 1 | 2 | 3 | 4 | 5;
 }
@@ -15,12 +16,14 @@ export function SectionShell({
   children,
   className = "",
   id,
+  ariaLabel,
   fullViewport = true,
   gradientTone = 0,
 }: SectionShellProps) {
   return (
     <section
       id={id}
+      aria-label={ariaLabel}
       className={`viewport-section relative ${
         fullViewport ? "snap-section" : ""
       } ${className}`}

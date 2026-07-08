@@ -28,7 +28,7 @@ function HighlightCard({
       }`}
     >
       <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-cta/10 sm:h-6 sm:w-6">
-        <Icon className="h-2.5 w-2.5 text-cta sm:h-3 sm:w-3" strokeWidth={2.25} />
+        <Icon className="h-2.5 w-2.5 text-cta sm:h-3 sm:w-3" strokeWidth={2.25} aria-hidden />
       </span>
       <span
         className={`min-w-0 flex-1 text-left font-semibold leading-snug text-charcoal ${
@@ -45,10 +45,7 @@ function HighlightCard({
 
 function HeroHighlightCards() {
   return (
-    <ul
-      className="hero-highlight-grid grid grid-cols-2 gap-2 sm:gap-2.5"
-      role="list"
-    >
+    <ul className="hero-highlight-grid grid grid-cols-2 gap-2 sm:gap-2.5">
       <HighlightCard label="Investment: ₹45 Lakhs+" icon={IndianRupee} />
       <HighlightCard label="Model: FICO" icon={Tag} />
       <HighlightCard label="Agreement Term: 5 years" icon={Calendar} />
@@ -84,8 +81,8 @@ export function HeroSection() {
           src={SITE_IMAGES.hero.desktop.src}
           alt=""
           fill
-          priority
           quality={85}
+          loading="lazy"
           className="hero-desktop-bg hidden object-cover object-[50%_35%] lg:block"
           sizes="100vw"
         />

@@ -75,7 +75,7 @@ function HeroIconField({
     <div
       className={`flex h-10 w-full min-w-0 items-stretch overflow-hidden rounded-xl border border-border bg-white shadow-[0_1px_4px_rgba(43,43,43,0.08)] focus-within:border-cta focus-within:ring-[3px] focus-within:ring-cta/20 ${className}`}
     >
-      <span className="flex w-10 shrink-0 items-center justify-center border-r border-border/80 bg-[#f7f5f2] text-charcoal/80">
+      <span className="flex w-10 shrink-0 items-center justify-center border-r border-border/80 bg-[#f7f5f2] text-charcoal/80" aria-hidden>
         {icon}
       </span>
       <div className="flex min-w-0 flex-1 items-center">{children}</div>
@@ -293,11 +293,11 @@ export function EnquiryForm({
         {showHeading && (
           <div className="flex flex-col items-center text-center">
             <div className="flex h-11 w-11 items-center justify-center rounded-full border border-border/60 bg-white shadow-sm">
-              <UserRound className="h-5 w-5 text-cta" strokeWidth={2.5} />
+              <UserRound className="h-5 w-5 text-cta" strokeWidth={2.5} aria-hidden />
             </div>
-            <h3 className="mt-3 font-display text-[15px] font-semibold leading-tight text-charcoal sm:text-base lg:whitespace-nowrap xl:text-[17px]">
+            <h2 className="mt-3 font-display text-[15px] font-semibold leading-tight text-charcoal sm:text-base lg:whitespace-nowrap xl:text-[17px]">
               {heading}
-            </h3>
+            </h2>
             {helperText ? (
               <p className="mt-2.5 max-w-[18rem] text-xs leading-relaxed text-taupe sm:text-[13px]">
                 {helperText}
@@ -312,7 +312,10 @@ export function EnquiryForm({
           className={`${showHeading ? "mt-5" : "mt-0"} flex flex-1 flex-col gap-2.5`}
           noValidate
         >
-          <HeroIconField icon={<UserRound className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} />}>
+          <HeroIconField icon={<UserRound className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} aria-hidden />}>
+            <label htmlFor={`${id}-name`} className="sr-only">
+              {nameLabel}
+            </label>
             <input
               id={`${id}-name`}
               type="text"
@@ -326,6 +329,9 @@ export function EnquiryForm({
           </HeroIconField>
 
           <div className="grid grid-cols-[6.25rem_minmax(0,1fr)] gap-2">
+            <label htmlFor={`${id}-country-code`} className="sr-only">
+              Country code
+            </label>
             <FormSelect
               id={`${id}-country-code`}
               value={formData.countryCode}
@@ -334,7 +340,10 @@ export function EnquiryForm({
               placeholder="Code"
               fieldClassName={`${heroFieldClass} px-2.5`}
             />
-            <HeroIconField icon={<Phone className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} />}>
+            <HeroIconField icon={<Phone className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} aria-hidden />}>
+              <label htmlFor={`${id}-mobile`} className="sr-only">
+                {phoneLabel}
+              </label>
               <input
                 id={`${id}-mobile`}
                 type="tel"
@@ -363,8 +372,11 @@ export function EnquiryForm({
             <>
               <HeroIconField
                 className="hero-form-email-field"
-                icon={<Mail className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} />}
+                icon={<Mail className="h-4 w-4 text-charcoal/85" strokeWidth={2.5} aria-hidden />}
               >
+                <label htmlFor={`${id}-email`} className="sr-only">
+                  Email address
+                </label>
                 <input
                   id={`${id}-email`}
                   type="email"
@@ -394,6 +406,9 @@ export function EnquiryForm({
               stackStateCityOnMobile ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-2"
             }`}
           >
+            <label htmlFor={`${id}-state`} className="sr-only">
+              State
+            </label>
             <FormSelect
               id={`${id}-state`}
               value={formData.state}
@@ -402,6 +417,9 @@ export function EnquiryForm({
               placeholder="State"
               fieldClassName={`${heroFieldClass} px-2.5`}
             />
+            <label htmlFor={`${id}-city`} className="sr-only">
+              City
+            </label>
             <input
               id={`${id}-city`}
               type="text"
@@ -440,14 +458,19 @@ export function EnquiryForm({
           )}
 
           {showBudget && (
-            <FormSelect
-              id={`${id}-budget`}
+            <>
+              <label htmlFor={`${id}-budget`} className="sr-only">
+                Investment budget
+              </label>
+              <FormSelect
+                id={`${id}-budget`}
               value={formData.investmentBudget}
               onChange={(budget) => setFormData({ ...formData, investmentBudget: budget })}
               options={budgetSelectOptions}
               placeholder="Select budget"
               fieldClassName={`${heroFieldClass} px-3.5 pr-3`}
-            />
+              />
+            </>
           )}
 
           <div className="mt-auto flex flex-col gap-2.5 pt-4">

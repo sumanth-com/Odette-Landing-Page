@@ -23,7 +23,7 @@ export function ImageGallery({ className = "" }: ImageGalleryProps) {
   }, [total]);
 
   return (
-    <div className={`flex w-full min-w-0 flex-col ${className}`}>
+    <div className={`flex w-full min-w-0 flex-col ${className}`} role="region" aria-label="Odette franchise gallery">
       <div className="premium-rotating-border premium-rotating-border--gallery luxury-shadow w-full">
         <div className="premium-rotating-border__inner w-full overflow-hidden">
           <div className="relative aspect-[4/3] w-full">
@@ -43,7 +43,7 @@ export function ImageGallery({ className = "" }: ImageGalleryProps) {
                   src={current.src}
                   alt={current.alt}
                   fill
-                  quality={80}
+                  quality={85}
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 480px"
                   loading={index === 0 ? "eager" : "lazy"}
                   draggable={false}
