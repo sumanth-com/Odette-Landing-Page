@@ -4,7 +4,7 @@ import { isAnalyticsEnabled, isGtmEnabled } from "@/lib/analytics-config";
 import { sendGAEvent } from "@next/third-parties/google";
 
 const FORM_NAME = "Odette Landing Page";
-const GTM_LEAD_EVENT = "lead_submit";
+const GTM_LEAD_EVENT = "contact_form_submit";
 
 type AnalyticsEventParams = Record<string, string | number | boolean | undefined>;
 
