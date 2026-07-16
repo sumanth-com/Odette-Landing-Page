@@ -2,8 +2,16 @@ export function getGaMeasurementId(): string | undefined {
   return process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim() || undefined;
 }
 
+export function getGtmContainerId(): string | undefined {
+  return process.env.NEXT_PUBLIC_GTM_ID?.trim() || undefined;
+}
+
 export function isAnalyticsEnabled(): boolean {
   return Boolean(getGaMeasurementId());
+}
+
+export function isGtmEnabled(): boolean {
+  return Boolean(getGtmContainerId());
 }
 
 export function isGaDebugMode(): boolean {
