@@ -1,11 +1,21 @@
 "use client";
 
-import { isAnalyticsEnabled } from "@/lib/analytics-config";
+import { isAnalyticsEnabled, isGtmEnabled } from "@/lib/analytics-config";
 import { sendGAEvent } from "@next/third-parties/google";
 
 const FORM_NAME = "Odette Landing Page";
+const GTM_LEAD_EVENT = "lead_submit";
 
 type AnalyticsEventParams = Record<string, string | number | boolean | undefined>;
+
+function pushDataLayerEvent(event: Record<string, string | undefined>): void {
+  if (!isGtmEnabled() || typeof window === "undefined") {
+    return;
+  }
+
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push(event);
+}
 
 function trackEvent(eventName: string, params: AnalyticsEventParams = {}): void {
   if (!isAnalyticsEnabled() || typeof window === "undefined") {
@@ -45,6 +55,14 @@ export function trackPageView(pagePath?: string): void {
 export function trackGenerateLead(): void {
   trackEvent("generate_lead", { form_name: FORM_NAME });
   trackFormSubmission();
+
+  pushDataLayerEvent({
+    event: GTM_LEAD_EVENT,
+    form_name: FORM_NAME,
+    page_location: window.location.href,
+    page_title: document.title,
+    page_path: `${window.location.pathname}${window.location.search}`,
+  });
 }
 
 export function trackFormSubmission(): void {
