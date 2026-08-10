@@ -43,3 +43,4 @@ export const NAV_LINKS = SITE_SECTIONS.filter(
 
 export const CONTACT_PATH = "/contact" as const;
 export const HOME_PATH = "/" as const;
+export const THANK_YOU_PATH = "/thank-you" as const;

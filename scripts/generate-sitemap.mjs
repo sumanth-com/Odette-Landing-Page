@@ -29,6 +29,7 @@ Allow: /
 
 Disallow: /api/
 Disallow: /private/
+Disallow: /thank-you
 
 Sitemap: ${siteUrl}/sitemap.xml
 `;

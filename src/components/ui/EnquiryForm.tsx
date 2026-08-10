@@ -1,7 +1,13 @@
 "use client";
 
-import { INDIAN_STATES, STATE_DISPLAY_LABELS } from "@/lib/indianLocations";
+import {
+  getLocationSuggestionsForState,
+  INDIAN_STATES,
+  resolveIndianState,
+  STATE_DISPLAY_LABELS,
+} from "@/lib/indianLocations";
 import { trackGenerateLead } from "@/lib/analytics";
+import { THANK_YOU_PATH } from "@/lib/site";
 import { submitLead } from "@/lib/submitLead";
 import { syncLeadToGoogleSheetsClient } from "@/lib/submitLeadToGoogleSheets.client";
 import { motion } from "framer-motion";
@@ -13,6 +19,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { FormEvent, type ReactNode, useMemo, useState } from "react";
+import { FormAutocomplete } from "./FormAutocomplete";
 import { FormSelect } from "./FormSelect";
 import { GoldButton } from "./GoldButton";
 
@@ -126,6 +133,15 @@ export function EnquiryForm({
     []
   );
 
+  const cityOptions = useMemo(
+    () =>
+      getLocationSuggestionsForState(formData.state).map((location) => ({
+        value: location,
+        label: location,
+      })),
+    [formData.state]
+  );
+
   const budgetSelectOptions = useMemo(
     () => budgetOptions.map((option) => ({ value: option, label: option })),
     []
@@ -161,8 +177,21 @@ export function EnquiryForm({
   };
 
   const handleStateChange = (state: string) => {
-    setFormData((prev) => ({ ...prev, state, city: "" }));
+    const resolved = resolveIndianState(state);
+    setFormData((prev) => ({
+      ...prev,
+      state: resolved ?? state,
+      city: "",
+    }));
     if (locationError) setLocationError("");
+  };
+
+  const openThankYouPage = () => {
+    const thankYouUrl = THANK_YOU_PATH;
+    const opened = window.open(thankYouUrl, "_blank", "noopener,noreferrer");
+    if (!opened) {
+      window.location.assign(thankYouUrl);
+    }
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -184,12 +213,14 @@ export function EnquiryForm({
       return;
     }
 
-    if (!formData.state) {
-      setLocationError("Please select your state.");
+    const stateValue = formData.state.trim();
+    if (!stateValue) {
+      setLocationError("Please enter your state.");
       return;
     }
 
-    if (!formData.city.trim()) {
+    const cityValue = formData.city.trim();
+    if (!cityValue) {
       setLocationError("Please enter your city.");
       return;
     }
@@ -201,12 +232,12 @@ export function EnquiryForm({
     setIsSubmitting(true);
     setSubmitError("");
 
-    const cityValue = formData.city.trim();
+    const resolvedState = resolveIndianState(stateValue) ?? stateValue;
     const leadPayload = {
       fullName: formData.fullName.trim(),
       mobileNumber: `${formData.countryCode} ${formData.mobile}`,
       email: emailValue,
-      state: formData.state,
+      state: resolvedState,
       city: cityValue,
       investmentBudget: formData.investmentBudget,
     };
@@ -219,6 +250,7 @@ export function EnquiryForm({
       }
 
       trackGenerateLead();
+      openThankYouPage();
       setSubmitted(true);
     } catch (error) {
       setSubmitError(
@@ -264,9 +296,19 @@ export function EnquiryForm({
           </div>
           <h3 className="font-display text-2xl text-charcoal">Thank You</h3>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-taupe">
-            Our franchise consultant will contact you within one business day.
+            Our franchise consultant will contact you within one business day. A confirmation
+            page has opened in a new tab.
           </p>
-          <div className="mt-8 w-full max-w-xs">
+          <div className="mt-8 flex w-full max-w-xs flex-col gap-3">
+            <GoldButton
+              type="button"
+              fullWidth
+              size={isHero ? "default" : "large"}
+              staticButton={isHero}
+              onClick={openThankYouPage}
+            >
+              Open Thank You Page
+            </GoldButton>
             <GoldButton
               type="button"
               fullWidth
@@ -409,37 +451,38 @@ export function EnquiryForm({
             <label htmlFor={`${id}-state`} className="sr-only">
               State
             </label>
-            <FormSelect
+            <FormAutocomplete
               id={`${id}-state`}
               value={formData.state}
               onChange={handleStateChange}
               options={stateOptions}
               placeholder="State"
-              fieldClassName={`${heroFieldClass} px-2.5`}
+              allowCustom
+              fieldClassName={`${heroFieldClass} pr-8`}
+              inputClassName="px-2.5 pr-7"
+              emptyMessage="No match — type your state"
+              aria-invalid={!!locationError}
+              aria-describedby={locationError ? `${id}-location-error` : undefined}
             />
             <label htmlFor={`${id}-city`} className="sr-only">
               City
             </label>
-            <input
+            <FormAutocomplete
               id={`${id}-city`}
-              type="text"
-              required
-              autoComplete="off"
-              readOnly={!cityEnabled}
-              placeholder={cityEnabled ? "City" : "Select state first"}
-              className={`${heroFieldClass} px-2.5 ${
-                cityEnabled
-                  ? "text-charcoal"
-                  : "cursor-not-allowed bg-[#f7f5f2] text-charcoal/45"
-              }`}
               value={formData.city}
-              onChange={(e) => {
-                setFormData({ ...formData, city: e.target.value });
+              onChange={(city) => {
+                setFormData({ ...formData, city });
                 if (locationError) setLocationError("");
               }}
-              onFocus={(e) => {
-                if (!cityEnabled) e.target.blur();
-              }}
+              options={cityOptions}
+              placeholder={cityEnabled ? "City / district" : "Select state first"}
+              disabled={!cityEnabled}
+              allowCustom
+              fieldClassName={`${heroFieldClass} pr-8 ${
+                cityEnabled ? "" : "cursor-not-allowed bg-[#f7f5f2] text-charcoal/45"
+              }`}
+              inputClassName="px-2.5 pr-7"
+              emptyMessage="No match — type your city or district"
               aria-invalid={!!locationError}
               aria-describedby={locationError ? `${id}-location-error` : undefined}
             />
@@ -602,13 +645,18 @@ export function EnquiryForm({
               <label htmlFor={`${id}-state`} className={labelClasses}>
                 State
               </label>
-              <FormSelect
+              <FormAutocomplete
                 id={`${id}-state`}
                 value={formData.state}
                 onChange={handleStateChange}
                 options={stateOptions}
-                placeholder="Select state"
-                fieldClassName={inputClasses}
+                placeholder="Type or select state"
+                allowCustom
+                fieldClassName={`${inputClasses} relative pr-8`}
+                inputClassName="px-3 pr-7"
+                emptyMessage="No match — type your state"
+                aria-invalid={!!locationError}
+                aria-describedby={locationError ? `${id}-location-error` : undefined}
               />
             </div>
 
@@ -616,26 +664,22 @@ export function EnquiryForm({
               <label htmlFor={`${id}-city`} className={labelClasses}>
                 City
               </label>
-              <input
+              <FormAutocomplete
                 id={`${id}-city`}
-                type="text"
-                required
-                autoComplete="off"
-                readOnly={!cityEnabled}
-                placeholder={cityEnabled ? "Enter your city" : "Select state first"}
-                className={`${inputClasses} ${
-                  cityEnabled
-                    ? "bg-white text-charcoal"
-                    : "cursor-not-allowed bg-gray-50 text-taupe/70"
-                }`}
                 value={formData.city}
-                onChange={(e) => {
-                  setFormData({ ...formData, city: e.target.value });
+                onChange={(city) => {
+                  setFormData({ ...formData, city });
                   if (locationError) setLocationError("");
                 }}
-                onFocus={(e) => {
-                  if (!cityEnabled) e.target.blur();
-                }}
+                options={cityOptions}
+                placeholder={cityEnabled ? "City / district / mandal" : "Select state first"}
+                disabled={!cityEnabled}
+                allowCustom
+                fieldClassName={`${inputClasses} relative pr-8 ${
+                  cityEnabled ? "bg-white text-charcoal" : "cursor-not-allowed bg-gray-50 text-taupe/70"
+                }`}
+                inputClassName="px-3 pr-7"
+                emptyMessage="No match — type your city or district"
                 aria-invalid={!!locationError}
                 aria-describedby={locationError ? `${id}-location-error` : undefined}
               />

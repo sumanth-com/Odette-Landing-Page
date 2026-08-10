@@ -56,8 +56,8 @@ Use the **same URL** for both variables. The public one powers the live-site bro
 | Full Name | Visitor name |
 | Mobile Number | Full phone number with country code |
 | Email | Visitor email |
-| State | Selected state |
-| City | City entered by visitor |
+| State | State from autocomplete or typed by visitor |
+| City | City / district / mandal from suggestions or typed by visitor |
 | Investment Budget | Selected budget option |
 
 ## Test
