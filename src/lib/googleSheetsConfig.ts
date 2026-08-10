@@ -1,11 +1,7 @@
 import type { LeadPayload } from "@/lib/submitLead";
 
 export function getGoogleScriptUrl(): string | undefined {
-  return (
-    process.env.GOOGLE_SCRIPT_URL?.trim() ||
-    process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL?.trim() ||
-    undefined
-  );
+  return process.env.GOOGLE_SCRIPT_URL?.trim() || undefined;
 }
 
 export function isGoogleAppsScriptConfigured(): boolean {

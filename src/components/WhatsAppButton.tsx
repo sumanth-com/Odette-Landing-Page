@@ -1,7 +1,9 @@
 "use client";
 
 import { trackWhatsAppClick } from "@/lib/analytics";
+import { THANK_YOU_PATH } from "@/lib/site";
 import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 const WHATSAPP_NUMBER = "919129130303";
 const WHATSAPP_MESSAGE = "Hi, I am interested in the Odette franchise opportunity.";
@@ -17,6 +19,12 @@ function WhatsAppIcon({ className = "h-6 w-6" }: { className?: string }) {
 }
 
 export function WhatsAppButton() {
+  const pathname = usePathname();
+
+  if (pathname === THANK_YOU_PATH) {
+    return null;
+  }
+
   return (
     <motion.a
       href={whatsappUrl}

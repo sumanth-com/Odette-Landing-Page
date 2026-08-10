@@ -9,8 +9,6 @@ import {
 import { trackGenerateLead } from "@/lib/analytics";
 import { THANK_YOU_PATH } from "@/lib/site";
 import { submitLead } from "@/lib/submitLead";
-import { syncLeadToGoogleSheetsClient } from "@/lib/submitLeadToGoogleSheets.client";
-import { motion } from "framer-motion";
 import {
   Mail,
   Phone,
@@ -105,7 +103,6 @@ export function EnquiryForm({
   showSecurityNote = true,
   footer,
 }: EnquiryFormProps) {
-  const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [mobileError, setMobileError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -186,12 +183,8 @@ export function EnquiryForm({
     if (locationError) setLocationError("");
   };
 
-  const openThankYouPage = () => {
-    const thankYouUrl = THANK_YOU_PATH;
-    const opened = window.open(thankYouUrl, "_blank", "noopener,noreferrer");
-    if (!opened) {
-      window.location.assign(thankYouUrl);
-    }
+  const goToThankYou = () => {
+    window.location.assign(THANK_YOU_PATH);
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -242,90 +235,51 @@ export function EnquiryForm({
       investmentBudget: formData.investmentBudget,
     };
 
-    try {
-      const result = await submitLead(leadPayload);
+    type SettleResult =
+      | { status: "ok" }
+      | { status: "error"; message: string };
 
-      if (!result.sheetsSynced) {
-        syncLeadToGoogleSheetsClient(leadPayload);
-      }
+    const settlement: { current: SettleResult | null } = { current: null };
 
-      trackGenerateLead();
-      openThankYouPage();
-      setSubmitted(true);
-    } catch (error) {
-      setSubmitError(
-        error instanceof Error
-          ? error.message
-          : "Unable to submit your inquiry. Please try again."
-      );
-    } finally {
+    const submission = submitLead(leadPayload)
+      .then((): SettleResult => {
+        const okResult: SettleResult = { status: "ok" };
+        settlement.current = okResult;
+        trackGenerateLead();
+        return okResult;
+      })
+      .catch((error): SettleResult => {
+        const errResult: SettleResult = {
+          status: "error",
+          message:
+            error instanceof Error
+              ? error.message
+              : "Unable to submit your inquiry. Please try again.",
+        };
+        settlement.current = errResult;
+        return errResult;
+      });
+
+    // Show thank-you within ~0.5–1s; don't wait on slow email/Sheets
+    await Promise.race([
+      submission,
+      new Promise<void>((resolve) => {
+        window.setTimeout(resolve, 700);
+      }),
+    ]);
+
+    if (settlement.current?.status === "error") {
+      setSubmitError(settlement.current.message);
       setIsSubmitting(false);
+      return;
     }
-  };
 
-  const handleSubmitAnother = () => {
-    setSubmitted(false);
-    setSubmitError("");
-    setMobileError("");
-    setEmailError("");
-    setLocationError("");
-    setFormData({
-      fullName: "",
-      countryCode: "+91",
-      mobile: "",
-      email: "",
-      state: "",
-      city: "",
-      investmentBudget: "",
-    });
-  };
+    if (!settlement.current) {
+      trackGenerateLead();
+    }
 
-  if (submitted) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className={shellClasses}
-      >
-        <div className="flex flex-col items-center py-8 text-center">
-          <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-            <svg className="h-8 w-8 text-cta" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h3 className="font-display text-2xl text-charcoal">Thank You</h3>
-          <p className="mt-3 max-w-xs text-sm leading-relaxed text-taupe">
-            Our franchise consultant will contact you within one business day. A confirmation
-            page has opened in a new tab.
-          </p>
-          <div className="mt-8 flex w-full max-w-xs flex-col gap-3">
-            <GoldButton
-              type="button"
-              fullWidth
-              size={isHero ? "default" : "large"}
-              staticButton={isHero}
-              onClick={openThankYouPage}
-            >
-              Open Thank You Page
-            </GoldButton>
-            <GoldButton
-              type="button"
-              fullWidth
-              size={isHero ? "default" : "large"}
-              staticButton={isHero}
-              onClick={handleSubmitAnother}
-            >
-              Submit Another Enquiry
-            </GoldButton>
-          </div>
-        </div>
-        {footer ? (
-          <div className="mt-3 shrink-0 border-t border-border/50 pt-2.5">{footer}</div>
-        ) : null}
-      </motion.div>
-    );
-  }
+    goToThankYou();
+  };
 
   if (isHero) {
     const cityEnabled = Boolean(formData.state);

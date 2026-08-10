@@ -26,6 +26,7 @@ export async function submitLead(payload: LeadPayload): Promise<SubmitLeadResult
       "Content-Type": "application/json",
     },
     body: JSON.stringify(payload),
+    keepalive: true,
   });
 
   const result = (await response.json()) as {
