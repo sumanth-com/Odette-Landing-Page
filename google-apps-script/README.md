@@ -41,7 +41,11 @@ GOOGLE_SCRIPT_URL=https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec
 
 Set this in:
 - `.env.local` for local development
-- Your production host (e.g. Vercel → Project → Settings → Environment Variables)
+- Vercel → Project → **Settings** → **Environment Variables**
+  - Name: `GOOGLE_SCRIPT_URL`
+  - Value: your Web App URL ending in `/exec`
+  - Environment: **Production** (and Preview if you use it)
+  - Then click **Redeploy** the latest deployment (env vars apply only after redeploy)
 
 9. Restart the dev server after changing env vars: `npm run dev`
 

@@ -54,26 +54,48 @@ async function postToGoogleAppsScript(
     throw new Error("GOOGLE_SCRIPT_URL is not configured");
   }
 
+  const headers =
+    contentType === "json"
+      ? { "Content-Type": "application/json" }
+      : { "Content-Type": "application/x-www-form-urlencoded" };
+
+  const body =
+    contentType === "json"
+      ? JSON.stringify(payload)
+      : buildFormBody(payload);
+
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), GAS_REQUEST_TIMEOUT_MS);
 
   try {
-    const response = await fetch(scriptUrl, {
+    // First attempt with redirect follow
+    let response = await fetch(scriptUrl, {
       method: "POST",
-      headers:
-        contentType === "json"
-          ? { "Content-Type": "application/json" }
-          : { "Content-Type": "application/x-www-form-urlencoded" },
-      body:
-        contentType === "json"
-          ? JSON.stringify(payload)
-          : buildFormBody(payload),
+      headers,
+      body,
       redirect: "follow",
       cache: "no-store",
       signal: controller.signal,
     });
 
-    const result = await parseGoogleAppsScriptResponse(response);
+    let result = await parseGoogleAppsScriptResponse(response);
+
+    // GAS sometimes turns redirected POSTs into GET (health-check). Retry as form POST once.
+    if (
+      result.status === "running" &&
+      result.success !== true &&
+      contentType === "form"
+    ) {
+      response = await fetch(scriptUrl, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+        redirect: "follow",
+        cache: "no-store",
+        signal: controller.signal,
+      });
+      result = await parseGoogleAppsScriptResponse(response);
+    }
 
     if (!response.ok) {
       throw new Error(

@@ -43,8 +43,7 @@ export async function POST(request: Request) {
       investmentBudget: lead.investmentBudget,
     };
 
-    await sendLeadEmails(lead);
-
+    // Sheets first — lead capture must not depend on email succeeding
     let sheetsSynced = false;
     let sheetsError: string | undefined;
 
@@ -58,17 +57,27 @@ export async function POST(request: Request) {
             ? error.message
             : "Google Sheets sync failed";
 
-        console.error("Google Sheets sync failed after email delivery:", sheetsError);
+        console.error("Google Sheets sync failed:", sheetsError);
       }
     } else {
-      sheetsError = "GOOGLE_SCRIPT_URL is not configured";
+      sheetsError =
+        "GOOGLE_SCRIPT_URL is not configured (set it in Vercel → Settings → Environment Variables for Production, then Redeploy)";
       console.error("Google Sheets sync skipped:", sheetsError);
+    }
+
+    // Emails second — non-fatal so a Resend issue never blocks Sheets
+    let confirmationSent = false;
+    try {
+      await sendLeadEmails(lead);
+      confirmationSent = Boolean(lead.email);
+    } catch (error) {
+      console.error("Lead email delivery failed after Sheets attempt:", error);
     }
 
     return NextResponse.json({
       success: true,
       message: "Your inquiry has been submitted successfully.",
-      confirmationSent: Boolean(lead.email),
+      confirmationSent,
       sheetsSynced,
       sheetsError: sheetsSynced ? undefined : sheetsError,
     });

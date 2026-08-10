@@ -235,50 +235,19 @@ export function EnquiryForm({
       investmentBudget: formData.investmentBudget,
     };
 
-    type SettleResult =
-      | { status: "ok" }
-      | { status: "error"; message: string };
-
-    const settlement: { current: SettleResult | null } = { current: null };
-
-    const submission = submitLead(leadPayload)
-      .then((): SettleResult => {
-        const okResult: SettleResult = { status: "ok" };
-        settlement.current = okResult;
-        trackGenerateLead();
-        return okResult;
-      })
-      .catch((error): SettleResult => {
-        const errResult: SettleResult = {
-          status: "error",
-          message:
-            error instanceof Error
-              ? error.message
-              : "Unable to submit your inquiry. Please try again.",
-        };
-        settlement.current = errResult;
-        return errResult;
-      });
-
-    // Show thank-you within ~0.5–1s; don't wait on slow email/Sheets
-    await Promise.race([
-      submission,
-      new Promise<void>((resolve) => {
-        window.setTimeout(resolve, 700);
-      }),
-    ]);
-
-    if (settlement.current?.status === "error") {
-      setSubmitError(settlement.current.message);
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!settlement.current) {
+    try {
+      // Wait for the API to finish so production Sheets/email are not aborted mid-request
+      await submitLead(leadPayload);
       trackGenerateLead();
+      goToThankYou();
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "Unable to submit your inquiry. Please try again."
+      );
+      setIsSubmitting(false);
     }
-
-    goToThankYou();
   };
 
   if (isHero) {
