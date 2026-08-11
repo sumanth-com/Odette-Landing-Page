@@ -41,6 +41,8 @@ export async function POST(request: Request) {
       state: lead.state,
       city: lead.city,
       investmentBudget: lead.investmentBudget,
+      source: lead.source,
+      utmParameters: lead.utmParameters,
     };
 
     // Sheets first — lead capture must not depend on email succeeding

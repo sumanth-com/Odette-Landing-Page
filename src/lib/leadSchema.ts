@@ -31,12 +31,16 @@ export const leadSchema = z.object({
     error: "Please select a valid investment budget",
   }),
   franchiseInterest: z.string().trim().max(120).optional(),
+  source: z.string().trim().max(120).optional(),
+  utmParameters: z.string().trim().max(500).optional(),
 });
 
 export type LeadInput = z.infer<typeof leadSchema>;
 
 export type LeadRecord = LeadInput & {
   franchiseInterest: string;
+  source: string;
+  utmParameters: string;
 };
 
 export function normalizeLeadInput(input: LeadInput): LeadRecord {
@@ -49,5 +53,7 @@ export function normalizeLeadInput(input: LeadInput): LeadRecord {
     city: input.city.trim(),
     franchiseInterest:
       input.franchiseInterest?.trim() || DEFAULT_FRANCHISE_INTEREST,
+    source: input.source?.trim() || "direct",
+    utmParameters: input.utmParameters?.trim() || "",
   };
 }

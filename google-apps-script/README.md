@@ -60,15 +60,32 @@ Set this in:
 | State | State from autocomplete or typed by visitor |
 | City | City / district / mandal from suggestions or typed by visitor |
 | Investment Budget | Selected budget option |
+| Source | `utm_source`, detected referrer, or `direct` |
+| UTM Parameters | Combined UTM string, e.g. `utm_source=instagram&utm_medium=social&utm_campaign=odette_launch`. Empty when none exist. |
+
+## Update an existing deployment (keep the same Web App URL)
+
+Do **not** create a new Web app. Edit the current deployment:
+
+1. Open the Google Sheet → **Extensions → Apps Script**
+2. Replace `Code.gs` with the updated file from this folder
+3. **Save**
+4. Select **`setupSheet`** → **Run** (adds the Source and UTM Parameters columns without deleting existing leads)
+5. **Deploy → Manage deployments**
+6. Click the **pencil** on the existing Web app
+7. **Version:** New version
+8. Click **Deploy**
+
+The `/exec` URL stays the same. No Vercel env change is needed if `GOOGLE_SCRIPT_URL` is already set.
 
 ## Test
 
 Open your Web App URL in a browser. You should see:
 
 ```json
-{"status":"running","version":"2.1.0","message":"Odette lead capture API is active."}
+{"status":"running","version":"2.2.0","message":"Odette lead capture API is active."}
 ```
 
-Then submit a test lead from the website and confirm a new row appears in the **Leads** sheet.
+Then submit a test lead from the website and confirm a new row appears in the **Leads** sheet, including Source and UTM Parameters.
 
 If emails arrive but rows do not appear, verify `GOOGLE_SCRIPT_URL` is set in production and redeploy the Apps Script after updating `Code.gs`.

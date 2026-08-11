@@ -6,6 +6,7 @@ import {
   GoogleTagManagerNoscript,
   GoogleTagManagerScript,
 } from "@/components/GoogleTagManager";
+import { AttributionCapture } from "@/components/AttributionCapture";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { rootMetadata } from "@/lib/seo";
 import "./globals.css";
@@ -52,6 +53,7 @@ export default function RootLayout({
           Skip to main content
         </a>
         {children}
+        <AttributionCapture />
         <Suspense fallback={null}>
           <WhatsAppButton />
         </Suspense>

@@ -5,6 +5,8 @@ export interface LeadPayload {
   state: string;
   city: string;
   investmentBudget: string;
+  source: string;
+  utmParameters: string;
 }
 
 export interface SubmitLeadResult {

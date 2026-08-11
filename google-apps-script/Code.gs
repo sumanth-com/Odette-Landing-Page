@@ -2,7 +2,7 @@
  * Odette Franchise Landing Page — Google Sheets Lead Capture
  *
  * Saves form fields plus submission timestamp:
- * Timestamp | Full Name | Mobile Number | Email | State | City | Investment Budget
+ * Timestamp | Full Name | Mobile Number | Email | State | City | Investment Budget | Source | UTM Parameters
  *
  * SETUP:
  * 1. Create a new Google Sheet
@@ -10,10 +10,16 @@
  * 3. Run setupSheet() once → allow permissions
  * 4. Deploy → New deployment → Web app (Execute as: Me, Access: Anyone)
  * 5. Copy Web App URL → GOOGLE_SCRIPT_URL in your hosting environment
+ *
+ * UPDATE (keep existing Web App URL):
+ * 1. Paste this updated Code.gs over the existing script
+ * 2. Save
+ * 3. Run setupSheet() to add Source and UTM Parameters columns
+ * 4. Deploy → Manage deployments → Edit (pencil) → Version: New version → Deploy
  */
 
 const SHEET_NAME = "Leads";
-const SCRIPT_VERSION = "2.1.0";
+const SCRIPT_VERSION = "2.2.0";
 
 /** Must match budget options in the enquiry form */
 const ALLOWED_BUDGETS = [
@@ -22,7 +28,7 @@ const ALLOWED_BUDGETS = [
   "Above ₹75 Lakhs",
 ];
 
-/** Sheet columns: timestamp (auto) + the 6 enquiry form fields */
+/** Sheet columns: timestamp (auto) + enquiry fields + marketing attribution */
 const SHEET_HEADERS = [
   "Timestamp",
   "Full Name",
@@ -31,6 +37,8 @@ const SHEET_HEADERS = [
   "State",
   "City",
   "Investment Budget",
+  "Source",
+  "UTM Parameters",
 ];
 
 function doPost(e) {
@@ -54,6 +62,13 @@ function doPost(e) {
       "investmentBudget",
       "investment_budget",
       "budget",
+    ]);
+    const source = pickField_(data, ["source", "trafficSource", "traffic_source"]) || "direct";
+    const utmParameters = pickField_(data, [
+      "utmParameters",
+      "utm_parameters",
+      "utm",
+      "utmParams",
     ]);
 
     if (!fullName) {
@@ -95,6 +110,8 @@ function doPost(e) {
       state: state,
       city: city,
       investmentBudget: investmentBudget,
+      source: source,
+      utmParameters: utmParameters,
     });
 
     return jsonResponse_({ success: true, message: "Lead saved successfully" });
@@ -112,8 +129,8 @@ function doGet() {
 }
 
 /**
- * Run once after pasting this script.
- * Creates the sheet, sets headers, and removes any extra columns.
+ * Run once after pasting this script, and again after adding attribution columns.
+ * Creates the sheet, sets headers, and keeps existing lead rows.
  */
 function setupSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -135,25 +152,26 @@ function getSheet_() {
     sheet = ss.getSheetByName(SHEET_NAME);
   }
 
-  if (sheet.getLastRow() === 0) {
-    syncSheetLayout_(sheet);
-  }
+  ensureHeaders_(sheet);
 
   return sheet;
 }
 
-function syncSheetLayout_(sheet) {
-  const lastCol = sheet.getLastColumn();
-  if (lastCol > SHEET_HEADERS.length) {
-    sheet.deleteColumns(SHEET_HEADERS.length + 1, lastCol - SHEET_HEADERS.length);
-  }
-
+function ensureHeaders_(sheet) {
   sheet
     .getRange(1, 1, 1, SHEET_HEADERS.length)
     .setValues([SHEET_HEADERS])
     .setFontWeight("bold");
 
   sheet.setFrozenRows(1);
+  sheet.setColumnWidth(8, 140);
+  sheet.setColumnWidth(9, 360);
+  sheet.getRange("H:I").setNumberFormat("@");
+}
+
+function syncSheetLayout_(sheet) {
+  ensureHeaders_(sheet);
+
   sheet.setColumnWidth(1, 170);
   sheet.setColumnWidth(2, 180);
   sheet.setColumnWidth(3, 160);
@@ -181,6 +199,8 @@ function appendLeadRow_(sheet, lead) {
   sheet.getRange(nextRow, 5).setValue(lead.state);
   sheet.getRange(nextRow, 6).setValue(lead.city);
   sheet.getRange(nextRow, 7).setValue(lead.investmentBudget);
+  sheet.getRange(nextRow, 8).setNumberFormat("@").setValue(lead.source || "direct");
+  sheet.getRange(nextRow, 9).setNumberFormat("@").setValue(lead.utmParameters || "");
 }
 
 function pickField_(data, keys) {

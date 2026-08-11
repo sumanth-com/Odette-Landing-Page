@@ -7,6 +7,7 @@ import {
   STATE_DISPLAY_LABELS,
 } from "@/lib/indianLocations";
 import { trackGenerateLead } from "@/lib/analytics";
+import { getStoredAttribution } from "@/lib/attribution";
 import { THANK_YOU_PATH } from "@/lib/site";
 import { submitLead } from "@/lib/submitLead";
 import {
@@ -226,6 +227,7 @@ export function EnquiryForm({
     setSubmitError("");
 
     const resolvedState = resolveIndianState(stateValue) ?? stateValue;
+    const attribution = getStoredAttribution();
     const leadPayload = {
       fullName: formData.fullName.trim(),
       mobileNumber: `${formData.countryCode} ${formData.mobile}`,
@@ -233,6 +235,8 @@ export function EnquiryForm({
       state: resolvedState,
       city: cityValue,
       investmentBudget: formData.investmentBudget,
+      source: attribution.source,
+      utmParameters: attribution.utmParameters,
     };
 
     try {
