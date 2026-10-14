@@ -3,15 +3,15 @@
 import { FAQ_ITEMS } from "@/lib/faqs";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { useId, useState } from "react";
+import { useState } from "react";
 import { StaggerGroup, StaggerItem } from "../ui/AnimatedSection";
 import { SectionHeading } from "../ui/GoldButton";
 import { SectionShell } from "../ui/SectionShell";
 
-function FAQItem({ question, answer }: { question: string; answer: string }) {
+function FAQItem({ id, question, answer }: { id: string; question: string; answer: string }) {
   const [isOpen, setIsOpen] = useState(false);
-  const panelId = useId();
-  const buttonId = useId();
+  const panelId = `${id}-panel`;
+  const buttonId = `${id}-button`;
 
   return (
     <div className="rounded-xl border border-cta/25 bg-white px-4 py-2.5 shadow-[0_2px_16px_rgba(91,45,139,0.06)] sm:px-5 sm:py-3">
@@ -67,9 +67,9 @@ export function FAQSection() {
         />
 
         <StaggerGroup className="flex w-full flex-col gap-2 sm:gap-2.5">
-          {FAQ_ITEMS.map((faq) => (
+          {FAQ_ITEMS.map((faq, index) => (
             <StaggerItem key={faq.question}>
-              <FAQItem question={faq.question} answer={faq.answer} />
+              <FAQItem id={`faq-${index}`} question={faq.question} answer={faq.answer} />
             </StaggerItem>
           ))}
         </StaggerGroup>

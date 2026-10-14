@@ -4,7 +4,6 @@ import { ChevronDown } from "lucide-react";
 import {
   useCallback,
   useEffect,
-  useId,
   useMemo,
   useRef,
   useState,
@@ -77,7 +76,7 @@ export function FormAutocomplete({
   "aria-invalid": ariaInvalid,
   "aria-describedby": ariaDescribedBy,
 }: FormAutocompleteProps) {
-  const listId = useId();
+  const listId = `${id}-listbox`;
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState(value);
   const [highlightIndex, setHighlightIndex] = useState(0);
