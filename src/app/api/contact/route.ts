@@ -24,9 +24,26 @@ function validationErrorResponse(error: ZodError) {
   );
 }
 
+const GENERIC_FAILURE_MESSAGE =
+  "We couldn't submit your inquiry right now. Please try again in a moment or call us directly.";
+
+function errorMessage(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback;
+}
+
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    let body: unknown;
+
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json(
+        { success: false, error: "Invalid form submission" },
+        { status: 400 }
+      );
+    }
+
     const parsed = leadSchema.safeParse(body);
 
     if (!parsed.success) {
@@ -54,11 +71,7 @@ export async function POST(request: Request) {
         await submitLeadToGoogleSheets(sheetsPayload);
         sheetsSynced = true;
       } catch (error) {
-        sheetsError =
-          error instanceof Error
-            ? error.message
-            : "Google Sheets sync failed";
-
+        sheetsError = errorMessage(error, "Google Sheets sync failed");
         console.error("Google Sheets sync failed:", sheetsError);
       }
     } else {
@@ -67,13 +80,28 @@ export async function POST(request: Request) {
       console.error("Google Sheets sync skipped:", sheetsError);
     }
 
-    // Emails second — non-fatal so a Resend issue never blocks Sheets
+    // Emails second — a Resend issue never blocks Sheets
+    let notificationSent = false;
     let confirmationSent = false;
     try {
-      await sendLeadEmails(lead);
-      confirmationSent = Boolean(lead.email);
+      const emails = await sendLeadEmails(lead);
+      notificationSent = true;
+      confirmationSent = emails.confirmationSent;
     } catch (error) {
-      console.error("Lead email delivery failed after Sheets attempt:", error);
+      console.error(
+        "Lead notification email failed:",
+        errorMessage(error, "Unknown Resend error")
+      );
+    }
+
+    // Only report success if the lead reached the sheet or the team inbox
+    if (!sheetsSynced && !notificationSent) {
+      console.error("Lead was not captured by any channel", { sheetsError });
+
+      return NextResponse.json(
+        { success: false, error: GENERIC_FAILURE_MESSAGE },
+        { status: 502 }
+      );
     }
 
     return NextResponse.json({
@@ -81,21 +109,15 @@ export async function POST(request: Request) {
       message: "Your inquiry has been submitted successfully.",
       confirmationSent,
       sheetsSynced,
-      sheetsError: sheetsSynced ? undefined : sheetsError,
     });
   } catch (error) {
-    console.error("Contact form submission failed:", error);
-
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Unable to submit your inquiry right now. Please try again.";
+    console.error(
+      "Contact form submission failed:",
+      errorMessage(error, "Unknown error")
+    );
 
     return NextResponse.json(
-      {
-        success: false,
-        error: message,
-      },
+      { success: false, error: GENERIC_FAILURE_MESSAGE },
       { status: 500 }
     );
   }

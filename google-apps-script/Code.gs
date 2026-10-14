@@ -19,7 +19,11 @@
  */
 
 const SHEET_NAME = "Leads";
-const SCRIPT_VERSION = "2.2.0";
+const SCRIPT_VERSION = "2.3.0";
+
+/** How long a submissionId is remembered to drop retried duplicates */
+const SUBMISSION_ID_TTL_SECONDS = 600;
+const LOCK_TIMEOUT_MS = 10000;
 
 /** Must match budget options in the enquiry form */
 const ALLOWED_BUDGETS = [
@@ -102,17 +106,38 @@ function doPost(e) {
       });
     }
 
-    appendLeadRow_(sheet, {
-      timestamp: new Date(),
-      fullName: fullName,
-      mobileNumber: mobileNumber,
-      email: email,
-      state: state,
-      city: city,
-      investmentBudget: investmentBudget,
-      source: source,
-      utmParameters: utmParameters,
-    });
+    const submissionId = pickField_(data, ["submissionId", "submission_id"]);
+    const cache = CacheService.getScriptCache();
+    const cacheKey = submissionId ? "submission:" + submissionId : "";
+
+    // Serialise writes so concurrent submissions never land on the same row
+    const lock = LockService.getScriptLock();
+    lock.waitLock(LOCK_TIMEOUT_MS);
+
+    try {
+      if (cacheKey && cache.get(cacheKey)) {
+        return jsonResponse_({ success: true, message: "Lead already saved", duplicate: true });
+      }
+
+      appendLeadRow_(sheet, {
+        timestamp: new Date(),
+        fullName: fullName,
+        mobileNumber: mobileNumber,
+        email: email,
+        state: state,
+        city: city,
+        investmentBudget: investmentBudget,
+        source: source,
+        utmParameters: utmParameters,
+      });
+      SpreadsheetApp.flush();
+
+      if (cacheKey) {
+        cache.put(cacheKey, "1", SUBMISSION_ID_TTL_SECONDS);
+      }
+    } finally {
+      lock.releaseLock();
+    }
 
     return jsonResponse_({ success: true, message: "Lead saved successfully" });
   } catch (error) {

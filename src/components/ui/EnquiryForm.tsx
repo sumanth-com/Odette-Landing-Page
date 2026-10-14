@@ -17,7 +17,7 @@ import {
   Shield,
   UserRound,
 } from "lucide-react";
-import { FormEvent, type ReactNode, useMemo, useState } from "react";
+import { FormEvent, type ReactNode, useMemo, useRef, useState } from "react";
 import { FormAutocomplete } from "./FormAutocomplete";
 import { FormSelect } from "./FormSelect";
 import { GoldButton } from "./GoldButton";
@@ -109,6 +109,8 @@ export function EnquiryForm({
   const [emailError, setEmailError] = useState("");
   const [locationError, setLocationError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // Blocks a second submit that fires before the disabled button re-renders
+  const submitInFlightRef = useRef(false);
   const [formData, setFormData] = useState<EnquiryFormData>({
     fullName: "",
     countryCode: "+91",
@@ -191,6 +193,8 @@ export function EnquiryForm({
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
+    if (submitInFlightRef.current) return;
+
     if (formData.mobile.length !== 10) {
       setMobileError("Please enter a valid 10-digit mobile number.");
       return;
@@ -223,6 +227,7 @@ export function EnquiryForm({
       return;
     }
 
+    submitInFlightRef.current = true;
     setIsSubmitting(true);
     setSubmitError("");
 
@@ -250,6 +255,7 @@ export function EnquiryForm({
           ? error.message
           : "Unable to submit your inquiry. Please try again."
       );
+      submitInFlightRef.current = false;
       setIsSubmitting(false);
     }
   };

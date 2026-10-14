@@ -7,11 +7,18 @@ import { Resend } from "resend";
 
 let resendClient: Resend | null = null;
 
+const EMAIL_PATTERN = /^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/;
+const NAMED_EMAIL_PATTERN = /^[^<>]+<([^\s@<>]+@[^\s@<>]+\.[^\s@<>]+)>$/;
+
 function getResendClient() {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = process.env.RESEND_API_KEY?.trim();
 
   if (!apiKey) {
     throw new Error("RESEND_API_KEY is not configured");
+  }
+
+  if (!apiKey.startsWith("re_")) {
+    throw new Error("RESEND_API_KEY is invalid (expected a key starting with re_)");
   }
 
   if (!resendClient) {
@@ -22,14 +29,26 @@ function getResendClient() {
 }
 
 function getFromAddress() {
-  return (
-    process.env.RESEND_FROM_EMAIL?.trim() ||
-    "iFranchise <contact@ifranchise.in>"
-  );
+  const from =
+    process.env.RESEND_FROM_EMAIL?.trim() || "iFranchise <contact@ifranchise.in>";
+
+  if (!EMAIL_PATTERN.test(from) && !NAMED_EMAIL_PATTERN.test(from)) {
+    throw new Error(
+      'RESEND_FROM_EMAIL is invalid (use "email@domain" or "Name <email@domain>")'
+    );
+  }
+
+  return from;
 }
 
 function getNotificationRecipient() {
-  return process.env.CONTACT_NOTIFICATION_EMAIL?.trim() || CONTACT_EMAIL;
+  const recipient = process.env.CONTACT_NOTIFICATION_EMAIL?.trim() || CONTACT_EMAIL;
+
+  if (!EMAIL_PATTERN.test(recipient)) {
+    throw new Error("CONTACT_NOTIFICATION_EMAIL is not a valid email address");
+  }
+
+  return recipient;
 }
 
 function getEmailAttachments() {
@@ -87,9 +106,12 @@ export async function sendLeadEmails(lead: LeadRecord) {
     try {
       confirmation = await sendLeadConfirmationEmail(lead);
     } catch (error) {
-      console.error("Lead confirmation email failed:", error);
+      console.error(
+        "Lead confirmation email failed:",
+        error instanceof Error ? error.message : error
+      );
     }
   }
 
-  return { notification, confirmation };
+  return { notification, confirmation, confirmationSent: Boolean(confirmation) };
 }

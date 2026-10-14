@@ -21,27 +21,41 @@ export class LeadSubmissionError extends Error {
   }
 }
 
-export async function submitLead(payload: LeadPayload): Promise<SubmitLeadResult> {
-  const response = await fetch("/api/contact", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-    keepalive: true,
-  });
+const DEFAULT_ERROR_MESSAGE = "Unable to submit your inquiry. Please try again.";
 
-  const result = (await response.json()) as {
+export async function submitLead(payload: LeadPayload): Promise<SubmitLeadResult> {
+  let response: Response;
+
+  try {
+    response = await fetch("/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      keepalive: true,
+    });
+  } catch {
+    throw new LeadSubmissionError(
+      "Network error — please check your connection and try again."
+    );
+  }
+
+  let result: {
     success?: boolean;
     error?: string;
     confirmationSent?: boolean;
     sheetsSynced?: boolean;
-  };
+  } = {};
+
+  try {
+    result = await response.json();
+  } catch {
+    // Non-JSON body (e.g. a platform timeout page) — fall through to the generic error
+  }
 
   if (!response.ok || !result.success) {
-    throw new LeadSubmissionError(
-      result.error || "Unable to submit your inquiry. Please try again."
-    );
+    throw new LeadSubmissionError(result.error || DEFAULT_ERROR_MESSAGE);
   }
 
   return {

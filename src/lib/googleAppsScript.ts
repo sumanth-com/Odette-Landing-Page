@@ -1,7 +1,15 @@
 import { getGoogleScriptUrl, isGoogleAppsScriptConfigured } from "@/lib/googleSheetsConfig";
 
-const GAS_REQUEST_TIMEOUT_MS = 25_000;
-const GAS_MAX_ATTEMPTS = 3;
+// Whole Sheets sync must finish well inside the route's 30s maxDuration so emails can still send
+const GAS_REQUEST_TIMEOUT_MS = 12_000;
+const GAS_TOTAL_BUDGET_MS = 20_000;
+const GAS_STRATEGIES: Array<"json" | "form"> = ["form", "json", "form"];
+
+/** Script answered with success:false and an error — retrying would give the same result */
+class GoogleAppsScriptRejectedError extends Error {}
+
+/** Request may have reached the script; retrying risks a duplicate row */
+class GoogleAppsScriptTimeoutError extends Error {}
 
 export type GoogleAppsScriptResult = {
   success?: boolean;
@@ -46,7 +54,8 @@ function isSuccessfulResult(result: GoogleAppsScriptResult): boolean {
 
 async function postToGoogleAppsScript(
   payload: Record<string, string>,
-  contentType: "json" | "form"
+  contentType: "json" | "form",
+  timeoutMs: number
 ): Promise<GoogleAppsScriptResult> {
   const scriptUrl = getGoogleScriptUrl();
 
@@ -65,7 +74,7 @@ async function postToGoogleAppsScript(
       : buildFormBody(payload);
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), GAS_REQUEST_TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     // First attempt with redirect follow
@@ -104,15 +113,24 @@ async function postToGoogleAppsScript(
     }
 
     if (!isSuccessfulResult(result)) {
-      throw new Error(
-        result.error ||
-          (result.status === "running"
-            ? "Google Sheets sync hit the script health-check endpoint instead of saving the lead"
-            : "Google Sheets sync failed")
+      if (result.status === "running") {
+        throw new Error(
+          "Google Sheets sync hit the script health-check endpoint instead of saving the lead"
+        );
+      }
+
+      throw new GoogleAppsScriptRejectedError(
+        result.error || "Google Sheets sync failed"
       );
     }
 
     return result;
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new GoogleAppsScriptTimeoutError("Google Sheets sync timed out");
+    }
+
+    throw error;
   } finally {
     clearTimeout(timeout);
   }
@@ -121,22 +139,33 @@ async function postToGoogleAppsScript(
 export async function submitPayloadToGoogleAppsScript(
   payload: Record<string, string>
 ): Promise<GoogleAppsScriptResult> {
+  // Same ID on every retry so the script can ignore repeats of this submission
+  const requestPayload = { ...payload, submissionId: crypto.randomUUID() };
+  const deadline = Date.now() + GAS_TOTAL_BUDGET_MS;
   let lastError: Error | null = null;
-  const strategies: Array<"json" | "form"> = ["form", "json"];
 
-  for (let attempt = 1; attempt <= GAS_MAX_ATTEMPTS; attempt += 1) {
-    for (const strategy of strategies) {
-      try {
-        return await postToGoogleAppsScript(payload, strategy);
-      } catch (error) {
-        lastError =
-          error instanceof Error
-            ? error
-            : new Error("Google Sheets sync failed");
+  for (const strategy of GAS_STRATEGIES) {
+    const remainingMs = deadline - Date.now();
 
-        if (lastError.name === "AbortError") {
-          lastError = new Error("Google Sheets sync timed out");
-        }
+    if (remainingMs < 2_000) {
+      break;
+    }
+
+    try {
+      return await postToGoogleAppsScript(
+        requestPayload,
+        strategy,
+        Math.min(GAS_REQUEST_TIMEOUT_MS, remainingMs)
+      );
+    } catch (error) {
+      lastError =
+        error instanceof Error ? error : new Error("Google Sheets sync failed");
+
+      if (
+        lastError instanceof GoogleAppsScriptRejectedError ||
+        lastError instanceof GoogleAppsScriptTimeoutError
+      ) {
+        break;
       }
     }
   }
