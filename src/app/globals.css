@@ -7,6 +7,9 @@
   --color-gold-hover: #4a2472;
   --color-cta: #5b2d8b;
   --color-cta-hover: #4a2472;
+  /* iFranchise logo blue — navbar and primary CTAs only */
+  --color-brand: #2e0ca2;
+  --color-brand-hover: #250a85;
   --color-charcoal: #000000;
   --color-taupe: #6b7280;
   --color-border: #e5e7eb;

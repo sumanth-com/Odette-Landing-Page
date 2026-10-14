@@ -5,8 +5,7 @@ import type { Attachment } from "resend";
 export const ODETTE_LOGO_CID = "odette-logo";
 
 const LOGO_CANDIDATE_PATHS = [
-  join(process.cwd(), "src", "assets", "Logo.png"),
-  join(process.cwd(), "src", "assets", "Logo.webp"),
+  join(process.cwd(), "src", "assets", "odette-email-logo.png"),
 ];
 
 function readLogoBuffer(): Buffer {
@@ -18,7 +17,9 @@ function readLogoBuffer(): Buffer {
     }
   }
 
-  throw new Error("Odette logo asset not found at src/assets/Logo.png or Logo.webp");
+  throw new Error(
+    "Odette logo asset not found at src/assets/odette-email-logo.png (run npm run sync-images)"
+  );
 }
 
 let cachedLogoAttachment: Attachment | null = null;

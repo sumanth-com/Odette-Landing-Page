@@ -7,14 +7,6 @@
     "width": 853,
     "height": 1844
   },
-  "brand.odette-mark": {
-    "width": 886,
-    "height": 624
-  },
-  "brand.odette-logo": {
-    "width": 886,
-    "height": 624
-  },
   "gallery.store-interior": {
     "width": 1672,
     "height": 941
@@ -39,8 +31,20 @@
     "width": 1672,
     "height": 941
   },
+  "brand.odette-logo": {
+    "width": 600,
+    "height": 153
+  },
+  "brand.odette-mark": {
+    "width": 600,
+    "height": 153
+  },
   "brand.ifranchise-logo": {
-    "width": 48,
-    "height": 48
+    "width": 99,
+    "height": 96
+  },
+  "brand.ifranchise-wordmark": {
+    "width": 349,
+    "height": 80
   }
 }

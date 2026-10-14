@@ -141,7 +141,7 @@ export function ThankYouContent() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackBookConsultation("thank_you_page")}
-            className="inline-flex min-h-[2.5rem] flex-1 items-center justify-center rounded-full bg-cta px-5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_24px_rgba(91,45,139,0.28)] transition-transform hover:bg-cta-hover hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 active:scale-[0.98]"
+            className="inline-flex min-h-[2.5rem] flex-1 items-center justify-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-[0_8px_24px_rgba(46,12,162,0.28)] transition-transform hover:bg-brand-hover hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 active:scale-[0.98]"
           >
             Book a Meeting Now
           </a>

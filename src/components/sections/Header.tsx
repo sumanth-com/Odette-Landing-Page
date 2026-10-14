@@ -26,7 +26,7 @@ const SCROLL_SECTION_IDS = [
 
 function navLinkClass(isActive: boolean) {
   return isActive
-    ? "bg-white font-semibold text-cta shadow-[0_4px_16px_rgba(0,0,0,0.12)]"
+    ? "bg-white font-semibold text-brand shadow-[0_4px_16px_rgba(0,0,0,0.12)]"
     : "text-white/80 hover:bg-white/10 hover:text-white";
 }
 
@@ -134,7 +134,7 @@ export function Header() {
   return (
     <>
       <header
-        className={`fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-cta shadow-[0_4px_24px_rgba(43,43,43,0.12)] transition-[height] duration-300 ease-out ${
+        className={`fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-brand shadow-[0_4px_24px_rgba(43,43,43,0.12)] transition-[height] duration-300 ease-out ${
           showHeroTagline ? "h-[4.75rem]" : "h-16"
         }`}
       >
@@ -153,20 +153,18 @@ export function Header() {
               sizes="40px"
               priority
               unoptimized
-              className="h-9 w-9 shrink-0 object-contain sm:h-10 sm:w-10"
+              className="h-9 w-9 shrink-0 rounded-lg object-cover ring-1 ring-white/30 sm:h-10 sm:w-10"
             />
-            <div className="min-w-0">
-              <span className="block font-display text-base font-semibold leading-tight tracking-[0.02em] text-white sm:text-[1.2rem]">
-                iFranchise
-              </span>
-              <span
-                className={`block overflow-hidden text-[10px] leading-tight text-white/75 transition-all duration-300 ease-out sm:text-[11px] ${
-                  showHeroTagline ? "mt-0.5 max-h-5 opacity-100" : "max-h-0 opacity-0"
-                }`}
-              >
-                India&apos;s Trusted Franchise Growth Platform
-              </span>
-            </div>
+            <Image
+              src={SITE_IMAGES.brand.iFranchiseWordmark.src}
+              alt={SITE_IMAGES.brand.iFranchiseWordmark.alt}
+              width={SITE_IMAGES.brand.iFranchiseWordmark.width}
+              height={SITE_IMAGES.brand.iFranchiseWordmark.height}
+              sizes="140px"
+              priority
+              unoptimized
+              className="block h-7 w-auto min-w-0 sm:h-8"
+            />
           </a>
 
           <nav className="hidden items-center gap-1 xl:flex" aria-label="Main navigation">
@@ -194,7 +192,7 @@ export function Header() {
                 trackBookConsultation("header_book_a_call");
                 goToSection(e, CONTACT_PATH);
               }}
-              className="hidden items-center justify-center rounded-full bg-white px-3.5 py-2 text-[13px] font-semibold text-cta shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition-all duration-300 hover:bg-white/90 sm:inline-flex lg:px-4"
+              className="hidden items-center justify-center rounded-full bg-white px-3.5 py-2 text-[13px] font-semibold text-brand shadow-[0_4px_16px_rgba(0,0,0,0.12)] transition-all duration-300 hover:bg-white/90 sm:inline-flex lg:px-4"
             >
               Book a call
             </a>
@@ -273,8 +271,8 @@ export function Header() {
                     aria-current={isActive ? "page" : undefined}
                     className={`rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                       isActive
-                        ? "bg-white font-semibold text-cta shadow-[0_4px_16px_rgba(0,0,0,0.08)]"
-                        : "text-charcoal hover:bg-cta/5 hover:text-cta"
+                        ? "bg-white font-semibold text-brand shadow-[0_4px_16px_rgba(0,0,0,0.08)]"
+                        : "text-charcoal hover:bg-brand/5 hover:text-brand"
                     }`}
                   >
                     {link.label}

@@ -5,7 +5,7 @@ import { type ReactNode } from "react";
 import { fadeUp } from "./AnimatedSection";
 
 export const ctaButtonBase =
-  "inline-flex items-center justify-center gap-1.5 rounded-full bg-cta font-semibold text-white shadow-[0_4px_16px_rgba(91,45,139,0.22)] transition-colors duration-200 hover:bg-cta-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cta focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex items-center justify-center gap-1.5 rounded-full bg-brand font-semibold text-white shadow-[0_4px_16px_rgba(46,12,162,0.22)] transition-colors duration-200 hover:bg-brand-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60";
 
 export const ctaButtonSize =
   "px-5 py-2.5 text-[13px] leading-snug lg:px-8 lg:py-3.5 lg:text-sm";
@@ -65,7 +65,7 @@ export function GoldButton({
 
   return (
     <motion.button
-      whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(91, 45, 139, 0.35)" }}
+      whileHover={{ y: -2, boxShadow: "0 8px 24px rgba(46, 12, 162, 0.35)" }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
       className={buttonClassName}

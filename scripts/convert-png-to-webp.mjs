@@ -4,8 +4,13 @@ import sharp from "sharp";
 
 const assetsDir = join(process.cwd(), "src", "assets");
 
-/** Keep PNG for email client compatibility */
-const KEEP_PNG = new Set(["Logo.png"]);
+/** Keep PNG for email client compatibility and as sources for sync-public-images / favicons */
+const KEEP_PNG = new Set([
+  "odette-email-logo.png",
+  "Odette Paris.png",
+  "iF-Logo.png",
+  "logoif.png",
+]);
 
 const qualityByFile = {
   Hero: 82,
@@ -46,4 +51,4 @@ for (const { filename, outputName, bytes } of results) {
   console.log(`Converted ${filename} -> ${outputName} (${(bytes / 1024).toFixed(1)} KB)`);
 }
 
-console.log(`Done. ${results.length} file(s) converted. Logo.png kept for email.`);
+console.log(`Done. ${results.length} file(s) converted. Source and email PNGs kept.`);
